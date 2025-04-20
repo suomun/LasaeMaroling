@@ -73,7 +73,7 @@
 <nav>
   <a href="#">정보</a>
   <a href="#">물리</a>
-  <a href="#">생명과학</a>
+  <a href="#">생명</a>
 </nav>
 
 <div class="container">
