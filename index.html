@@ -1,11 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>My First GitHub Page</title>
+  <title>내 뉴스 웹사이트</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #333;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    nav {
+      background-color: #444;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+    }
+
+    .container {
+      display: flex;
+      padding: 20px;
+    }
+
+    .main {
+      flex: 3;
+      margin-right: 20px;
+    }
+
+    .sidebar {
+      flex: 1;
+    }
+
+    .news {
+      border-bottom: 1px solid #ccc;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+    }
+
+    .news img {
+      width: 100%;
+      height: auto;
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello, World!</h1>
-  <p>이건 내가 만든 첫 웹사이트야 🎉</p>
+
+<header>
+  <h1>오늘의 뉴스</h1>
+</header>
+
+<nav>
+  <a href="#">정치</a>
+  <a href="#">경제</a>
+  <a href="#">사회</a>
+  <a href="#">스포츠</a>
+  <a href="#">연예</a>
+</nav>
+
+<div class="container">
+  <div class="main">
+    <div class="news">
+      <h2>헤드라인 뉴스</h2>
+      <img src="https://via.placeholder.com/600x300" alt="헤드라인 이미지">
+      <p>이곳은 헤드라인 뉴스의 내용입니다. 여기에 간단한 설명이 들어갑니다.</p>
+    </div>
+
+    <div class="news">
+      <h2>경제 뉴스</h2>
+      <p>주식시장이 오늘도 상승세를 보였습니다...</p>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <h3>인기 기사</h3>
+    <ul>
+      <li><a href="#">지금 가장 많이 본 뉴스</a></li>
+      <li><a href="#">실시간 속보</a></li>
+      <li><a href="#">기상 예보</a></li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 내 뉴스 웹사이트. All rights reserved.</p>
+</footer>
+
 </body>
 </html>
