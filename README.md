@@ -71,9 +71,9 @@
 </header>
 
 <nav>
-  <a href="#">정보</a>
-  <a href="#">물리</a>
-  <a href="#">생명</a>
+  <a href="info.html">정보</a>
+  <a href="physics.html">물리</a>
+  <a href="bio.html">생명</a>
 </nav>
 
 <div class="container">
