@@ -71,11 +71,9 @@
 </header>
 
 <nav>
-  <a href="#">정치</a>
-  <a href="#">경제</a>
-  <a href="#">사회</a>
-  <a href="#">스포츠</a>
-  <a href="#">연예</a>
+  <a href="#">정보</a>
+  <a href="#">물리</a>
+  <a href="#">생명과학</a>
 </nav>
 
 <div class="container">
