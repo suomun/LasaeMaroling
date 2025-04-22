@@ -108,9 +108,55 @@
   <div class="popup-content">
     <span class="close-btn" onclick="closePopup()">&times;</span>
     <img src="images/EX_picture1.png" alt="팝업 이미지">
-    <p>김치찌개가 먹고싶은 밤이네요...</p>
+    <p>이건 중요 공지입니다! 확인 후 닫아주세요.</p>
+    <!-- "일주일 동안 안 보이기" 체크박스 -->
+    <label>
+      <input type="checkbox" id="dontShowAgain"> 일주일 동안 안 보이기
+    </label>
   </div>
 </div>
+
+<!-- 팝업 제어 스크립트 -->
+<script>
+  window.onload = function() {
+    // 로컬스토리지에서 'popupCloseDate' 값이 있으면, 일주일을 계산해 팝업 표시 여부 결정
+    const closeDate = localStorage.getItem("popupCloseDate");
+    
+    if (closeDate) {
+      // 로컬스토리지에서 저장된 닫은 날짜를 가져와서 현재 날짜와 비교
+      const currentDate = new Date().getTime();
+      const differenceInDays = (currentDate - closeDate) / (1000 * 3600 * 24); // 밀리초를 일로 변환
+
+      // 일주일(7일)이 지나지 않았다면 팝업을 숨긴다
+      if (differenceInDays < 7) {
+        document.getElementById("popup").style.display = "none";
+      } else {
+        // 일주일이 지난 경우 팝업을 다시 띄운다
+        document.getElementById("popup").style.display = "flex";
+      }
+    } else {
+      // 로컬스토리지에 값이 없으면 첫 방문이므로 팝업을 띄운다
+      document.getElementById("popup").style.display = "flex";
+    }
+  }
+
+  function closePopup() {
+    const dontShowAgain = document.getElementById("dontShowAgain").checked;
+    
+    // 팝업을 닫고, 현재 날짜를 밀리초 단위로 로컬스토리지에 저장
+    document.getElementById("popup").style.display = "none";
+    
+    if (dontShowAgain) {
+      // "일주일 동안 안 보이기" 체크박스를 클릭한 경우
+      const currentDate = new Date().getTime();
+      localStorage.setItem("popupCloseDate", currentDate); // 닫은 날짜를 저장
+    } else {
+      // 체크박스를 클릭하지 않으면 로컬스토리지에 저장하지 않음
+      localStorage.removeItem("popupCloseDate");
+    }
+  }
+</script>
+
 
 <header>
   <h1>오늘의 뉴스</h1>
