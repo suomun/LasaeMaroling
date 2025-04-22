@@ -110,36 +110,43 @@
       cursor: pointer;
     }
 
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-        padding: 10px;
-      }
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    padding: 10px;
+  }
 
-      .main {
-        margin-right: 0;
-        padding: 10px;
-      }
+  .main {
+    margin-right: 0;
+    padding: 10px;
+  }
 
-      .sidebar {
-        flex: 1 1 100%;
-        margin-top: 20px;
-      }
+  .sidebar {
+    flex: 1 1 100%;
+    margin-top: 20px;
+  }
 
-      nav a {
-        display: block;
-        margin: 10px 0;
-      }
+  /* nav 스타일 수정: 가로 유지 & 간격 조절 */
+  nav {
+    flex-wrap: wrap; /* 너무 좁은 화면에서 줄 바꿈 가능하게 */
+  }
 
-      footer {
-        padding: 10px;
-      }
+  nav a {
+    display: inline-block; /* 가로로 유지 */
+    margin: 5px 10px; /* 좌우 여백 조절 */
+    font-size: 0.95rem;
+  }
 
-      #popup .popup-content {
-        max-width: 95%;
-        max-height: 90%;
-      }
-    }
+  footer {
+    padding: 10px;
+  }
+
+  #popup .popup-content {
+    max-width: 95%;
+    max-height: 90%;
+  }
+}
+
   </style>
 </head>
 <body>
