@@ -62,9 +62,55 @@
       padding: 15px;
       margin-top: 20px;
     }
+
+    /* 팝업 관련 스타일 */
+    #popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .popup-content {
+      position: relative;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 80%;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .popup-content img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      font-size: 24px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+
+<!-- 팝업창 -->
+<div id="popup">
+  <div class="popup-content">
+    <span class="close-btn" onclick="closePopup()">&times;</span>
+    <img src="https://via.placeholder.com/600x300?text=중요+공지" alt="팝업 이미지">
+    <p>이건 중요 공지입니다! 확인 후 닫아주세요.</p>
+  </div>
+</div>
 
 <header>
   <h1>오늘의 뉴스</h1>
@@ -85,8 +131,8 @@
     </div>
 
     <div class="news">
-      <h2>경제 뉴스</h2>
-      <p>주식시장이 오늘도 상승세를 보였습니다...</p>
+      <h2>오늘의 뉴스</h2>
+      <p>이상원씨 오늘 프로젝트 봉봉 마음대로하겠다고 선언해, 팀원들 충격.</p>
     </div>
   </div>
 
@@ -104,6 +150,16 @@
   <p>© 2025 내 뉴스 웹사이트. All rights reserved.</p>
 </footer>
 
+<!-- 팝업 제어 스크립트 -->
+<script>
+  window.onload = function() {
+    document.getElementById("popup").style.display = "flex";
+  }
+
+  function closePopup() {
+    document.getElementById("popup").style.display = "none";
+  }
+</script>
+
 </body>
 </html>
-
