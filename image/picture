@@ -1,8 +1,0 @@
-<!-- 팝업창 -->
-<div id="popup">
-  <div class="popup-content">
-    <span class="close-btn" onclick="closePopup()">&times;</span>
-    <img src="images/popup.jpg" alt="공지 이미지">
-    <p>이건 중요 공지입니다! 확인 후 닫아주세요.</p>
-  </div>
-</div>
