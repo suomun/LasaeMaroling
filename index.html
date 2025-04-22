@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 모바일 뷰포트 설정 -->
   <title>내 뉴스 웹사이트</title>
   <style>
     body {
@@ -32,16 +33,19 @@
 
     .container {
       display: flex;
+      flex-wrap: wrap; /* 모바일에서 요소들이 쌓일 수 있도록 설정 */
       padding: 20px;
     }
 
     .main {
       flex: 3;
       margin-right: 20px;
+      padding: 20px;
     }
 
     .sidebar {
       flex: 1;
+      padding: 20px;
     }
 
     .news {
@@ -82,7 +86,7 @@
       background-color: white;
       padding: 20px;
       border-radius: 8px;
-      max-width: 80%;
+      max-width: 90%; /* 화면에 맞게 크기 조정 */
       text-align: center;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     }
@@ -99,6 +103,33 @@
       font-size: 24px;
       cursor: pointer;
     }
+
+    /* 모바일에서 더욱 적합한 디자인 */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column; /* 모바일에서는 세로로 쌓이도록 설정 */
+        padding: 10px;
+      }
+
+      .main {
+        margin-right: 0;
+        padding: 10px;
+      }
+
+      .sidebar {
+        flex: 1 1 100%; /* 모바일에서는 사이드바가 전체 너비를 차지하도록 설정 */
+        margin-top: 20px;
+      }
+
+      nav a {
+        display: block;
+        margin: 10px 0;
+      }
+
+      footer {
+        padding: 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -108,7 +139,7 @@
   <div class="popup-content">
     <span class="close-btn" onclick="closePopup()">&times;</span>
     <img src="images/EX_picture1.png" alt="팝업 이미지">
-    <p>아 김치찌개 먹고싶다.</p>
+    <p>이건 중요 공지입니다! 확인 후 닫아주세요.</p>
     <!-- "일주일 동안 안 보이기" 체크박스 -->
     <label>
       <input type="checkbox" id="dontShowAgain"> 일주일 동안 안 보이기
