@@ -23,11 +23,14 @@
       color: white;
       padding: 10px;
       text-align: center;
+      display: flex; /* 링크들을 가로로 배치 */
+      justify-content: center; /* 가운데 정렬 */
+      align-items: center; /* 수직 정렬 */
     }
 
     nav a {
       color: white;
-      margin: 0 15px;
+      margin: 0 15px; /* 좌우 마진을 주어 간격을 설정 */
       text-decoration: none;
     }
 
@@ -87,9 +90,9 @@
       background-color: white;
       padding: 20px;
       border-radius: 8px;
-      max-width: 80%; /* 팝업의 최대 너비를 80%로 설정 */
-      max-height: 80%; /* 팝업의 최대 높이를 80%로 설정 */
-      overflow-y: auto; /* 내용이 넘칠 경우 스크롤 추가 */
+      max-width: 80%;
+      max-height: 80%;
+      overflow-y: auto;
       text-align: center;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     }
@@ -107,7 +110,6 @@
       cursor: pointer;
     }
 
-    /* 모바일에서 더욱 적합한 디자인 */
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
@@ -133,7 +135,6 @@
         padding: 10px;
       }
 
-      /* 모바일에서 팝업 크기 조정 */
       #popup .popup-content {
         max-width: 95%;
         max-height: 90%;
@@ -148,7 +149,7 @@
   <div class="popup-content">
     <span class="close-btn" onclick="closePopup()">&times;</span>
     <img src="images/EX_picture1.png" alt="팝업 이미지">
-    <p>아 수정 얼마나 더해야됨.</p>
+    <p>수정그만할래 샹.</p>
     <!-- "일주일 동안 안 보이기" 체크박스 -->
     <label>
       <input type="checkbox" id="dontShowAgain"> 일주일 동안 안 보이기
