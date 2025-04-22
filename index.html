@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 모바일 뷰포트 설정 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>내 뉴스 웹사이트</title>
   <style>
     body {
@@ -33,7 +33,7 @@
 
     .container {
       display: flex;
-      flex-wrap: wrap; /* 모바일에서 요소들이 쌓일 수 있도록 설정 */
+      flex-wrap: wrap;
       padding: 20px;
     }
 
@@ -79,6 +79,7 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      overflow: hidden;
     }
 
     .popup-content {
@@ -86,7 +87,9 @@
       background-color: white;
       padding: 20px;
       border-radius: 8px;
-      max-width: 90%; /* 화면에 맞게 크기 조정 */
+      max-width: 80%; /* 팝업의 최대 너비를 80%로 설정 */
+      max-height: 80%; /* 팝업의 최대 높이를 80%로 설정 */
+      overflow-y: auto; /* 내용이 넘칠 경우 스크롤 추가 */
       text-align: center;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     }
@@ -107,7 +110,7 @@
     /* 모바일에서 더욱 적합한 디자인 */
     @media (max-width: 768px) {
       .container {
-        flex-direction: column; /* 모바일에서는 세로로 쌓이도록 설정 */
+        flex-direction: column;
         padding: 10px;
       }
 
@@ -117,7 +120,7 @@
       }
 
       .sidebar {
-        flex: 1 1 100%; /* 모바일에서는 사이드바가 전체 너비를 차지하도록 설정 */
+        flex: 1 1 100%;
         margin-top: 20px;
       }
 
@@ -129,6 +132,12 @@
       footer {
         padding: 10px;
       }
+
+      /* 모바일에서 팝업 크기 조정 */
+      #popup .popup-content {
+        max-width: 95%;
+        max-height: 90%;
+      }
     }
   </style>
 </head>
@@ -139,7 +148,7 @@
   <div class="popup-content">
     <span class="close-btn" onclick="closePopup()">&times;</span>
     <img src="images/EX_picture1.png" alt="팝업 이미지">
-    <p>아~~ 김치찌개 먹고싶다~~~~.</p>
+    <p>아 수정 얼마나 더해야됨.</p>
     <!-- "일주일 동안 안 보이기" 체크박스 -->
     <label>
       <input type="checkbox" id="dontShowAgain"> 일주일 동안 안 보이기
