@@ -108,7 +108,7 @@
   <div class="popup-content">
     <span class="close-btn" onclick="closePopup()">&times;</span>
     <img src="images/EX_picture1.png" alt="팝업 이미지">
-    <p>이건 중요 공지입니다! 확인 후 닫아주세요.</p>
+    <p>김치찌개가 먹고싶은 밤이네요...</p>
   </div>
 </div>
 
