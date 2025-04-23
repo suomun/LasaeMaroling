@@ -14,23 +14,24 @@
     .header {
       display: flex;
       align-items: baseline;
+      justify-content: space-between;
       padding: 20px 24px 10px;
     }
 
-    .title {
+    .header .title {
       font-size: 36px;
       font-weight: bold;
       margin-right: 10px;
     }
 
-    .links a {
+    .header .links a {
       font-size: 16px;
       color: #333;
       text-decoration: none;
       margin-right: 10px;
     }
 
-    .links a:hover {
+    .header .links a:hover {
       text-decoration: underline;
     }
 
@@ -39,43 +40,38 @@
       margin: 0 24px;
     }
 
-    /* 동그란 햄버거 버튼 */
     .circle-hamburger {
-      position: fixed;
-      top: 24px;
-      right: 24px;
       width: 50px;
       height: 50px;
       background-color: rgba(0, 0, 0, 0.6);
       border-radius: 50%;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      flex-direction: column;
       cursor: pointer;
       z-index: 1100;
     }
 
     .circle-hamburger span {
-      display: block;
-      width: 24px;
-      height: 3px;
+      width: 6px;
+      height: 20px;
       background-color: white;
-      margin: 4px 0;
-      border-radius: 2px;
+      margin: 3px 0;
+      border-radius: 3px;
     }
 
-    /* 사이드바 */
     .sidebar {
       position: fixed;
       top: 0;
       right: -250px;
       width: 250px;
       height: 100%;
-      background-color: #f5f5f5;
-      box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+      background-color: #f5f6f5;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
       transition: right 0.3s ease;
-      padding: 24px;
       z-index: 1000;
+      padding: 24px;
     }
 
     .sidebar.open {
@@ -83,8 +79,8 @@
     }
 
     .sidebar h2 {
-      font-size: 20px;
       margin-top: 0;
+      font-size: 24px;
     }
 
     .sidebar a {
@@ -92,6 +88,7 @@
       margin-top: 12px;
       color: #333;
       text-decoration: none;
+      font-size: 18px;
     }
 
     .sidebar a:hover {
@@ -101,26 +98,26 @@
 </head>
 <body>
   <div class="header">
-    <div class="title">프로젝트</div>
-    <div class="links">
-      <a href="info.html">정보</a>
-      <a href="physics.html">물리</a>
-      <a href="bio.html">생명</a>
+    <div>
+      <div class="title">프로젝트</div>
+      <div class="links">
+        <a href="info.html">정보</a>
+        <a href="physics.html">물리</a>
+        <a href="bio.html">생명</a>
+      </div>
+    </div>
+    <div class="circle-hamburger" onclick="toggleSidebar()">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
   </div>
+
   <div class="divider"></div>
 
-  <!-- 동그란 햄버거 버튼 -->
-  <div class="circle-hamburger" onclick="toggleSidebar()">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-
-  <!-- 사이드바 -->
   <div class="sidebar" id="sidebar">
     <h2>메뉴</h2>
-    <a href="index.html">메인으로</a>
+    <a href="index.html">메인</a>
     <a href="info.html">정보</a>
     <a href="physics.html">물리</a>
     <a href="bio.html">생명</a>
