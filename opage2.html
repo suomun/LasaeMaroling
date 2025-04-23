@@ -62,20 +62,23 @@
     }
 
     .sidebar {
+      display: none;
       position: fixed;
       top: 0;
-      right: -250px;
+      right: 0;
       width: 250px;
       height: 100%;
-      background-color: #f5f6f5;
-      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-      transition: right 0.3s ease;
-      z-index: 1000;
+      background-color: #f5f5f5;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
       padding: 24px;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+      transform: translateX(100%);
     }
 
     .sidebar.open {
-      right: 0;
+      display: block;
+      transform: translateX(0%);
     }
 
     .sidebar h2 {
@@ -106,6 +109,7 @@
         <a href="bio.html">생명</a>
       </div>
     </div>
+    <!-- 햄버거 아이콘 -->
     <div class="circle-hamburger" onclick="toggleSidebar()">
       <span></span>
       <span></span>
@@ -115,9 +119,10 @@
 
   <div class="divider"></div>
 
+  <!-- 사이드바 -->
   <div class="sidebar" id="sidebar">
     <h2>메뉴</h2>
-    <a href="index.html">메인</a>
+    <a href="index.html">메인으로</a>
     <a href="info.html">정보</a>
     <a href="physics.html">물리</a>
     <a href="bio.html">생명</a>
@@ -126,7 +131,17 @@
   <script>
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('open');
+      if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        setTimeout(() => {
+          sidebar.style.display = 'none';
+        }, 300);
+      } else {
+        sidebar.style.display = 'block';
+        setTimeout(() => {
+          sidebar.classList.add('open');
+        }, 10);
+      }
     }
   </script>
 </body>
