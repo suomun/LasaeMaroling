@@ -3,22 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>프로젝트 이름</title>
+  <title>opage2</title>
   <style>
     body {
       margin: 0;
-      background-color: white;
-      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      font-family: 'Apple SD Gothic Neo', sans-serif;
     }
+
     .header {
-      padding: 20px;
-      font-size: 32px;
+      display: flex;
+      align-items: baseline;
+      padding: 20px 24px 10px;
+    }
+
+    .header .title {
+      font-size: 36px;
       font-weight: bold;
-      color: black;
+      margin-right: 10px;
+    }
+
+    .header .links a {
+      font-size: 16px;
+      color: #333;
+      text-decoration: none;
+      margin-right: 10px;
+    }
+
+    .header .links a:hover {
+      text-decoration: underline;
+    }
+
+    .divider {
+      border-top: 1px dotted #999;
+      margin: 0 24px;
     }
   </style>
 </head>
 <body>
-  <div class="header">프로젝트 이름</div>
+  <div class="header">
+    <div class="title">프로젝트</div>
+    <div class="links">
+      <a href="info.html">정보</a>
+      <a href="physics.html">물리</a>
+      <a href="bio.html">생명</a>
+    </div>
+  </div>
+  <div class="divider"></div>
 </body>
 </html>
