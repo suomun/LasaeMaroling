@@ -74,10 +74,32 @@
       margin: 15px 0;
       font-size: 1.1rem;
     }
+
+    /* 과목 링크 스타일 (검은색 박스 추가, 좌우 끝에 붙도록 설정) */
+    .subject-nav {
+      display: flex;
+      justify-content: space-around;  /* 링크들을 좌우에 고르게 배치 */
+      background-color: #333; /* 검은색 배경 */
+      padding: 10px 0;
+      width: 100%;  /* 전체 너비로 확장 */
+    }
+
+    .subject-nav a {
+      text-decoration: none;
+      font-size: 1.2rem;
+      color: white; /* 흰색 텍스트 */
+      font-weight: bold;
+      transition: color 0.2s ease;
+    }
+
+    .subject-nav a:hover {
+      color: #f0f0f0; /* 호버 시 색 변경 */
+    }
   </style>
 </head>
 <body>
 
+  <!-- 헤더 -->
   <header>
     <h1>프로젝트 이름</h1>
     <div class="menu-icon" onclick="toggleMenu()">
@@ -87,6 +109,14 @@
     </div>
   </header>
 
+  <!-- 과목 링크 (정보, 물리, 생명) -->
+  <nav class="subject-nav">
+    <a href="info.html">정보</a>
+    <a href="physics.html">물리</a>
+    <a href="bio.html">생명</a>
+  </nav>
+
+  <!-- 사이드 메뉴 -->
   <div class="side-menu" id="sideMenu">
     <h2>메뉴</h2>
     <ul>
