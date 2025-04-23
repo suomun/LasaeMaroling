@@ -95,15 +95,6 @@
     .subject-nav a:hover {
       color: #f0f0f0; /* 호버 시 색 변경 */
     }
-
-    /* fixed로 따라오는 박스 */
-    .subject-nav.fixed {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 99;
-    }
   </style>
 </head>
 <body>
@@ -119,7 +110,7 @@
   </header>
 
   <!-- 과목 링크 (정보, 물리, 생명) -->
-  <nav class="subject-nav" id="subjectNav">
+  <nav class="subject-nav">
     <a href="info.html">정보</a>
     <a href="physics.html">물리</a>
     <a href="bio.html">생명</a>
@@ -140,23 +131,6 @@
       const menu = document.getElementById('sideMenu');
       menu.classList.toggle('active');
     }
-
-    // 스크롤 이벤트 처리
-    window.addEventListener('scroll', function() {
-      const subjectNav = document.getElementById('subjectNav');
-      const scrollPosition = window.scrollY || window.pageYOffset;
-      const docHeight = document.documentElement.scrollHeight;
-      const windowHeight = window.innerHeight;
-
-      // 스크롤이 아래로 내려갔을 때 박스를 고정시키기 위한 조건
-      if (scrollPosition + windowHeight >= docHeight - subjectNav.offsetHeight) {
-        subjectNav.classList.remove('fixed');
-      } else if (scrollPosition > 100) {
-        subjectNav.classList.add('fixed');
-      } else {
-        subjectNav.classList.remove('fixed');
-      }
-    });
   </script>
 
 </body>
