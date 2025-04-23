@@ -58,21 +58,6 @@
       border-radius: 2px;
     }
 
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      display: none;
-    }
-
-    .overlay.active {
-      display: block;
-    }
-
     .sidebar {
       position: fixed;
       top: 0;
@@ -81,23 +66,28 @@
       height: 100%;
       background-color: #f5f6f5;
       box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, width 0.3s ease;
       transform: translateX(100%);
       z-index: 1005;
       padding: 24px;
+      overflow-y: auto;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
     }
 
     .sidebar.open {
       transform: translateX(0);
     }
 
-    .sidebar.full {
-      width: 100%;
+    .sidebar.expanded {
+      width: 100vw;
     }
 
     .sidebar h2 {
       margin-top: 0;
       font-size: 24px;
+      white-space: nowrap;
     }
 
     .sidebar a {
@@ -106,13 +96,33 @@
       color: #333;
       text-decoration: none;
       font-size: 18px;
+      white-space: nowrap;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 1004;
+      display: none;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    .content {
+      padding: 100px 24px 24px;
     }
 
     .banner-slider-wrapper {
       position: relative;
       width: calc(100% - 40px);
       margin: 1000px auto 40px;
-      height: 600px;
+      height: 500px;
       overflow: hidden;
       background: #fff;
     }
@@ -124,7 +134,7 @@
 
     .banner-slider img {
       width: 100vw;
-      height: 600px;
+      height: 500px;
       object-fit: contain;
       flex-shrink: 0;
     }
@@ -177,6 +187,8 @@
   </style>
 </head>
 <body>
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
   <div class="header">
     <div>
       <div class="title">프로젝트</div>
@@ -192,8 +204,6 @@
       <span></span>
     </div>
   </div>
-
-  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
   <div class="sidebar" id="sidebar">
     <h2>메뉴</h2>
@@ -216,39 +226,25 @@
     <div class="banner-dots" id="bannerDots"></div>
   </div>
 
-  <script>
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    let touchStartX = null;
+  <div class="content">
+    <p>이곳은 본문 내용입니다. 스크롤해도 헤더가 따라옵니다.</p>
+    <p style="margin-top: 1000px;">스크롤 끝!</p>
+  </div>
 
+  <script>
     function toggleSidebar() {
-      sidebar.classList.add('open');
-      overlay.classList.add('active');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
     }
 
     function closeSidebar() {
-      sidebar.classList.remove('open', 'full');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      sidebar.classList.remove('open', 'expanded');
       overlay.classList.remove('active');
     }
-
-    document.addEventListener('touchstart', (e) => {
-      touchStartX = e.touches[0].clientX;
-    });
-
-    document.addEventListener('touchend', (e) => {
-      if (!touchStartX) return;
-      let touchEndX = e.changedTouches[0].clientX;
-      let deltaX = touchEndX - touchStartX;
-
-      if (sidebar.classList.contains('open')) {
-        if (deltaX < -50) {
-          sidebar.classList.add('full');
-        } else if (deltaX > 50) {
-          closeSidebar();
-        }
-      }
-      touchStartX = null;
-    });
 
     const bannerSlider = document.getElementById("bannerSlider");
     const images = bannerSlider.querySelectorAll("img");
@@ -283,6 +279,21 @@
     }
 
     let slideInterval = setInterval(nextSlide, 4000);
+
+    // 스와이프 제스처로 확장
+    let startX = 0;
+    const sidebar = document.getElementById('sidebar');
+
+    sidebar.addEventListener('touchstart', function(e) {
+      startX = e.touches[0].clientX;
+    });
+
+    sidebar.addEventListener('touchend', function(e) {
+      const endX = e.changedTouches[0].clientX;
+      if (startX - endX > 50) {
+        sidebar.classList.add('expanded');
+      }
+    });
   </script>
 </body>
 </html>
