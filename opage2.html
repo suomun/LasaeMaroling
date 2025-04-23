@@ -1,250 +1,40 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>배너 수정</title>
-  <style>
-    body {
-      margin: 0;
-      background-color: #ffffff;
-      font-family: 'Apple SD Gothic Neo', sans-serif;
-      overflow-x: hidden;
-    }
+<style>
+  /* ... 생략된 스타일들은 기존 그대로 유지 ... */
 
-    .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background-color: #fff;
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      padding: 20px 24px 10px;
-      z-index: 1001;
-      border-bottom: 1px dotted #999;
-    }
+  .banner-slider-wrapper {
+    position: relative;
+    width: calc(100% - 40px);
+    margin: 1000px auto 40px;
+    height: 500px; /* 줄어든 배너 높이 */
+    overflow: hidden;
+    background: #fff;
+  }
 
-    .title {
-      font-size: 36px;
-      font-weight: bold;
-      margin-right: 10px;
-    }
+  .banner-slider img {
+    width: 100vw;
+    height: 500px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
 
-    .links a {
-      font-size: 16px;
-      color: #333;
-      text-decoration: none;
-      margin-right: 10px;
-    }
+  .arrow-button {
+    position: absolute;
+    top: 250px; /* 500px의 정중앙 */
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    border: none;
+    font-size: 24px;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+  }
 
-    .circle-hamburger {
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      flex-direction: column;
-      gap: 5px;
-      background: none;
-    }
+  .arrow-left {
+    left: 10px;
+  }
 
-    .circle-hamburger span {
-      width: 28px;
-      height: 4px;
-      background-color: black;
-      border-radius: 2px;
-    }
-
-    .sidebar {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 250px;
-      height: 100%;
-      background-color: #f5f6f5;
-      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-      transition: transform 0.3s ease;
-      transform: translateX(100%);
-      z-index: 1005;
-      padding: 24px;
-    }
-
-    .sidebar.open {
-      transform: translateX(0);
-    }
-
-    .sidebar h2 {
-      margin-top: 0;
-      font-size: 24px;
-    }
-
-    .sidebar a {
-      display: block;
-      margin-top: 12px;
-      color: #333;
-      text-decoration: none;
-      font-size: 18px;
-    }
-
-    .content {
-      padding: 100px 24px 24px;
-    }
-
-    .banner-slider-wrapper {
-      position: relative;
-      width: calc(100% - 40px); /* 좌우 여백 */
-      margin: 1000px auto 40px;
-      height: 500px; /* 높이 줄임 */
-      overflow: hidden;
-      background: #fff;
-    }
-
-    .banner-slider {
-      display: flex;
-      transition: transform 0.5s ease-in-out;
-    }
-
-    .banner-slider img {
-      width: 100vw;
-      height: 500px; /* 줄인 높이 적용 */
-      object-fit: contain;
-      flex-shrink: 0;
-    }
-
-    .banner-dots {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      z-index: 11;
-    }
-
-    .banner-dots span {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      margin: 0 5px;
-      background-color: #ccc;
-      border-radius: 50%;
-      opacity: 0.5;
-      transition: opacity 0.3s;
-    }
-
-    .banner-dots span.active {
-      background-color: #333;
-      opacity: 1;
-    }
-
-    .arrow-button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: rgba(0, 0, 0, 0.4);
-      color: white;
-      border: none;
-      font-size: 24px;
-      padding: 10px;
-      cursor: pointer;
-      z-index: 10;
-    }
-
-    .arrow-left {
-      left: 10px;
-    }
-
-    .arrow-right {
-      right: 10px;
-    }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <div>
-      <div class="title">프로젝트</div>
-      <div class="links">
-        <a href="info.html">정보</a>
-        <a href="physics.html">물리</a>
-        <a href="bio.html">생명</a>
-      </div>
-    </div>
-    <div class="circle-hamburger" onclick="toggleSidebar()">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-  </div>
-
-  <div class="sidebar" id="sidebar">
-    <h2>메뉴</h2>
-    <a href="index.html">메인</a>
-    <a href="info.html">정보</a>
-    <a href="physics.html">물리</a>
-    <a href="bio.html">생명</a>
-  </div>
-
-  <!-- 배너 영역 -->
-  <div class="banner-slider-wrapper">
-    <button class="arrow-button arrow-left" onclick="prevSlide()">&#10094;</button>
-    <div class="banner-slider" id="bannerSlider">
-      <img src="images/EX_picture1.png" alt="배너1">
-      <img src="images/EX_picture2.jpg" alt="배너2">
-      <img src="images/EX_picture3.jpg" alt="배너3">
-      <img src="images/EX_picture4.png" alt="배너4">
-      <img src="images/EX_picture5.png" alt="배너5">
-    </div>
-    <button class="arrow-button arrow-right" onclick="nextSlide()">&#10095;</button>
-    <div class="banner-dots" id="bannerDots"></div>
-  </div>
-
-  <div class="content">
-    <p>이곳은 본문 내용입니다. 스크롤해도 헤더가 따라옵니다.</p>
-    <p style="margin-top: 1000px;">스크롤 끝!</p>
-  </div>
-
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('open');
-    }
-
-    const bannerSlider = document.getElementById("bannerSlider");
-    const images = bannerSlider.querySelectorAll("img");
-    bannerSlider.style.width = `${images.length * 100}vw`;
-
-    const dotsContainer = document.getElementById("bannerDots");
-    let currentSlide = 0;
-    const totalSlides = images.length;
-
-    // 점 생성
-    for (let i = 0; i < totalSlides; i++) {
-      const dot = document.createElement("span");
-      if (i === 0) dot.classList.add("active");
-      dotsContainer.appendChild(dot);
-    }
-
-    const dots = dotsContainer.querySelectorAll("span");
-
-    function updateSlide() {
-      bannerSlider.style.transform = `translateX(-${currentSlide * 100}vw)`;
-      dots.forEach(dot => dot.classList.remove("active"));
-      dots[currentSlide].classList.add("active");
-    }
-
-    function nextSlide() {
-      currentSlide = (currentSlide + 1) % totalSlides;
-      updateSlide();
-    }
-
-    function prevSlide() {
-      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-      updateSlide();
-    }
-
-    let slideInterval = setInterval(nextSlide, 4000);
-  </script>
-</body>
-</html>
+  .arrow-right {
+    right: 10px;
+  }
+</style>
