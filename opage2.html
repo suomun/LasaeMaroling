@@ -80,6 +80,10 @@
       transform: translateX(0);
     }
 
+    .sidebar.fullscreen {
+      width: 100vw;
+    }
+
     .sidebar h2 {
       margin-top: 0;
       font-size: 24px;
@@ -246,9 +250,7 @@
       <img src="adimages/Ads_1.png" alt="팝업 이미지 1">
     </a>
     <div style="text-align:center; margin-top:10px;">
-      <label>
-        <input type="checkbox" id="dontShowPopup1"> 하루 동안 안 보기
-      </label>
+      <label><input type="checkbox" id="dontShowPopup1"> 하루 동안 안 보기</label>
     </div>
   </div>
 </div>
@@ -264,9 +266,7 @@
       <img src="adimages/Ads_2.png" alt="팝업 이미지 2">
     </a>
     <div style="text-align:center; margin-top:10px;">
-      <label>
-        <input type="checkbox" id="dontShowPopup2"> 하루 동안 안 보기
-      </label>
+      <label><input type="checkbox" id="dontShowPopup2"> 하루 동안 안 보기</label>
     </div>
   </div>
 </div>
@@ -283,9 +283,7 @@
     </div>
   </div>
   <div class="circle-hamburger" onclick="toggleSidebar()">
-    <span></span>
-    <span></span>
-    <span></span>
+    <span></span><span></span><span></span>
   </div>
 </div>
 
@@ -295,7 +293,6 @@
   <a href="info.html">정보</a>
   <a href="physics.html">물리</a>
   <a href="bio.html">생명</a>
-
   <div style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 20px;">
     <a href="https://www.instagram.com/marcopolo_jygo07/?igsh=Y3ZkcmMweHBxeXRv#" target="_blank" style="color:#007BFF;">이공견문록 인스타바로가기</a>
   </div>
@@ -321,12 +318,15 @@
 
 <script>
   function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
-    document.getElementById('overlay').classList.toggle('active');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
   }
 
   function closeSidebar() {
-    document.getElementById('sidebar').classList.remove('open');
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.remove('open', 'fullscreen');
     document.getElementById('overlay').classList.remove('active');
   }
 
@@ -395,6 +395,37 @@
       }
     }
   }
+
+  // 스와이프 제스처 추가
+  let startX = 0;
+  let currentX = 0;
+  let dragging = false;
+
+  document.addEventListener("touchstart", function (e) {
+    if (e.touches[0].clientX > window.innerWidth - 30) {
+      startX = e.touches[0].clientX;
+      dragging = true;
+    }
+  });
+
+  document.addEventListener("touchmove", function (e) {
+    if (!dragging) return;
+    currentX = e.touches[0].clientX;
+  });
+
+  document.addEventListener("touchend", function () {
+    if (!dragging) return;
+    dragging = false;
+    const distance = startX - currentX;
+    if (distance > 50) {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.add("open");
+      document.getElementById("overlay").classList.add("active");
+      if (distance > 200) {
+        sidebar.classList.add("fullscreen");
+      }
+    }
+  });
 </script>
 
 </body>
