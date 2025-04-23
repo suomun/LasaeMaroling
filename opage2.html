@@ -39,6 +39,10 @@
       margin-right: 10px;
     }
 
+    .links a:hover {
+      text-decoration: underline;
+    }
+
     .circle-hamburger {
       width: 50px;
       height: 50px;
@@ -96,7 +100,7 @@
     .banner-slider-wrapper {
       position: relative;
       width: calc(100% - 40px); /* 좌우 여백 */
-      margin: 100px auto 40px;
+      margin: 1000px auto 40px;  /* 배너가 헤더로부터 1000px 떨어지도록 설정 */
       height: 700px;
       overflow: hidden;
       background: #fff;
@@ -194,7 +198,7 @@
       <img src="images/EX_picture2.jpg" alt="배너2">
       <img src="images/EX_picture3.jpg" alt="배너3">
       <img src="images/EX_picture4.png" alt="배너4">
-      <img src="images/EX_picture5.png" alt="배너3">
+      <img src="images/EX_picture5.png" alt="배너5">
     </div>
     <button class="arrow-button arrow-right" onclick="nextSlide()">&#10095;</button>
     <div class="banner-dots" id="bannerDots"></div>
