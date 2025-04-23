@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>우리 프로젝트</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 100px auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+      color: #1e90ff;
+    }
+
+    p {
+      font-size: 1.2em;
+      line-height: 1.6;
+    }
+
+    .button-container {
+      margin-top: 40px;
+    }
+
+    .nav-button {
+      display: inline-block;
+      padding: 12px 24px;
+      font-size: 1em;
+      color: white;
+      background-color: #1e90ff;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-button:hover {
+      background-color: #0f70d1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>프로젝트 제목</h1>
+    <p>
+      프로젝트설명
+    </p>
+
+    <div class="button-container">
+      <a href="about.html" class="nav-button">자세히 보기</a>
+    </div>
+  </div>
+</body>
+</html>
