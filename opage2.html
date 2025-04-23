@@ -44,7 +44,6 @@
     .circle-hamburger {
       width: 50px;
       height: 50px;
-      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -65,18 +64,19 @@
     .sidebar {
       position: fixed;
       top: 0;
-      right: -250px;
+      right: 0;
       width: 250px;
       height: 100%;
       background-color: #f5f6f5;
       box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-      transition: right 0.3s ease;
+      transition: transform 0.3s ease;
+      transform: translateX(100%);
       z-index: 1000;
       padding: 24px;
     }
 
     .sidebar.open {
-      right: 0;
+      transform: translateX(0);
     }
 
     .sidebar h2 {
