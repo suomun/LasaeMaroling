@@ -82,8 +82,6 @@
 
     .sidebar.expanded {
       width: 100vw;
-      padding-left: 48px;  /* ← 여백 추가 */
-      padding-right: 48px; /* ← 여백 추가 */
     }
 
     .sidebar h2 {
@@ -180,11 +178,11 @@
     }
 
     .arrow-left {
-      left: 2vw;
+      left: 10px;
     }
 
     .arrow-right {
-      right: 2vw;
+      right: 10px;
     }
   </style>
 </head>
@@ -282,6 +280,7 @@
 
     let slideInterval = setInterval(nextSlide, 4000);
 
+    // 스와이프 제스처로 확장
     let startX = 0;
     const sidebar = document.getElementById('sidebar');
 
