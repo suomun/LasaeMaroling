@@ -98,57 +98,54 @@
     }
 
     .content {
-      padding-top: 400px; /* 헤더 + 배너 높이 고려 */
-      padding-left: 24px;
-      padding-right: 24px;
-      padding-bottom: 24px;
+      padding-top: 100px;
+      padding: 100px 24px 24px;
     }
 
-    /* 배너 슬라이드 영역 */
-    .banner-wrapper {
-      margin-top: 120px;
+    /* 배너 스타일 */
+    .banner-container {
+      margin-top: 20px;
       width: 100%;
       max-width: 800px;
-      height: 250px;
+      height: 300px;
       overflow: hidden;
-      position: relative;
       margin-left: auto;
       margin-right: auto;
-      border-radius: 8px;
+      position: relative;
     }
 
-    .banner-track {
+    .banner-slide-wrapper {
       display: flex;
-      width: 400%;
       transition: transform 0.6s ease-in-out;
+      width: 400%;
     }
 
-    .banner-track img {
+    .banner-slide-wrapper img {
       width: 100%;
-      height: 100%;
+      height: 300px;
       object-fit: cover;
     }
 
-    .dots {
+    .banner-indicators {
       position: absolute;
-      bottom: 12px;
+      bottom: 10px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
       gap: 8px;
     }
 
-    .dot {
-      width: 12px;
-      height: 12px;
+    .banner-indicators span {
+      width: 10px;
+      height: 10px;
+      background-color: rgba(255,255,255,0.5);
       border-radius: 50%;
-      background-color: rgba(255, 255, 255, 0.4);
       cursor: pointer;
       transition: background-color 0.3s;
     }
 
-    .dot.active {
-      background-color: rgba(255, 255, 255, 0.95);
+    .banner-indicators span.active {
+      background-color: rgba(255,255,255,1);
     }
   </style>
 </head>
@@ -177,18 +174,19 @@
     <a href="bio.html">생명</a>
   </div>
 
-  <!-- 자동 배너 영역 -->
-  <div class="banner-wrapper">
-    <div class="banner-track" id="bannerTrack">
+  <!-- 배너 영역 -->
+  <div class="banner-container">
+    <div class="banner-slide-wrapper" id="bannerSlideWrapper">
       <img src="images/EX_picture1.png" alt="배너1">
       <img src="images/EX_picture2.jpg" alt="배너2">
       <img src="images/EX_picture3.jpg" alt="배너3">
-      <img src="images/EX_picture4.png" alt="배너1 복제"> <!-- 무한 루프용 -->
+      <img src="images/EX_picture4.png" alt="배너4">
     </div>
-    <div class="dots" id="dotsContainer">
-      <span class="dot active"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
+    <div class="banner-indicators" id="bannerIndicators">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
   </div>
 
@@ -204,31 +202,31 @@
       sidebar.classList.toggle('open');
     }
 
-    // 자동 배너 슬라이드 스크립트
-    const track = document.getElementById("bannerTrack");
-    const dots = document.querySelectorAll(".dot");
-    let current = 0;
-    const totalSlides = dots.length;
+    document.addEventListener("DOMContentLoaded", () => {
+      const slideWrapper = document.getElementById("bannerSlideWrapper");
+      const indicators = document.getElementById("bannerIndicators").children;
+      const totalSlides = indicators.length;
+      let currentSlide = 0;
+      let slideInterval;
 
-    function updateBanner() {
-      track.style.transform = `translateX(-${current * 100}%)`;
-      dots.forEach(dot => dot.classList.remove("active"));
-      dots[current % totalSlides].classList.add("active");
-    }
-
-    setInterval(() => {
-      current = (current + 1) % (totalSlides + 1);
-      if (current === totalSlides) {
-        setTimeout(() => {
-          track.style.transition = "none";
-          current = 0;
-          updateBanner();
-          track.offsetHeight; // 강제 리플로우
-          track.style.transition = "transform 0.6s ease-in-out";
-        }, 600);
+      function showSlide(index) {
+        slideWrapper.style.transform = `translateX(-${index * 100}%)`;
+        for (let i = 0; i < indicators.length; i++) {
+          indicators[i].classList.remove("active");
+        }
+        indicators[index].classList.add("active");
       }
-      updateBanner();
-    }, 4000); // 4초 간격
+
+      function startAutoSlide() {
+        slideInterval = setInterval(() => {
+          currentSlide = (currentSlide + 1) % totalSlides;
+          showSlide(currentSlide);
+        }, 4000);
+      }
+
+      showSlide(currentSlide);
+      startAutoSlide();
+    });
   </script>
 </body>
 </html>
