@@ -60,7 +60,7 @@
     </p>
 
     <div class="button-container">
-      <a href="opage2.html" class="nav-button">자세히 보기</a>
+      <a href="opage2.html" class="nav-button">다음</a>
     </div>
   </div>
 </body>
