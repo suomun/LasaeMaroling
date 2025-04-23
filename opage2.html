@@ -104,9 +104,10 @@
     .banner-slider-wrapper {
       position: relative;
       width: 100%;
+      max-width: 1200px;
       height: 700px;
+      margin: 1000px auto 0 auto;
       overflow: hidden;
-      margin-top: 1000px;
       padding: 0 20px;
       box-sizing: border-box;
     }
@@ -117,15 +118,17 @@
     }
 
     .banner-slider img {
-      width: 100%;
-      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
       object-fit: contain;
       flex-shrink: 0;
     }
 
     .banner-dots {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
       text-align: center;
-      margin-top: 10px;
     }
 
     .banner-dots span {
@@ -191,12 +194,13 @@
     <a href="bio.html">생명</a>
   </div>
 
+  <!-- 배너 영역 -->
   <div class="banner-slider-wrapper">
     <button class="arrow-button arrow-left" onclick="prevSlide()">&#10094;</button>
     <div class="banner-slider" id="bannerSlider">
       <img src="images/EX_picture1.png" alt="배너1">
-      <img src="images/EX_picture2.jpg" alt="배너2">
-      <img src="images/EX_picture3.jpg" alt="배너3">
+      <img src="images/EX_picture2.png" alt="배너2">
+      <img src="images/EX_picture3.png" alt="배너3">
       <img src="images/EX_picture4.png" alt="배너4">
       <img src="images/EX_picture5.png" alt="배너5">
     </div>
@@ -207,7 +211,6 @@
   <div class="content">
     <p>이곳은 본문 내용입니다. 스크롤해도 헤더가 따라옵니다.</p>
     <p>더 많은 내용이 여기에 들어갈 수 있습니다.</p>
-    <p style="margin-top: 1000px;">스크롤 끝!</p>
   </div>
 
   <script>
