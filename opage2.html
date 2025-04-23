@@ -395,7 +395,38 @@
       }
     }
   }
+<script>
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  document.addEventListener('touchstart', function (e) {
+    touchStartX = e.changedTouches[0].screenX;
+  });
+
+  document.addEventListener('touchend', function (e) {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipeGesture();
+  });
+
+  function handleSwipeGesture() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const isOpen = sidebar.classList.contains('open');
+    const swipeDistance = touchEndX - touchStartX;
+
+    if (swipeDistance < -50) {
+      // 👉 오른쪽 → 왼쪽 스와이프: 전체 화면 확장
+      sidebar.classList.add('open');
+      sidebar.style.width = '100vw';
+      overlay.classList.add('active');
+    } else if (swipeDistance > 50 && isOpen) {
+      // 👉 왼쪽 → 오른쪽 스와이프: 사이드바 닫기 (열려 있을 때만)
+      closeSidebar();
+      sidebar.style.width = '250px'; // 다시 원래 크기로 복구
+    }
+  }
 </script>
+
 
 </body>
 </html>
