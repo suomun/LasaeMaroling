@@ -35,7 +35,7 @@
       flex-direction: column;
       justify-content: space-between;
       transition: all 0.3s ease;
-      visibility: hidden; /* 햄버거 아이콘 기본적으로 숨김 */
+      display: none; /* 햄버거 아이콘 기본적으로 숨김 */
     }
 
     .menu-icon span {
@@ -47,7 +47,7 @@
 
     /* 햄버거 아이콘이 활성화되면 보이게 하기 */
     .menu-icon.active {
-      visibility: visible;
+      display: flex; /* 아이콘이 활성화되면 보이도록 설정 */
     }
 
     /* 사이드 메뉴 */
@@ -126,32 +126,4 @@
 
   <!-- 사이드 메뉴 -->
   <div class="side-menu" id="sideMenu">
-    <h2>메뉴</h2>
-    <ul>
-      <li><a href="#">소개</a></li>
-      <li><a href="#">뉴스</a></li>
-      <li><a href="#">문의</a></li>
-    </ul>
-  </div>
-
-  <script>
-    function toggleMenu() {
-      const menu = document.getElementById('sideMenu');
-      const icon = document.querySelector('.menu-icon');
-      
-      // 사이드 메뉴 토글
-      menu.classList.toggle('active');
-      // 햄버거 아이콘 활성화 상태 토글
-      icon.classList.toggle('active');
-      
-      // 사이드 메뉴가 열리면 햄버거 아이콘을 보이게
-      if (menu.classList.contains('active')) {
-        icon.style.visibility = 'visible';
-      } else {
-        icon.style.visibility = 'hidden';
-      }
-    }
-  </script>
-
-</body>
-</html>
+    <h2>메뉴</
