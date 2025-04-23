@@ -82,6 +82,8 @@
 
     .sidebar.expanded {
       width: 100vw;
+      padding-left: 48px;  /* ← 여백 추가 */
+      padding-right: 48px; /* ← 여백 추가 */
     }
 
     .sidebar h2 {
@@ -280,7 +282,6 @@
 
     let slideInterval = setInterval(nextSlide, 4000);
 
-    // 스와이프 제스처로 확장
     let startX = 0;
     const sidebar = document.getElementById('sidebar');
 
