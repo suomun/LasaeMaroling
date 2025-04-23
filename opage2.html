@@ -2,196 +2,278 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>배너 슬라이더</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>opage2</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #ffffff;
+      font-family: 'Apple SD Gothic Neo', sans-serif;
+      overflow-x: hidden;
     }
 
-    header {
+    .header {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      background-color: #333;
-      color: #fff;
-      padding: 10px 20px;
-      z-index: 1000;
-    }
-
-    .banner-container {
-      position: relative;
-      width: calc(100% - 40px);
-      max-width: 1000px;
-      margin: 1000px auto 0 auto;
-      overflow: hidden;
-      border-radius: 8px;
-    }
-
-    .banner-slide {
+      right: 0;
+      background-color: #fff;
       display: flex;
-      transition: transform 0.5s ease-in-out;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 20px 24px 10px;
+      z-index: 1001;
+      border-bottom: 1px dotted #999;
     }
 
-    .banner-slide img {
-      width: 100%;
-      height: auto;
-      object-fit: contain;
-      flex-shrink: 0;
+    .title {
+      font-size: 36px;
+      font-weight: bold;
+      margin-right: 10px;
     }
 
-    .arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: rgba(0,0,0,0.5);
-      color: white;
-      padding: 8px 12px;
+    .links a {
+      font-size: 16px;
+      color: #333;
+      text-decoration: none;
+      margin-right: 10px;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    .circle-hamburger {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      z-index: 10;
-      border-radius: 3px;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
     }
 
-    .arrow.left {
-      left: 10px;
-    }
-
-    .arrow.right {
-      right: 10px;
-    }
-
-    .dots {
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      margin: 0 4px;
-      background-color: #bbb;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-
-    .dot.active {
-      background-color: #333;
+    .circle-hamburger span {
+      width: 28px;
+      height: 4px;
+      background-color: black;
+      border-radius: 2px;
     }
 
     .sidebar {
       position: fixed;
       top: 0;
-      right: -300px;
-      width: 300px;
-      height: 100%;
-      background-color: white;
-      box-shadow: -2px 0 5px rgba(0,0,0,0.5);
-      transition: right 0.3s ease;
-      z-index: 1500;
-      padding: 20px;
-    }
-
-    .sidebar.active {
       right: 0;
+      width: 250px;
+      height: 100%;
+      background-color: #f5f6f5;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+      transform: translateX(100%);
+      z-index: 1005;
+      padding: 24px;
     }
 
+    .sidebar.open {
+      transform: translateX(0);
+    }
+
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 24px;
+    }
+
+    .sidebar a {
+      display: block;
+      margin-top: 12px;
+      color: #333;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .sidebar a:hover {
+      text-decoration: underline;
+    }
+
+    .content {
+      padding: 100px 24px 24px;
+    }
+
+    /* 배너 스타일 */
+    .banner-slider-wrapper {
+      position: relative;
+      width: calc(100% - 20px); /* 좌우 여백 확보 */
+      max-width: 1200px;
+      height: 700px;
+      overflow: hidden;
+      margin: 1000px auto 0;
+      border-radius: 10px;
+    }
+
+    .banner-slider {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .banner-slider img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .banner-dots {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 11;
+    }
+
+    .banner-dots span {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin: 0 5px;
+      background-color: #ccc;
+      border-radius: 50%;
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+
+    .banner-dots span.active {
+      background-color: #333;
+      opacity: 1;
+    }
+
+    .arrow-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.4);
+      color: white;
+      border: none;
+      font-size: 24px;
+      padding: 10px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .arrow-left {
+      left: 10px;
+    }
+
+    .arrow-right {
+      right: 10px;
+    }
+
+    /* Overlay */
     .overlay {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1400;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 1000;
       display: none;
     }
 
-    .overlay.active {
+    .overlay.show {
       display: block;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>뉴스 헤더</h1>
-  </header>
-
-  <div class="banner-container">
-    <div class="banner-slide" id="slide">
-      <img src="EX_picture1.png" alt="배너1" />
-      <img src="EX_picture2.jpg" alt="배너2" />
-      <img src="EX_picture3.jpg" alt="배너3" />
-      <img src="EX_picture4.png" alt="배너4" />
-      <img src="EX_picture5.png" alt="배너5" />
+  <div class="header">
+    <div>
+      <div class="title">프로젝트</div>
+      <div class="links">
+        <a href="info.html">정보</a>
+        <a href="physics.html">물리</a>
+        <a href="bio.html">생명</a>
+      </div>
     </div>
-    <div class="arrow left" onclick="prevSlide()">&#10094;</div>
-    <div class="arrow right" onclick="nextSlide()">&#10095;</div>
-    <div class="dots" id="dots"></div>
+    <div class="circle-hamburger" onclick="toggleSidebar()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
   </div>
-
-  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
   <div class="sidebar" id="sidebar">
-    <h2>사이드바 내용</h2>
-    <p>여기에 추가 정보</p>
+    <h2>메뉴</h2>
+    <a href="index.html">메인</a>
+    <a href="info.html">정보</a>
+    <a href="physics.html">물리</a>
+    <a href="bio.html">생명</a>
+  </div>
+  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+  <!-- 배너 영역 -->
+  <div class="banner-slider-wrapper">
+    <button class="arrow-button arrow-left" onclick="prevSlide()">&#10094;</button>
+    <div class="banner-slider" id="bannerSlider">
+      <img src="images/EX_picture1.png" alt="배너1">
+      <img src="images/EX_picture2.jpg" alt="배너2">
+      <img src="images/EX_picture3.jpg" alt="배너3">
+      <img src="images/EX_picture4.png" alt="배너4">
+      <img src="images/EX_picture5.png" alt="배너4">
+
+    </div>
+    <button class="arrow-button arrow-right" onclick="nextSlide()">&#10095;</button>
+    <div class="banner-dots" id="bannerDots"></div>
   </div>
 
-  <main style="padding: 20px;">
+  <div class="content">
     <p>이곳은 본문 내용입니다. 스크롤해도 헤더가 따라옵니다.</p>
     <p>더 많은 내용이 여기에 들어갈 수 있습니다.</p>
-  </main>
+    <p style="margin-top: 1000px;">스크롤 끝!</p>
+  </div>
 
   <script>
-    const slide = document.getElementById("slide");
-    const dotsContainer = document.getElementById("dots");
-    const images = slide.querySelectorAll("img");
-    let current = 0;
-    let total = images.length;
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+    }
+
+    const bannerSlider = document.getElementById("bannerSlider");
+    const images = bannerSlider.querySelectorAll("img");
+    const dotsContainer = document.getElementById("bannerDots");
+    let currentSlide = 0;
+    const totalSlides = images.length;
+
+    // 점 생성
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement("span");
+      if (i === 0) dot.classList.add("active");
+      dotsContainer.appendChild(dot);
+    }
+
+    const dots = dotsContainer.querySelectorAll("span");
 
     function updateSlide() {
-      slide.style.transform = `translateX(-${current * 100}%)`;
-      document.querySelectorAll(".dot").forEach((dot, index) => {
-        dot.classList.toggle("active", index === current);
-      });
+      bannerSlider.style.transform = `translateX(-${currentSlide * 100}%)`;
+      dots.forEach(dot => dot.classList.remove("active"));
+      dots[currentSlide].classList.add("active");
     }
 
     function nextSlide() {
-      current = (current + 1) % total;
+      currentSlide = (currentSlide + 1) % totalSlides;
       updateSlide();
     }
 
     function prevSlide() {
-      current = (current - 1 + total) % total;
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
       updateSlide();
     }
 
-    function goToSlide(index) {
-      current = index;
-      updateSlide();
-    }
-
-    images.forEach((_, index) => {
-      const dot = document.createElement("div");
-      dot.classList.add("dot");
-      if (index === 0) dot.classList.add("active");
-      dot.addEventListener("click", () => goToSlide(index));
-      dotsContainer.appendChild(dot);
-    });
-
-    setInterval(nextSlide, 4000);
-
-    // 사이드바 닫기
-    const overlay = document.getElementById("overlay");
-    function closeSidebar() {
-      document.getElementById("sidebar").classList.remove("active");
-      overlay.classList.remove("active");
-    }
+    let slideInterval = setInterval(nextSlide, 4000);
   </script>
 </body>
 </html>
