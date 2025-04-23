@@ -98,19 +98,17 @@
     }
 
     .content {
-      padding-top: 120px;
-      padding-left: 24px;
-      padding-right: 24px;
+      padding: 100px 24px 24px;
     }
 
-    /* 배너 스타일 */
     .banner-slider-wrapper {
       position: relative;
-      width: calc(100% - 20px);
+      width: 100%;
       height: 700px;
       overflow: hidden;
-      margin: 40px auto 0;
-      border-radius: 12px;
+      margin-top: 1000px;
+      padding: 0 20px;
+      box-sizing: border-box;
     }
 
     .banner-slider {
@@ -126,11 +124,8 @@
     }
 
     .banner-dots {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
       text-align: center;
+      margin-top: 10px;
     }
 
     .banner-dots span {
@@ -169,22 +164,6 @@
     .arrow-right {
       right: 10px;
     }
-
-    /* 오버레이 */
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.4);
-      z-index: 1004;
-      display: none;
-    }
-
-    .overlay.show {
-      display: block;
-    }
   </style>
 </head>
 <body>
@@ -211,9 +190,7 @@
     <a href="physics.html">물리</a>
     <a href="bio.html">생명</a>
   </div>
-  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
-  <!-- 배너 영역 -->
   <div class="banner-slider-wrapper">
     <button class="arrow-button arrow-left" onclick="prevSlide()">&#10094;</button>
     <div class="banner-slider" id="bannerSlider">
@@ -236,14 +213,7 @@
   <script>
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('overlay');
       sidebar.classList.toggle('open');
-      overlay.classList.toggle('show');
-    }
-
-    function closeSidebar() {
-      document.getElementById('sidebar').classList.remove('open');
-      document.getElementById('overlay').classList.remove('show');
     }
 
     const bannerSlider = document.getElementById("bannerSlider");
@@ -252,7 +222,6 @@
     let currentSlide = 0;
     const totalSlides = images.length;
 
-    // 점 생성
     for (let i = 0; i < totalSlides; i++) {
       const dot = document.createElement("span");
       if (i === 0) dot.classList.add("active");
