@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>배너 수정</title>
+  <title>배너 및 팝업 통합</title>
   <style>
     body {
       margin: 0;
@@ -82,8 +82,8 @@
 
     .sidebar.expanded {
       width: 100vw;
-      padding-left: 48px;  /* ← 여백 추가 */
-      padding-right: 48px; /* ← 여백 추가 */
+      padding-left: 48px;
+      padding-right: 48px;
     }
 
     .sidebar h2 {
@@ -186,115 +186,203 @@
     .arrow-right {
       right: 2vw;
     }
+
+    /* 팝업 */
+    .popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .popup-content {
+      position: relative;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 80%;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .popup-content img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
-  <div class="header">
+<!-- 팝업 1 -->
+<div id="popup1" class="popup">
+  <div class="popup-content">
+    <span class="close-btn" onclick="closePopup('popup1')">&times;</span>
+    <img src="adimages/Ads_1.png" alt="팝업 이미지 1">
     <div>
-      <div class="title">프로젝트</div>
-      <div class="links">
-        <a href="info.html">정보</a>
-        <a href="physics.html">물리</a>
-        <a href="bio.html">생명</a>
-      </div>
-    </div>
-    <div class="circle-hamburger" onclick="toggleSidebar()">
-      <span></span>
-      <span></span>
-      <span></span>
+      <label>
+        <input type="checkbox" id="dontShowPopup1"> 하루 동안 안 보기
+      </label>
     </div>
   </div>
+</div>
 
-  <div class="sidebar" id="sidebar">
-    <h2>메뉴</h2>
-    <a href="index.html">메인</a>
-    <a href="info.html">정보</a>
-    <a href="physics.html">물리</a>
-    <a href="bio.html">생명</a>
-  </div>
-
-  <div class="banner-slider-wrapper">
-    <button class="arrow-button arrow-left" onclick="prevSlide()">&#10094;</button>
-    <div class="banner-slider" id="bannerSlider">
-      <img src="images/EX_picture1.png" alt="배너1">
-      <img src="images/EX_picture2.png" alt="배너2">
-      <img src="images/EX_picture3.jpg" alt="배너3">
-      <img src="images/EX_picture4.png" alt="배너4">
-      <img src="images/EX_picture5.png" alt="배너5">
+<!-- 팝업 2 -->
+<div id="popup2" class="popup">
+  <div class="popup-content">
+    <span class="close-btn" onclick="closePopup('popup2')">&times;</span>
+    <img src="adimages/Ads_2.png" alt="팝업 이미지 2">
+    <div>
+      <label>
+        <input type="checkbox" id="dontShowPopup2"> 하루 동안 안 보기
+      </label>
     </div>
-    <button class="arrow-button arrow-right" onclick="nextSlide()">&#10095;</button>
-    <div class="banner-dots" id="bannerDots"></div>
   </div>
+</div>
 
-  <div class="content">
-    <p>이곳은 본문 내용입니다. 스크롤해도 헤더가 따라옵니다.</p>
-    <p style="margin-top: 1000px;">스크롤 끝!</p>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<div class="header">
+  <div>
+    <div class="title">프로젝트</div>
+    <div class="links">
+      <a href="info.html">정보</a>
+      <a href="physics.html">물리</a>
+      <a href="bio.html">생명</a>
+    </div>
   </div>
+  <div class="circle-hamburger" onclick="toggleSidebar()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
 
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('overlay');
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('active');
-    }
+<div class="sidebar" id="sidebar">
+  <h2>메뉴</h2>
+  <a href="index.html">메인</a>
+  <a href="info.html">정보</a>
+  <a href="physics.html">물리</a>
+  <a href="bio.html">생명</a>
+</div>
 
-    function closeSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('overlay');
-      sidebar.classList.remove('open', 'expanded');
-      overlay.classList.remove('active');
-    }
+<div class="banner-slider-wrapper">
+  <button class="arrow-button arrow-left" onclick="prevSlide()">&#10094;</button>
+  <div class="banner-slider" id="bannerSlider">
+    <img src="images/EX_picture1.png" alt="배너1">
+    <img src="images/EX_picture2.png" alt="배너2">
+    <img src="images/EX_picture3.jpg" alt="배너3">
+    <img src="images/EX_picture4.png" alt="배너4">
+    <img src="images/EX_picture5.png" alt="배너5">
+  </div>
+  <button class="arrow-button arrow-right" onclick="nextSlide()">&#10095;</button>
+  <div class="banner-dots" id="bannerDots"></div>
+</div>
 
-    const bannerSlider = document.getElementById("bannerSlider");
-    const images = bannerSlider.querySelectorAll("img");
-    bannerSlider.style.width = `${images.length * 100}vw`;
+<div class="content">
+  <p>이곳은 본문 내용입니다. 스크롤해도 헤더가 따라옵니다.</p>
+  <p style="margin-top: 1000px;">스크롤 끝!</p>
+</div>
 
-    const dotsContainer = document.getElementById("bannerDots");
-    let currentSlide = 0;
-    const totalSlides = images.length;
-
-    for (let i = 0; i < totalSlides; i++) {
-      const dot = document.createElement("span");
-      if (i === 0) dot.classList.add("active");
-      dotsContainer.appendChild(dot);
-    }
-
-    const dots = dotsContainer.querySelectorAll("span");
-
-    function updateSlide() {
-      bannerSlider.style.transform = `translateX(-${currentSlide * 100}vw)`;
-      dots.forEach(dot => dot.classList.remove("active"));
-      dots[currentSlide].classList.add("active");
-    }
-
-    function nextSlide() {
-      currentSlide = (currentSlide + 1) % totalSlides;
-      updateSlide();
-    }
-
-    function prevSlide() {
-      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-      updateSlide();
-    }
-
-    let slideInterval = setInterval(nextSlide, 4000);
-
-    let startX = 0;
+<script>
+  function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+  }
 
-    sidebar.addEventListener('touchstart', function(e) {
-      startX = e.touches[0].clientX;
-    });
+  function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    sidebar.classList.remove('open', 'expanded');
+    overlay.classList.remove('active');
+  }
 
-    sidebar.addEventListener('touchend', function(e) {
-      const endX = e.changedTouches[0].clientX;
-      if (startX - endX > 50) {
-        sidebar.classList.add('expanded');
+  const bannerSlider = document.getElementById("bannerSlider");
+  const images = bannerSlider.querySelectorAll("img");
+  bannerSlider.style.width = `${images.length * 100}vw`;
+
+  const dotsContainer = document.getElementById("bannerDots");
+  let currentSlide = 0;
+  const totalSlides = images.length;
+
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement("span");
+    if (i === 0) dot.classList.add("active");
+    dotsContainer.appendChild(dot);
+  }
+
+  const dots = dotsContainer.querySelectorAll("span");
+
+  function updateSlide() {
+    bannerSlider.style.transform = `translateX(-${currentSlide * 100}vw)`;
+    dots.forEach(dot => dot.classList.remove("active"));
+    dots[currentSlide].classList.add("active");
+  }
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % totalSlides;
+    updateSlide();
+  }
+
+  function prevSlide() {
+    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+    updateSlide();
+  }
+
+  setInterval(nextSlide, 4000);
+
+  // 팝업 로직
+  function closePopup(popupId) {
+    document.getElementById(popupId).style.display = "none";
+    const checkboxId = popupId === 'popup1' ? 'dontShowPopup1' : 'dontShowPopup2';
+    const localStorageKey = popupId + "_closed";
+    const checked = document.getElementById(checkboxId).checked;
+    if (checked) {
+      const now = new Date().getTime();
+      localStorage.setItem(localStorageKey, now);
+    }
+
+    if (popupId === 'popup1') {
+      // popup1 닫힌 후 popup2 확인 및 열기
+      setTimeout(() => {
+        const popup2ClosedAt = localStorage.getItem("popup2_closed");
+        const now = new Date().getTime();
+        if (!popup2ClosedAt || (now - popup2ClosedAt) > 24 * 60 * 60 * 1000) {
+          document.getElementById("popup2").style.display = "flex";
+        }
+      }, 1000);
+    }
+  }
+
+  window.onload = function () {
+    const now = new Date().getTime();
+    const popup1ClosedAt = localStorage.getItem("popup1_closed");
+
+    if (!popup1ClosedAt || (now - popup1ClosedAt) > 24 * 60 * 60 * 1000) {
+      document.getElementById("popup1").style.display = "flex";
+    } else {
+      const popup2ClosedAt = localStorage.getItem("popup2_closed");
+      if (!popup2ClosedAt || (now - popup2ClosedAt) > 24 * 60 * 60 * 1000) {
+        setTimeout(() => {
+          document.getElementById("popup2").style.display = "flex";
+        }, 500);
       }
-    });
-  </script>
+    }
+  }
+</script>
+
 </body>
 </html>
