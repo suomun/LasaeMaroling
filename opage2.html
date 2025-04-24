@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>이공견문록 공식 사이트</title>
   <style>
-    * { box-sizing: border-box; touch-action: pan-y; }
-
     body {
       margin: 0;
-      background-color: #fff;
+      background-color: #ffffff;
       font-family: 'Apple SD Gothic Neo', sans-serif;
       overflow-x: hidden;
     }
@@ -19,7 +17,7 @@
       top: 0;
       left: 0;
       right: 0;
-      background: #fff;
+      background-color: #fff;
       display: flex;
       align-items: baseline;
       justify-content: space-between;
@@ -55,7 +53,7 @@
     .circle-hamburger span {
       width: 28px;
       height: 4px;
-      background: black;
+      background-color: black;
       border-radius: 2px;
     }
 
@@ -65,12 +63,13 @@
       right: 0;
       width: 250px;
       height: 100%;
-      background: #f5f6f5;
+      background-color: #f5f6f5;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+      transition: transform 0.4s ease-in-out;
       transform: translateX(100%);
-      transition: transform 0.3s ease;
       z-index: 1005;
       padding: 24px;
-      overflow-y: auto;
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
     }
@@ -79,25 +78,13 @@
       transform: translateX(0);
     }
 
-    .sidebar h2 {
-      margin-top: 0;
-      font-size: 24px;
-    }
-
-    .sidebar a {
-      margin-top: 12px;
-      color: #333;
-      text-decoration: none;
-      font-size: 18px;
-    }
-
     .overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.4);
+      background-color: rgba(0, 0, 0, 0.4);
       z-index: 1004;
       display: none;
     }
@@ -106,23 +93,28 @@
       display: block;
     }
 
+    .content {
+      padding: 100px 24px 24px;
+    }
+
     .banner-slider-wrapper {
       position: relative;
       width: 100vw;
-      margin-top: 1000px;
-      height: 500px;
+      margin: 1100px auto 40px;
+      height: 600px;
       overflow: hidden;
       background: #fff;
     }
 
     .banner-slider {
       display: flex;
-      transition: transform 0.4s ease-in-out;
+      transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+      touch-action: pan-y;
     }
 
     .banner-slider img {
       width: 100vw;
-      height: 500px;
+      height: 600px;
       object-fit: contain;
       flex-shrink: 0;
     }
@@ -132,93 +124,88 @@
       bottom: 10px;
       left: 50%;
       transform: translateX(-50%);
-      display: flex;
-      gap: 8px;
+      text-align: center;
+      z-index: 11;
     }
 
     .banner-dots span {
-      width: 12px;
-      height: 12px;
-      background: #ccc;
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin: 0 5px;
+      background-color: #ccc;
       border-radius: 50%;
       opacity: 0.5;
+      transition: opacity 0.3s;
     }
 
     .banner-dots span.active {
-      background: #333;
+      background-color: #333;
       opacity: 1;
     }
 
     .popup {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.6);
-      display: none;
-      justify-content: center;
-      align-items: center;
+      top: 20px;
+      left: 20px;
       z-index: 2000;
-    }
-
-    .popup-content {
       background: white;
-      width: 66vw;
-      border-radius: 12px;
-      padding: 20px;
-      position: relative;
+      padding: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      border-radius: 8px;
+      max-width: 90%;
+      width: 300px;
+      animation: fadeIn 0.5s ease;
     }
 
-    .popup-header {
+    .popup img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 6px;
+    }
+
+    .popup .controls {
+      margin-top: 8px;
       text-align: center;
-      position: relative;
     }
 
-    .close-btn {
-      position: absolute;
-      right: 0;
-      top: 0;
-      font-size: 24px;
-      cursor: pointer;
+    .popup button {
+      margin: 4px;
+      padding: 4px 8px;
+      font-size: 14px;
     }
 
-    .content {
-      padding: 100px 24px 24px;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 500px) {
+      .popup {
+        width: 90%;
+        left: 5%;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- 팝업 1 -->
-<div id="popup1" class="popup">
-  <div class="popup-content">
-    <div class="popup-header">
-      <p>아래 이미지를 클릭하면 이공견문록 인스타로 이동합니다.</p>
-      <span class="close-btn" onclick="closePopup('popup1')">&times;</span>
-    </div>
-    <a href="https://www.instagram.com/marcopolo_jygo07/" target="_blank">
-      <img src="adimages/Ads_1.png" alt="팝업1">
-    </a>
-    <div style="text-align:center;">
-      <label><input type="checkbox" id="dontShowPopup1"> 하루 동안 안 보기</label>
-    </div>
+<!-- 팝업1 -->
+<div class="popup" id="popup1" style="display:none;">
+  <img src="adimages/Ads_1.png" alt="팝업1 광고" />
+  <div class="controls">
+    <button onclick="closePopup('popup1', true)">하루 동안 보지 않기</button>
+    <button onclick="closePopup('popup1', false)">닫기</button>
   </div>
 </div>
 
-<!-- 팝업 2 -->
-<div id="popup2" class="popup">
-  <div class="popup-content">
-    <div class="popup-header">
-      <p>광고를 클릭하면 새 창으로 이동됩니다.</p>
-      <span class="close-btn" onclick="closePopup('popup2')">&times;</span>
-    </div>
-    <a href="https://example.com/ad2" target="_blank">
-      <img src="adimages/Ads_2.png" alt="팝업2">
-    </a>
-    <div style="text-align:center;">
-      <label><input type="checkbox" id="dontShowPopup2"> 하루 동안 안 보기</label>
-    </div>
+<!-- 팝업2 -->
+<div class="popup" id="popup2" style="display:none;">
+  <img src="adimages/Ads_2.png" alt="팝업2 광고" />
+  <div class="controls">
+    <button onclick="closePopup('popup2', true)">하루 동안 보지 않기</button>
+    <button onclick="closePopup('popup2', false)">닫기</button>
   </div>
 </div>
 
@@ -245,7 +232,7 @@
   <a href="physics.html">물리</a>
   <a href="bio.html">생명</a>
   <div style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 20px;">
-    <a href="https://www.instagram.com/marcopolo_jygo07/" target="_blank" style="color:#007BFF;">인스타그램 바로가기</a>
+    <a href="https://www.instagram.com/marcopolo_jygo07/" target="_blank" style="color:#007BFF;">인스타바로가기</a>
   </div>
 </div>
 
@@ -261,12 +248,11 @@
 </div>
 
 <div class="content">
-  <p>본문 영역입니다. 스크롤해도 헤더가 고정됩니다.</p>
-  <p style="margin-top: 1000px;">끝!</p>
+  <p>이곳은 본문 내용입니다. 스크롤해도 헤더가 따라옵니다.</p>
+  <p style="margin-top: 1000px;">스크롤 끝!</p>
 </div>
 
 <script>
-  // 사이드바
   function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
     document.getElementById('overlay').classList.toggle('active');
@@ -277,94 +263,89 @@
     document.getElementById('overlay').classList.remove('active');
   }
 
-  // 배너 슬라이더
-  const bannerSlider = document.getElementById('bannerSlider');
-  const dotsContainer = document.getElementById('bannerDots');
-  const banners = bannerSlider.querySelectorAll('img');
+  // 배너 슬라이드
+  const slider = document.getElementById("bannerSlider");
+  const slides = slider.querySelectorAll("img");
+  const totalSlides = slides.length;
   let currentSlide = 0;
-  let startX = 0;
-  let isDragging = false;
-  let autoSlideInterval;
+  let startX = 0, isDragging = false;
 
-  banners.forEach((_, i) => {
-    const dot = document.createElement('span');
-    if (i === 0) dot.classList.add('active');
+  slider.style.width = `${100 * totalSlides}vw`;
+
+  const dotsContainer = document.getElementById("bannerDots");
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement("span");
+    if (i === 0) dot.classList.add("active");
     dotsContainer.appendChild(dot);
-  });
+  }
+  const dots = dotsContainer.querySelectorAll("span");
 
-  const dots = dotsContainer.querySelectorAll('span');
-
-  function updateSlide(index) {
-    currentSlide = index;
-    bannerSlider.style.transform = `translateX(-${currentSlide * 100}vw)`;
-    dots.forEach(dot => dot.classList.remove('active'));
-    dots[currentSlide].classList.add('active');
+  function updateSlide() {
+    slider.style.transform = `translateX(-${currentSlide * 100}vw)`;
+    dots.forEach(dot => dot.classList.remove("active"));
+    dots[currentSlide].classList.add("active");
   }
 
-  function nextSlide() {
-    updateSlide((currentSlide + 1) % banners.length);
+  function autoSlide() {
+    currentSlide = (currentSlide + 1) % totalSlides;
+    updateSlide();
   }
 
-  function startAutoSlide() {
-    autoSlideInterval = setInterval(nextSlide, 4000);
-  }
+  setInterval(autoSlide, 4000);
 
-  function stopAutoSlide() {
-    clearInterval(autoSlideInterval);
-  }
-
-  bannerSlider.addEventListener('touchstart', (e) => {
-    stopAutoSlide();
+  slider.addEventListener("touchstart", (e) => {
     startX = e.touches[0].clientX;
     isDragging = true;
   });
 
-  bannerSlider.addEventListener('touchmove', (e) => {
+  slider.addEventListener("touchmove", (e) => {
     if (!isDragging) return;
-    let moveX = e.touches[0].clientX;
-    let diff = startX - moveX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) nextSlide();
-      else updateSlide((currentSlide - 1 + banners.length) % banners.length);
+    const deltaX = e.touches[0].clientX - startX;
+    if (Math.abs(deltaX) > 50) {
       isDragging = false;
+      if (deltaX < 0) {
+        currentSlide = (currentSlide + 1) % totalSlides;
+      } else {
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      }
+      updateSlide();
     }
   });
 
-  bannerSlider.addEventListener('touchend', () => {
+  slider.addEventListener("touchend", () => {
     isDragging = false;
-    startAutoSlide();
   });
 
   // 팝업
-  function closePopup(popupId) {
-    document.getElementById(popupId).style.display = "none";
-    const checkbox = document.getElementById("dontShow" + popupId.charAt(0).toUpperCase() + popupId.slice(1));
-    if (checkbox && checkbox.checked) {
-      localStorage.setItem(popupId + "_closed", Date.now());
-    }
-
-    if (popupId === 'popup1') {
-      const popup2Time = localStorage.getItem("popup2_closed");
-      if (!popup2Time || (Date.now() - popup2Time > 86400000)) {
-        document.getElementById("popup2").style.display = "flex";
+  function closePopup(id, hideForDay) {
+    document.getElementById(id).style.display = "none";
+    if (id === 'popup1') {
+      if (!getCookie('hidePopup2')) {
+        document.getElementById('popup2').style.display = "block";
       }
+    }
+    if (hideForDay) {
+      const expire = new Date();
+      expire.setDate(expire.getDate() + 1);
+      document.cookie = `hide${id}=true; expires=${expire.toUTCString()}; path=/`;
     }
   }
 
-  window.onload = function () {
-    const now = Date.now();
-    const popup1Closed = localStorage.getItem("popup1_closed");
-
-    if (!popup1Closed || (now - popup1Closed > 86400000)) {
-      document.getElementById("popup1").style.display = "flex";
-    } else {
-      const popup2Closed = localStorage.getItem("popup2_closed");
-      if (!popup2Closed || (now - popup2Closed > 86400000)) {
-        document.getElementById("popup2").style.display = "flex";
-      }
+  function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+      const [k, v] = cookie.trim().split('=');
+      if (k === name) return v;
     }
+    return null;
+  }
 
-    startAutoSlide();
+  window.onload = () => {
+    if (!getCookie('hidepopup1')) {
+      document.getElementById('popup1').style.display = "block";
+    } else if (!getCookie('hidepopup2')) {
+      document.getElementById('popup2').style.display = "block";
+    }
   };
 </script>
 
