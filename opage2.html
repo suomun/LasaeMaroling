@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>이공견문록 공식 사이트</title>
   <style>
+    * { box-sizing: border-box; touch-action: pan-y; }
+
     body {
       margin: 0;
+      background-color: #fff;
       font-family: 'Apple SD Gothic Neo', sans-serif;
       overflow-x: hidden;
     }
@@ -16,7 +19,7 @@
       top: 0;
       left: 0;
       right: 0;
-      background-color: #fff;
+      background: #fff;
       display: flex;
       align-items: baseline;
       justify-content: space-between;
@@ -28,46 +31,48 @@
     .title {
       font-size: 36px;
       font-weight: bold;
+      margin-right: 10px;
     }
 
     .links a {
       font-size: 16px;
       color: #333;
       text-decoration: none;
-      margin-left: 10px;
+      margin-right: 10px;
     }
 
     .circle-hamburger {
       width: 50px;
       height: 50px;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
-      gap: 5px;
+      justify-content: center;
       cursor: pointer;
+      flex-direction: column;
+      gap: 5px;
     }
 
     .circle-hamburger span {
       width: 28px;
       height: 4px;
-      background-color: black;
+      background: black;
       border-radius: 2px;
     }
 
     .sidebar {
       position: fixed;
       top: 0;
-      left: 0;
+      right: 0;
       width: 250px;
       height: 100%;
-      background-color: #f5f6f5;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-      z-index: 1005;
-      transform: translateX(-100%);
+      background: #f5f6f5;
+      transform: translateX(100%);
       transition: transform 0.3s ease;
+      z-index: 1005;
       padding: 24px;
-      box-sizing: border-box;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
     }
 
     .sidebar.open {
@@ -76,13 +81,14 @@
 
     .sidebar h2 {
       margin-top: 0;
+      font-size: 24px;
     }
 
     .sidebar a {
-      display: block;
       margin-top: 12px;
       color: #333;
       text-decoration: none;
+      font-size: 18px;
     }
 
     .overlay {
@@ -91,7 +97,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background-color: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.4);
       z-index: 1004;
       display: none;
     }
@@ -100,29 +106,47 @@
       display: block;
     }
 
-    .content {
-      padding: 100px 24px;
-    }
-
     .banner-slider-wrapper {
       position: relative;
+      width: 100vw;
+      margin-top: 1000px;
+      height: 500px;
       overflow: hidden;
-      width: 100%;
-      height: 600px;
-      margin-top: 1100px;
+      background: #fff;
     }
 
     .banner-slider {
       display: flex;
-      transition: transform 0.3s ease;
-      touch-action: pan-y;
+      transition: transform 0.4s ease-in-out;
     }
 
     .banner-slider img {
       width: 100vw;
-      height: 600px;
+      height: 500px;
       object-fit: contain;
       flex-shrink: 0;
+    }
+
+    .banner-dots {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+    }
+
+    .banner-dots span {
+      width: 12px;
+      height: 12px;
+      background: #ccc;
+      border-radius: 50%;
+      opacity: 0.5;
+    }
+
+    .banner-dots span.active {
+      background: #333;
+      opacity: 1;
     }
 
     .popup {
@@ -131,7 +155,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background-color: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.6);
       display: none;
       justify-content: center;
       align-items: center;
@@ -139,30 +163,28 @@
     }
 
     .popup-content {
-      background-color: white;
+      background: white;
       width: 66vw;
       border-radius: 12px;
       padding: 20px;
       position: relative;
-      text-align: center;
     }
 
     .popup-header {
-      font-size: 16px;
-      margin-bottom: 12px;
+      text-align: center;
+      position: relative;
     }
 
     .close-btn {
       position: absolute;
-      right: 10px;
-      top: 10px;
+      right: 0;
+      top: 0;
       font-size: 24px;
       cursor: pointer;
     }
 
-    .popup-content img {
-      max-width: 100%;
-      height: auto;
+    .content {
+      padding: 100px 24px 24px;
     }
   </style>
 </head>
@@ -172,13 +194,13 @@
 <div id="popup1" class="popup">
   <div class="popup-content">
     <div class="popup-header">
-      아래 이미지를 클릭하면 이공견문록 인스타타로 이동합니다.
+      <p>아래 이미지를 클릭하면 이공견문록 인스타로 이동합니다.</p>
       <span class="close-btn" onclick="closePopup('popup1')">&times;</span>
     </div>
-    <a href="https://www.instagram.com/marcopolo_jygo07/?igsh=Y3ZkcmMweHBxeXRv" target="_blank">
-      <img src="adimages/Ads_1.png" alt="팝업 이미지 1">
+    <a href="https://www.instagram.com/marcopolo_jygo07/" target="_blank">
+      <img src="adimages/Ads_1.png" alt="팝업1">
     </a>
-    <div style="margin-top:10px;">
+    <div style="text-align:center;">
       <label><input type="checkbox" id="dontShowPopup1"> 하루 동안 안 보기</label>
     </div>
   </div>
@@ -188,13 +210,13 @@
 <div id="popup2" class="popup">
   <div class="popup-content">
     <div class="popup-header">
-      광고를 클릭하면 새 창으로 이동됩니다.
+      <p>광고를 클릭하면 새 창으로 이동됩니다.</p>
       <span class="close-btn" onclick="closePopup('popup2')">&times;</span>
     </div>
     <a href="https://example.com/ad2" target="_blank">
-      <img src="adimages/Ads_2.png" alt="팝업 이미지 2">
+      <img src="adimages/Ads_2.png" alt="팝업2">
     </a>
-    <div style="margin-top:10px;">
+    <div style="text-align:center;">
       <label><input type="checkbox" id="dontShowPopup2"> 하루 동안 안 보기</label>
     </div>
   </div>
@@ -211,7 +233,7 @@
       <a href="bio.html">생명</a>
     </div>
   </div>
-  <div class="circle-hamburger" id="hamburger">
+  <div class="circle-hamburger" onclick="toggleSidebar()">
     <span></span><span></span><span></span>
   </div>
 </div>
@@ -223,120 +245,127 @@
   <a href="physics.html">물리</a>
   <a href="bio.html">생명</a>
   <div style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 20px;">
-    <a href="https://www.instagram.com/marcopolo_jygo07/" target="_blank" style="color:#007BFF;">이공견문록 인스타바로가기</a>
+    <a href="https://www.instagram.com/marcopolo_jygo07/" target="_blank" style="color:#007BFF;">인스타그램 바로가기</a>
   </div>
 </div>
 
 <div class="banner-slider-wrapper">
   <div class="banner-slider" id="bannerSlider">
     <img src="images/EX_picture1.png" alt="배너1">
-    <img src="images/EX_picture2.png" alt="배너2">
+    <img src="images/EX_picture2.jpg" alt="배너2">
     <img src="images/EX_picture3.jpg" alt="배너3">
     <img src="images/EX_picture4.png" alt="배너4">
     <img src="images/EX_picture5.png" alt="배너5">
   </div>
+  <div class="banner-dots" id="bannerDots"></div>
 </div>
 
 <div class="content">
-  <p>이곳은 본문 내용입니다. 스크롤해도 헤더가 따라옵니다.</p>
-  <p style="margin-top: 1000px;">스크롤 끝!</p>
+  <p>본문 영역입니다. 스크롤해도 헤더가 고정됩니다.</p>
+  <p style="margin-top: 1000px;">끝!</p>
 </div>
 
 <script>
-  // 팝업
-  function closePopup(id) {
-    document.getElementById(id).style.display = "none";
-    const checkbox = document.getElementById("dontShow" + id.charAt(0).toUpperCase() + id.slice(1));
-    if (checkbox?.checked) {
-      localStorage.setItem(id + "_closed", Date.now());
+  // 사이드바
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('active');
+  }
+
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
+  }
+
+  // 배너 슬라이더
+  const bannerSlider = document.getElementById('bannerSlider');
+  const dotsContainer = document.getElementById('bannerDots');
+  const banners = bannerSlider.querySelectorAll('img');
+  let currentSlide = 0;
+  let startX = 0;
+  let isDragging = false;
+  let autoSlideInterval;
+
+  banners.forEach((_, i) => {
+    const dot = document.createElement('span');
+    if (i === 0) dot.classList.add('active');
+    dotsContainer.appendChild(dot);
+  });
+
+  const dots = dotsContainer.querySelectorAll('span');
+
+  function updateSlide(index) {
+    currentSlide = index;
+    bannerSlider.style.transform = `translateX(-${currentSlide * 100}vw)`;
+    dots.forEach(dot => dot.classList.remove('active'));
+    dots[currentSlide].classList.add('active');
+  }
+
+  function nextSlide() {
+    updateSlide((currentSlide + 1) % banners.length);
+  }
+
+  function startAutoSlide() {
+    autoSlideInterval = setInterval(nextSlide, 4000);
+  }
+
+  function stopAutoSlide() {
+    clearInterval(autoSlideInterval);
+  }
+
+  bannerSlider.addEventListener('touchstart', (e) => {
+    stopAutoSlide();
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  });
+
+  bannerSlider.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    let moveX = e.touches[0].clientX;
+    let diff = startX - moveX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) nextSlide();
+      else updateSlide((currentSlide - 1 + banners.length) % banners.length);
+      isDragging = false;
     }
-    if (id === "popup1") {
-      const t2 = localStorage.getItem("popup2_closed");
-      if (!t2 || Date.now() - t2 > 86400000) {
+  });
+
+  bannerSlider.addEventListener('touchend', () => {
+    isDragging = false;
+    startAutoSlide();
+  });
+
+  // 팝업
+  function closePopup(popupId) {
+    document.getElementById(popupId).style.display = "none";
+    const checkbox = document.getElementById("dontShow" + popupId.charAt(0).toUpperCase() + popupId.slice(1));
+    if (checkbox && checkbox.checked) {
+      localStorage.setItem(popupId + "_closed", Date.now());
+    }
+
+    if (popupId === 'popup1') {
+      const popup2Time = localStorage.getItem("popup2_closed");
+      if (!popup2Time || (Date.now() - popup2Time > 86400000)) {
         document.getElementById("popup2").style.display = "flex";
       }
     }
   }
 
   window.onload = function () {
-    const t1 = localStorage.getItem("popup1_closed");
-    if (!t1 || Date.now() - t1 > 86400000) {
+    const now = Date.now();
+    const popup1Closed = localStorage.getItem("popup1_closed");
+
+    if (!popup1Closed || (now - popup1Closed > 86400000)) {
       document.getElementById("popup1").style.display = "flex";
     } else {
-      const t2 = localStorage.getItem("popup2_closed");
-      if (!t2 || Date.now() - t2 > 86400000) {
+      const popup2Closed = localStorage.getItem("popup2_closed");
+      if (!popup2Closed || (now - popup2Closed > 86400000)) {
         document.getElementById("popup2").style.display = "flex";
       }
     }
-  }
 
-  // 사이드바
-  const sidebar = document.getElementById("sidebar");
-  const overlay = document.getElementById("overlay");
-  const hamburger = document.getElementById("hamburger");
-
-  hamburger.addEventListener("click", () => {
-    sidebar.classList.add("open");
-    overlay.classList.add("active");
-  });
-
-  function closeSidebar() {
-    sidebar.classList.remove("open");
-    overlay.classList.remove("active");
-  }
-
-  let startX = 0;
-  sidebar.addEventListener("touchstart", e => startX = e.touches[0].clientX);
-  sidebar.addEventListener("touchmove", e => {
-    const moveX = e.touches[0].clientX;
-    if (startX - moveX > 100) closeSidebar();
-  });
-
-  // 배너 슬라이더
-  const slider = document.getElementById("bannerSlider");
-  let isDown = false, startX2, scrollLeft;
-
-  slider.addEventListener("mousedown", (e) => {
-    isDown = true;
-    startX2 = e.pageX - slider.offsetLeft;
-    scrollLeft = slider.scrollLeft;
-    slider.style.cursor = 'grabbing';
-  });
-
-  slider.addEventListener("mouseleave", () => {
-    isDown = false;
-    slider.style.cursor = 'grab';
-  });
-
-  slider.addEventListener("mouseup", () => {
-    isDown = false;
-    slider.style.cursor = 'grab';
-  });
-
-  slider.addEventListener("mousemove", (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - slider.offsetLeft;
-    const walk = (x - startX2) * 2;
-    slider.scrollLeft = scrollLeft - walk;
-  });
-
-  slider.addEventListener("touchstart", (e) => {
-    isDown = true;
-    startX2 = e.touches[0].pageX - slider.offsetLeft;
-    scrollLeft = slider.scrollLeft;
-  });
-
-  slider.addEventListener("touchmove", (e) => {
-    if (!isDown) return;
-    const x = e.touches[0].pageX - slider.offsetLeft;
-    const walk = (x - startX2) * 2;
-    slider.scrollLeft = scrollLeft - walk;
-  });
-
-  slider.addEventListener("touchend", () => {
-    isDown = false;
-  });
+    startAutoSlide();
+  };
 </script>
 
 </body>
