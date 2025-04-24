@@ -1,251 +1,353 @@
-<!DOCTYPE html><html lang="ko">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>뉴스 페이지</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>이공견문록 공식 사이트</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: sans-serif; overflow-x: hidden; }header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: #333;
-  color: white;
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  z-index: 1000;
-}
+    body {
+      margin: 0;
+      background-color: #ffffff;
+      font-family: 'Apple SD Gothic Neo', sans-serif;
+      overflow-x: hidden;
+    }
 
-#banner {
-  margin-top: 1100px;
-  width: 100%;
-  height: 600px;
-  overflow: hidden;
-  position: relative;
-}
-.slides {
-  display: flex;
-  transition: transform 0.6s ease-in-out;
-  width: 500%;
-  height: 100%;
-}
-.slide {
-  width: 100%;
-  flex-shrink: 0;
-  position: relative;
-}
-.slide a {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-.slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.indicator {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 5px;
-}
-.indicator div {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.5);
-}
-.indicator .active {
-  background: white;
-}
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: #fff;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 20px 24px 10px;
+      z-index: 1001;
+      border-bottom: 1px dotted #999;
+    }
 
-.sidebar {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: -300px;
-  width: 300px;
-  background: #444;
-  color: white;
-  transition: right 0.4s ease, width 0.4s ease;
-  z-index: 999;
-  padding: 20px;
-}
-.sidebar.fullscreen {
-  width: 100%;
-}
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.5);
-  display: none;
-  z-index: 998;
-}
-.sidebar.open + .overlay {
-  display: block;
-}
+    .title {
+      font-size: 36px;
+      font-weight: bold;
+      margin-right: 10px;
+    }
 
-.popup {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  width: 300px;
-  max-width: 90vw;
-  background: white;
-  border: 1px solid #ccc;
-  padding: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  z-index: 2000;
-  animation: fadeIn 0.5s ease;
-}
-.popup img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-.popup label {
-  display: flex;
-  align-items: center;
-  margin-top: 5px;
-  font-size: 0.9rem;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+    .links a {
+      font-size: 16px;
+      color: #333;
+      text-decoration: none;
+      margin-right: 10px;
+    }
 
+    .circle-hamburger {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .circle-hamburger span {
+      width: 28px;
+      height: 4px;
+      background-color: black;
+      border-radius: 2px;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 250px;
+      height: 100%;
+      background-color: #f5f6f5;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+      transition: transform 0.4s ease-in-out;
+      transform: translateX(100%);
+      z-index: 1005;
+      padding: 24px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 1004;
+      display: none;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    .content {
+      padding: 100px 24px 24px;
+    }
+
+    .banner-slider-wrapper {
+      position: relative;
+      width: 100vw;
+      margin: 1100px auto 40px;
+      height: 600px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .banner-slider {
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+      touch-action: pan-y;
+    }
+
+    .banner-slider img {
+      width: 100vw;
+      height: 600px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .banner-dots {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 11;
+    }
+
+    .banner-dots span {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin: 0 5px;
+      background-color: #ccc;
+      border-radius: 50%;
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+
+    .banner-dots span.active {
+      background-color: #333;
+      opacity: 1;
+    }
+
+    .popup {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 2000;
+      background: white;
+      padding: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      border-radius: 8px;
+      max-width: 90%;
+      width: 300px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .popup img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 6px;
+    }
+
+    .popup .controls {
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .popup button {
+      margin: 4px;
+      padding: 4px 8px;
+      font-size: 14px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 500px) {
+      .popup {
+        width: 90%;
+        left: 5%;
+      }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>뉴스 헤더</h1>
-  </header>  <div id="popup1" class="popup">
-    <a href="https://example.com/ad1" target="_blank">
-      <img src="adimages/Ads_1.png" alt="광고 1">
-    </a>
-    <label><input type="checkbox" id="hidePopup1"> 하루 동안 보지 않기</label>
+
+<!-- 팝업1 -->
+<div class="popup" id="popup1" style="display:none;">
+  <img src="adimages/Ads_1.png" alt="팝업1 광고" />
+  <div class="controls">
+    <button onclick="closePopup('popup1', true)">하루 동안 보지 않기</button>
+    <button onclick="closePopup('popup1', false)">닫기</button>
   </div>
-  <div id="popup2" class="popup" style="top: 340px">
-    <a href="https://example.com/ad2" target="_blank">
-      <img src="adimages/Ads_2.png" alt="광고 2">
-    </a>
-    <label><input type="checkbox" id="hidePopup2"> 하루 동안 보지 않기</label>
-  </div>  <div id="banner">
-    <div class="slides" id="slides">
-      <div class="slide"><a href="#"><img src="EX_picture1.png" alt="배너1"></a></div>
-      <div class="slide"><a href="#"><img src="EX_picture2.jpg" alt="배너2"></a></div>
-      <div class="slide"><a href="#"><img src="EX_picture3.jpg" alt="배너3"></a></div>
-      <div class="slide"><a href="#"><img src="EX_picture4.jpg" alt="배너4"></a></div>
-      <div class="slide"><a href="#"><img src="EX_picture5.jpg" alt="배너5"></a></div>
+</div>
+
+<!-- 팝업2 -->
+<div class="popup" id="popup2" style="display:none;">
+  <img src="adimages/Ads_2.png" alt="팝업2 광고" />
+  <div class="controls">
+    <button onclick="closePopup('popup2', true)">하루 동안 보지 않기</button>
+    <button onclick="closePopup('popup2', false)">닫기</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<div class="header">
+  <div>
+    <div class="title">프로젝트</div>
+    <div class="links">
+      <a href="info.html">정보</a>
+      <a href="physics.html">물리</a>
+      <a href="bio.html">생명</a>
     </div>
-    <div class="indicator" id="indicator"></div>
-  </div>  <div class="sidebar" id="sidebar">
-    <h2>사이드바</h2>
-    <p>내용</p>
   </div>
-  <div class="overlay" id="overlay"></div>  <script>
-    // 팝업 하루 동안 안 보기
-    function checkPopup(id) {
-      if (localStorage.getItem(id) === new Date().toDateString()) {
-        document.getElementById(id).style.display = 'none';
+  <div class="circle-hamburger" onclick="toggleSidebar()">
+    <span></span><span></span><span></span>
+  </div>
+</div>
+
+<div class="sidebar" id="sidebar">
+  <h2>메뉴</h2>
+  <a href="index.html">메인</a>
+  <a href="info.html">정보</a>
+  <a href="physics.html">물리</a>
+  <a href="bio.html">생명</a>
+  <div style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 20px;">
+    <a href="https://www.instagram.com/marcopolo_jygo07/" target="_blank" style="color:#007BFF;">인스타바로가기</a>
+  </div>
+</div>
+
+<div class="banner-slider-wrapper">
+  <div class="banner-slider" id="bannerSlider">
+    <img src="images/EX_picture1.png" alt="배너1">
+    <img src="images/EX_picture2.jpg" alt="배너2">
+    <img src="images/EX_picture3.jpg" alt="배너3">
+    <img src="images/EX_picture4.png" alt="배너4">
+    <img src="images/EX_picture5.png" alt="배너5">
+  </div>
+  <div class="banner-dots" id="bannerDots"></div>
+</div>
+
+<div class="content">
+  <p>이곳은 본문 내용입니다. 스크롤해도 헤더가 따라옵니다.</p>
+  <p style="margin-top: 1000px;">스크롤 끝!</p>
+</div>
+
+<script>
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('active');
+  }
+
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
+  }
+
+  // 배너 슬라이드
+  const slider = document.getElementById("bannerSlider");
+  const slides = slider.querySelectorAll("img");
+  const totalSlides = slides.length;
+  let currentSlide = 0;
+  let startX = 0, isDragging = false;
+
+  slider.style.width = `${100 * totalSlides}vw`;
+
+  const dotsContainer = document.getElementById("bannerDots");
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement("span");
+    if (i === 0) dot.classList.add("active");
+    dotsContainer.appendChild(dot);
+  }
+  const dots = dotsContainer.querySelectorAll("span");
+
+  function updateSlide() {
+    slider.style.transform = `translateX(-${currentSlide * 100}vw)`;
+    dots.forEach(dot => dot.classList.remove("active"));
+    dots[currentSlide].classList.add("active");
+  }
+
+  function autoSlide() {
+    currentSlide = (currentSlide + 1) % totalSlides;
+    updateSlide();
+  }
+
+  setInterval(autoSlide, 4000);
+
+  slider.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  });
+
+  slider.addEventListener("touchmove", (e) => {
+    if (!isDragging) return;
+    const deltaX = e.touches[0].clientX - startX;
+    if (Math.abs(deltaX) > 50) {
+      isDragging = false;
+      if (deltaX < 0) {
+        currentSlide = (currentSlide + 1) % totalSlides;
+      } else {
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      }
+      updateSlide();
+    }
+  });
+
+  slider.addEventListener("touchend", () => {
+    isDragging = false;
+  });
+
+  // 팝업
+  function closePopup(id, hideForDay) {
+    document.getElementById(id).style.display = "none";
+    if (id === 'popup1') {
+      if (!getCookie('hidePopup2')) {
+        document.getElementById('popup2').style.display = "block";
       }
     }
-    checkPopup('popup1');
-    checkPopup('popup2');
-
-    document.getElementById('hidePopup1').addEventListener('change', function() {
-      if (this.checked) {
-        localStorage.setItem('popup1', new Date().toDateString());
-        document.getElementById('popup1').style.display = 'none';
-      }
-    });
-    document.getElementById('hidePopup2').addEventListener('change', function() {
-      if (this.checked) {
-        localStorage.setItem('popup2', new Date().toDateString());
-        document.getElementById('popup2').style.display = 'none';
-      }
-    });
-
-    // 배너 슬라이드
-    const slides = document.getElementById('slides');
-    const indicator = document.getElementById('indicator');
-    const total = slides.children.length;
-    let current = 0;
-
-    function updateIndicator() {
-      indicator.innerHTML = '';
-      for (let i = 0; i < total; i++) {
-        const dot = document.createElement('div');
-        if (i === current) dot.classList.add('active');
-        indicator.appendChild(dot);
-      }
+    if (hideForDay) {
+      const expire = new Date();
+      expire.setDate(expire.getDate() + 1);
+      document.cookie = `hide${id}=true; expires=${expire.toUTCString()}; path=/`;
     }
+  }
 
-    function goToSlide(i) {
-      current = i;
-      slides.style.transform = `translateX(-${100 * i}%)`;
-      updateIndicator();
+  function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+      const [k, v] = cookie.trim().split('=');
+      if (k === name) return v;
     }
+    return null;
+  }
 
-    let startX = 0;
-    slides.addEventListener('touchstart', (e) => {
-      startX = e.touches[0].clientX;
-    });
-    slides.addEventListener('touchend', (e) => {
-      let deltaX = e.changedTouches[0].clientX - startX;
-      if (deltaX < -50 && current < total - 1) goToSlide(current + 1);
-      else if (deltaX > 50 && current > 0) goToSlide(current - 1);
-    });
-
-    updateIndicator();
-    setInterval(() => {
-      current = (current + 1) % total;
-      goToSlide(current);
-    }, 4000);
-
-    // 사이드바 슬라이드
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    let sidebarOpen = false;
-    let dragStartX = null;
-
-    function openSidebar() {
-      sidebar.classList.add('open');
-      sidebar.style.right = '0';
-      overlay.style.display = 'block';
-      sidebarOpen = true;
+  window.onload = () => {
+    if (!getCookie('hidepopup1')) {
+      document.getElementById('popup1').style.display = "block";
+    } else if (!getCookie('hidepopup2')) {
+      document.getElementById('popup2').style.display = "block";
     }
-    function closeSidebar() {
-      sidebar.classList.remove('open', 'fullscreen');
-      sidebar.style.right = '-300px';
-      overlay.style.display = 'none';
-      sidebarOpen = false;
-    }
+  };
+</script>
 
-    document.addEventListener('touchstart', (e) => {
-      dragStartX = e.touches[0].clientX;
-    });
-
-    document.addEventListener('touchend', (e) => {
-      const deltaX = e.changedTouches[0].clientX - dragStartX;
-      if (!sidebarOpen && deltaX < -70 && dragStartX > window.innerWidth - 60) {
-        openSidebar();
-      } else if (sidebarOpen && deltaX > 70) {
-        closeSidebar();
-      } else if (sidebarOpen && deltaX < -100) {
-        sidebar.classList.add('fullscreen');
-      }
-    });
-
-    overlay.addEventListener('click', closeSidebar);
-  </script></body>
+</body>
 </html>
