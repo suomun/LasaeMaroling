@@ -32,22 +32,18 @@
       z-index: 1000;
     }
 
-    .hamburger-container {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      z-index: 1100;
-      cursor: pointer;
-    }
-
     .hamburger {
-      width: 30px;
-      height: 3px;
-      background-color: red;
-      margin: 6px 0;
-      transition: 0.4s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
     }
 
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background: black;
+    }
 
     .sidebar {
       position: fixed;
@@ -64,10 +60,6 @@
 
     .sidebar.open {
       right: 0;
-    }
-
-        .sidebar h2 {
-      margin-top: 50px;
     }
 
     .content {
@@ -238,7 +230,7 @@
 
   <script>
     function toggleSidebar() {
-      document.getElementById("sidebar").classList.toggle("open");
+      document.getElementById('sidebar').classList.toggle('open');
     }
   </script>
 </body>
