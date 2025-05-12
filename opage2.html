@@ -182,13 +182,18 @@
     </div>
   </header>
 
-  <!-- Sidebar -->
-  <div class="sidebar" id="sidebar">
+  <!-- 햄버거 아이콘 (메인 화면용) -->
+<div id="hamburger" onclick="toggleSidebar()">☰</div>
+
+<!-- 사이드바 -->
+<div id="sidebar">
+  <!-- 햄버거 아이콘 (사이드바 안 닫기용) -->
+  <div id="sidebar-close" onclick="toggleSidebar()">☰</div>
     <p>봉봉 메뉴</p>
     <a href="physics.html">물리</a><br>
     <a href="info.html">정보</a><br>
     <a href="bio.html">생명</a><br>
-  </div>
+</div>
 
   <!-- Content -->
   <div class="content">
