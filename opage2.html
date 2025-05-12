@@ -37,7 +37,6 @@
       display: flex;
       flex-direction: column;
       gap: 5px;
-      z-index: 9999;  
     }
 
     .hamburger div {
@@ -52,7 +51,7 @@
       right: -250px;
       width: 250px;
       height: 100%;
-      background: yellow;
+      background: #333;
       color: #fff;
       padding: 20px;
       transition: right 0.3s ease;
@@ -182,15 +181,13 @@
     </div>
   </header>
 
-<!-- sidebar -->
-<div id="sidebar">
-  <!-- hamburger icon(in sidebar) -->
-  <div id="sidebar-close" onclick="toggleSidebar()">☰</div>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
     <p>봉봉 메뉴</p>
     <a href="physics.html">물리</a><br>
     <a href="info.html">정보</a><br>
     <a href="bio.html">생명</a><br>
-</div>
+  </div>
 
   <!-- Content -->
   <div class="content">
