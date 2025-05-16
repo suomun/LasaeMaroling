@@ -86,43 +86,24 @@
       padding: 20px;
     }
 
-    .slider-container{
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      height: 400px;
-      overflow: hidden;
+    .outer {
+      border: 6px solid royalblue;
+      width: 300px;
+      height: 200px;
+      margin: 0 auto;
+      overflow-x: hidden;
     }
 
-    .slider {
+    .inner-list {
       display: flex;
-      transition: transform 2s ease;
+      transition: .3s ease-out;
       height: 100%;
     }
 
-    .slider img {
-      width: 100%;
-      object-fit: cover;
+    .inner {
+      border: 6px solid olive;
+      padding: 0 16px;
     }
-
-    .dot {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-    }
-
-    .dot {
-      height: 10px;
-      margin: 0 5px;
-      background-color: white;
-      border-radius: 50%;
-      display: inline-block;
-      cursor: pointer;
-      opacity: 0.5;
-    }
-    
     .red-box {
       background: red;
       height: 54px;
@@ -200,15 +181,21 @@
 
   <!-- Content -->
   <div class="content">
-    <div class="slider-container">
-      <div class="slider" id="slider">
-        <img src="images/EX_picture1.png" alt="Banner 1" />
-        <img src="images/EX_picture2.png" alt="Banner 2" />
-        <img src="images/EX_picture3.png" alt="Banner 3" />
-      </div>
-      <div class="dots" id="dots"></div>
-    </div>
     
+    <div class="outer">
+      <div class="inner-list">
+        <div class="inner">
+          <h2>first...</h2>
+        </div>
+        <div class="inner">
+          <h2>second...</h2>
+        </div>
+        <div class="inner">
+          <h2>third...</h2>
+        </div>
+      </div>
+    </div>
+
     <div class="red-box">통합소식</div>
 
     <div class="orange-box">
@@ -273,69 +260,28 @@
   <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
 </div>
 
-  <script>  
-  const slider = document.getElementById("slider");
-  const images = slider.querySelectorAll("img");
-  const dotsContainer = document.getElementById("dots");
+  <script>
+  const outer = document.querySelector('.outer');
+  const innerList = document.querySelector('.inner-list');
+  const inners = document.querySelectorAll('.inner');
   let currentIndex = 0;
-  const total = images.length;
 
-  function showSlide(index) {
-    slider.style.transform = `translateX(-${index * 100}%)`;
-    updateDots(index);
+  inners.forEach((inner) => {
+   inner.style.width = `${outer.clientWidth}px`; 
+  })
+
+  innerList.style.width = `${outer.clientWidth * inners.length}px`;
+
+  const getInterval = () => {
+   return setInterval(() => {
+     currentIndex++;
+     currentIndex = currentIndex >= inners.length ? 0 : currentIndex;
+     innerList.style.marginLeft = `-${outer.clientWidth * currentIndex}px`;
+   }, 2000);
   }
-
-  function updateDots(index) {
-    dotsContainer.innerHTML = '';
-    for (let i = 0; i < total; i++) {
-      const dot = document.createElement('span');
-      dot.classList.toggle('active', i === index);
-      dot.addEventListener('click', () => {
-        currentIndex = i;
-        showSlide(currentIndex);
-      });
-      dotsContainer.appendChild(dot);
-    }
-  }
-
-  function nextSlide() {
-    currentIndex = (currentIndex + 1) % total;
-    showSlide(currentIndex);
-  }
-
-  showSlide(currentIndex);
-  setInterval(nextSlide, 4000);
-
-  // 터치 슬라이드
-  let startX = 0;
-  let isDragging = false;
-
-  slider.addEventListener("touchstart", (e) => {
-    startX = e.touches[0].clientX;
-    isDragging = true;
-  });
-
-  slider.addEventListener("touchmove", (e) => {
-    if (!isDragging) return;
-    const currentX = e.touches[0].clientX;
-    const diffX = currentX - startX;
-
-    if (Math.abs(diffX) > 50) {
-      if (diffX > 0 && currentIndex > 0) {
-        currentIndex--;
-      } else if (diffX < 0 && currentIndex < total - 1) {
-        currentIndex++;
-      }
-      showSlide(currentIndex);
-      isDragging = false;
-    }
-  });
-
-  slider.addEventListener("touchend", () => {
-    isDragging = false;
-  });
-
-
+  
+  let interval = getInterval();
+  
   function toggleSidebar() {    
     document.getElementById('sidebar').classList.toggle('open');
     document.getElementById('overlay').classList.toggle('active');
