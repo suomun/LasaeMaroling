@@ -86,27 +86,6 @@
       padding: 20px;
     }
 
-    .outer {
-      border: 6px solid royalblue;
-      width: 300px;
-      height: 200px;
-      margin-top: 300px:
-      margin-left: 30px:
-      margin-right: 30px:
-      margin-down: 100px:
-      overflow-x: hidden;
-    }
-
-    .inner-list {
-      display: flex;
-      transition: .3s ease-out;
-      height: 100%;
-    }
-
-    .inner {
-      border: 6px solid olive;
-      padding: 0 16px;
-    }
     .red-box {
       background: red;
       height: 54px;
@@ -184,20 +163,6 @@
 
   <!-- Content -->
   <div class="content">
-    
-    <div class="outer">
-      <div class="inner-list">
-        <div class="inner">
-          <h2>first...</h2>
-        </div>
-        <div class="inner">
-          <h2>second...</h2>
-        </div>
-        <div class="inner">
-          <h2>third...</h2>
-        </div>
-      </div>
-    </div>
 
     <div class="red-box">통합소식</div>
 
@@ -264,27 +229,7 @@
 </div>
 
   <script>
-  const outer = document.querySelector('.outer');
-  const innerList = document.querySelector('.inner-list');
-  const inners = document.querySelectorAll('.inner');
-  let currentIndex = 0;
 
-  inners.forEach((inner) => {
-   inner.style.width = `${outer.clientWidth}px`; 
-  })
-
-  innerList.style.width = `${outer.clientWidth * inners.length}px`;
-
-  const getInterval = () => {
-   return setInterval(() => {
-     currentIndex++;
-     currentIndex = currentIndex >= inners.length ? 0 : currentIndex;
-     innerList.style.marginLeft = `-${outer.clientWidth * currentIndex}px`;
-   }, 2000);
-  }
-  
-  let interval = getInterval();
-  
   function toggleSidebar() {    
     document.getElementById('sidebar').classList.toggle('open');
     document.getElementById('overlay').classList.toggle('active');
