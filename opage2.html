@@ -89,22 +89,23 @@
     .slider-container{
       position: relative;
       width: 100%;
+      aspect-ratio: 16 / 9;
       height: 400px;
       overflow: hidden;
     }
 
-    .slider{
+    .slider {
       display: flex;
       transition: transform 2s ease;
       height: 100%;
     }
 
-    .slider img{
+    .slider img {
       width: 100%;
       object-fit: cover;
     }
 
-    .dot{
+    .dot {
       position: absolute;
       bottom: 10px;
       left: 50%;
@@ -112,7 +113,7 @@
       display: flex;
     }
 
-    .dot{
+    .dot {
       height: 10px;
       margin: 0 5px;
       background-color: white;
@@ -272,10 +273,10 @@
   <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
 </div>
 
-  <script>
-      const slider = document.getElementById('slider');
-  const images = slider.querySelectorAll('img');
-  const dotsContainer = document.getElementById('dots');
+  <script>  
+  const slider = document.getElementById("slider");
+  const images = slider.querySelectorAll("img");
+  const dotsContainer = document.getElementById("dots");
   let currentIndex = 0;
   const total = images.length;
 
@@ -304,7 +305,37 @@
 
   showSlide(currentIndex);
   setInterval(nextSlide, 4000);
-  
+
+  // 터치 슬라이드
+  let startX = 0;
+  let isDragging = false;
+
+  slider.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  });
+
+  slider.addEventListener("touchmove", (e) => {
+    if (!isDragging) return;
+    const currentX = e.touches[0].clientX;
+    const diffX = currentX - startX;
+
+    if (Math.abs(diffX) > 50) {
+      if (diffX > 0 && currentIndex > 0) {
+        currentIndex--;
+      } else if (diffX < 0 && currentIndex < total - 1) {
+        currentIndex++;
+      }
+      showSlide(currentIndex);
+      isDragging = false;
+    }
+  });
+
+  slider.addEventListener("touchend", () => {
+    isDragging = false;
+  });
+
+
   function toggleSidebar() {    
     document.getElementById('sidebar').classList.toggle('open');
     document.getElementById('overlay').classList.toggle('active');
