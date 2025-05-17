@@ -212,13 +212,74 @@
   </style>
 </head>
 <body>
-
   <!-- Content -->
   <div class="content">
     <div class="banner-slider-wrapper">
-     <div class="banner-slider" id="bannerSl스</a><br>
+     <div class="banner-slider" id="bannerSlider">
+      <img src="images/EX_picture1.png" alt="배너1">
+      <img src="images/EX_picture2.png" alt="배너2">
+      <img src="images/EX_picture3.jpg" alt="배너3">
+      <img src="images/EX_picture4.png" alt="배너4">
+      <img src="images/EX_picture5.png" alt="배너5">
+    </div>
+    <div class="banner-dots" id="bannerDots"></div>
+  </div>
+
+    <div class="red-box">통합소식</div>
+
+    <div class="orange-box">
+      <div class="yellow-image">
+        <!-- 이미지 삽입 -->
+        <img src="images/FNAF_EX_Picture.jpg" alt="이미지" style="width:100%; height:100%;">
+      </div>
+      <div>생선.</div>
+    </div>
+
+    <div class="purple-box">분야별 최---신 근황</div>
+
+    <div class="post">
+      <div class="dot-icon"></div>
+      <div class="brown-text"><a href="physics.html">물리</a></div>
+      <div class="blue-box">생선.</div>
+    </div>
+    <div class="post">
+      <div class="dot-icon"></div>
+      <div class="brown-text"><a href="info.html">정보</a></div>
+      <div class="blue-box">생선.</div>
+    </div>
+    <div class="post">
+      <div class="dot-icon"></div>
+      <div class="brown-text"><a href="bio.html">생명</a></div>
+      <div class="blue-box">생선.</div>
+    </div>
+
+      <!-- Header -->
+  <header>
+    <div class="logo">봉봉뉴스</div>
+    <div class="hamburger" onclick="toggleSidebar()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
     
-  <a href="bio.html"><p style="font-size: 30px;">생명뉴스</a><br>
+  </header>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="logo"></div>
+    <div class="hamburger" onclick="toggleSidebar()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    
+  <p>봉봉 메뉴</p>
+    
+  <a href="physics.html"><p style="font-size: 30px;">물리</p></a><br>
+    
+  <a href="info.html"><p style="font-size: 30px;">정보</a><br>
+    
+  <a href="bio.html"><p style="font-size: 30px;">생명</a><br>
   
   </div>
   <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
@@ -233,7 +294,7 @@ const dotsContainer = document.getElementById("bannerDots");
 let currentSlide = 0;
 const totalSlides = images.length;
 
-// 도트 생성
+
 for (let i = 0; i < totalSlides; i++) {
   const dot = document.createElement("span");
   dot.style.display = "inline-block";
@@ -262,20 +323,20 @@ function prevSlide() {
   updateSlide();
 }
 
-// 자동 슬라이드
+
 setInterval(nextSlide, 10000);
 
-// 터치 & 마우스 드래그 기능
+
 let startX = 0;
 let isDragging = false;
 
-// 터치 시작
+
 bannerSlider.addEventListener("touchstart", (e) => {
   startX = e.touches[0].clientX;
   isDragging = true;
 });
 
-// 터치 이동
+
 bannerSlider.addEventListener("touchmove", (e) => {
   if (!isDragging) return;
   const currentX = e.touches[0].clientX;
@@ -295,13 +356,13 @@ bannerSlider.addEventListener("touchend", () => {
   isDragging = false;
 });
 
-// 마우스 시작
+
 bannerSlider.addEventListener("mousedown", (e) => {
   startX = e.clientX;
   isDragging = true;
 });
 
-// 마우스 이동
+
 bannerSlider.addEventListener("mousemove", (e) => {
   if (!isDragging) return;
   const currentX = e.clientX;
@@ -321,7 +382,7 @@ bannerSlider.addEventListener("mouseup", () => {
   isDragging = false;
 });
 
-// 마우스 벗어날 때 드래그 종료
+    
 bannerSlider.addEventListener("mouseleave", () => {
   isDragging = false;
 });
