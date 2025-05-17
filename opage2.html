@@ -291,40 +291,107 @@
 </div>
 
   <script>
+    const bannerSlider = document.getElementById("bannerSlider");
+const images = bannerSlider.querySelectorAll("img");
+bannerSlider.style.width = `${images.length * 100}vw`;
 
-      const bannerSlider = document.getElementById("bannerSlider");
-  const images = bannerSlider.querySelectorAll("img");
-  bannerSlider.style.width = `${images.length * 100}vw`;
+const dotsContainer = document.getElementById("bannerDots");
+let currentSlide = 0;
+const totalSlides = images.length;
 
-  const dotsContainer = document.getElementById("bannerDots");
-  let currentSlide = 0;
-  const totalSlides = images.length;
+// 도트 생성
+for (let i = 0; i < totalSlides; i++) {
+  const dot = document.createElement("span");
+  dot.style.display = "inline-block";
+  dot.style.width = "10px";
+  dot.style.height = "10px";
+  dot.style.margin = "5px";
+  dot.style.borderRadius = "50%";
+  dot.style.background = i === 0 ? "black" : "gray";
+  dotsContainer.appendChild(dot);
+}
+const dots = dotsContainer.querySelectorAll("span");
 
-  for (let i = 0; i < totalSlides; i++) {
-    const dot = document.createElement("span");
-    if (i === 0) dot.classList.add("active");
-    dotsContainer.appendChild(dot);
+function updateSlide() {
+  bannerSlider.style.transform = `translateX(-${currentSlide * 100}vw)`;
+  dots.forEach(dot => dot.style.background = "gray");
+  dots[currentSlide].style.background = "black";
+}
+
+function nextSlide() {
+  currentSlide = (currentSlide + 1) % totalSlides;
+  updateSlide();
+}
+
+function prevSlide() {
+  currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+  updateSlide();
+}
+
+// 자동 슬라이드
+setInterval(nextSlide, 10000);
+
+// 터치 & 마우스 드래그 기능
+let startX = 0;
+let isDragging = false;
+
+// 터치 시작
+bannerSlider.addEventListener("touchstart", (e) => {
+  startX = e.touches[0].clientX;
+  isDragging = true;
+});
+
+// 터치 이동
+bannerSlider.addEventListener("touchmove", (e) => {
+  if (!isDragging) return;
+  const currentX = e.touches[0].clientX;
+  const diffX = startX - currentX;
+
+  if (Math.abs(diffX) > 50) {
+    if (diffX > 0) {
+      nextSlide();
+    } else {
+      prevSlide();
+    }
+    isDragging = false;
   }
+});
 
-  const dots = dotsContainer.querySelectorAll("span");
+bannerSlider.addEventListener("touchend", () => {
+  isDragging = false;
+});
 
-  function updateSlide() {
-    bannerSlider.style.transform = `translateX(-${currentSlide * 100}vw)`;
-    dots.forEach(dot => dot.classList.remove("active"));
-    dots[currentSlide].classList.add("active");
+// 마우스 시작
+bannerSlider.addEventListener("mousedown", (e) => {
+  startX = e.clientX;
+  isDragging = true;
+});
+
+// 마우스 이동
+bannerSlider.addEventListener("mousemove", (e) => {
+  if (!isDragging) return;
+  const currentX = e.clientX;
+  const diffX = startX - currentX;
+
+  if (Math.abs(diffX) > 50) {
+    if (diffX > 0) {
+      nextSlide();
+    } else {
+      prevSlide();
+    }
+    isDragging = false;
   }
+});
 
-  function nextSlide() {
-    currentSlide = (currentSlide + 1) % totalSlides;
-    updateSlide();
-  }
+bannerSlider.addEventListener("mouseup", () => {
+  isDragging = false;
+});
 
-  function prevSlide() {
-    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-    updateSlide();
-  }
+// 마우스 벗어날 때 드래그 종료
+bannerSlider.addEventListener("mouseleave", () => {
+  isDragging = false;
+});
 
-  setInterval(nextSlide, 10000);
 
   function toggleSidebar() {    
     document.getElementById('sidebar').classList.toggle('open');
