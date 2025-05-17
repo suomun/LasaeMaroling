@@ -132,29 +132,6 @@
       opacity: 1;
     }
 
-    .arrow-button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: rgba(0, 0, 0, 0.4);
-      color: white;
-      border: none;
-      font-size: 24px;
-      padding: 10px;
-      cursor: pointer;
-      z-index: 10;
-    }
-
-    .arrow-left {
-      left: 2vw;
-    }
-
-    .arrow-right {
-      right: 2vw;
-    }
-
-
-
     .red-box {
       background: red;
       height: 54px;
@@ -239,7 +216,6 @@
   <!-- Content -->
   <div class="content">
     <div class="banner-slider-wrapper">
-     <button class="arrow-button arrow-left" onclick="prevSlide()">&#10094;</button>
      <div class="banner-slider" id="bannerSlider">
       <img src="images/EX_picture1.png" alt="배너1">
       <img src="images/EX_picture2.png" alt="배너2">
@@ -247,7 +223,6 @@
       <img src="images/EX_picture4.png" alt="배너4">
       <img src="images/EX_picture5.png" alt="배너5">
     </div>
-    <button class="arrow-button arrow-right" onclick="nextSlide()">&#10095;</button>
     <div class="banner-dots" id="bannerDots"></div>
   </div>
 
@@ -349,7 +324,7 @@
     updateSlide();
   }
 
-  setInterval(nextSlide, 4000);
+  setInterval(nextSlide, 10000);
 
   function toggleSidebar() {    
     document.getElementById('sidebar').classList.toggle('open');
