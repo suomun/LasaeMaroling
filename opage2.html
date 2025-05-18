@@ -68,7 +68,7 @@
       left: 0;
       width: calc(100% - 250px); 
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.5); 
+      background-color: rgba(0, 0, 0, 0.5); /* 반투명한 검정 */
       display: none;
       z-index: 1000;
     }
@@ -131,7 +131,7 @@
 
     .banner-slider {
       display: flex;
-      transition: transform 0.5s ease-in-out;
+      transition: transform 1s ease-in-out;
     }
 
     .banner-slider img {
@@ -221,8 +221,10 @@
 <body>
 
   <!-- Content -->
-  <div class="content">    
+  <div class="content">
+    
     <div class="red-box">통합소식</div>
+
     <div class="orange-box">
       <div class="yellow-image">
         <!-- 이미지 삽입 -->
@@ -240,8 +242,9 @@
     </div>
     <div class="banner-dots" id="bannerDots"></div>
   </div>
-    
+
     <div class="purple-box">분야별 최---신 근황</div>
+
     <div class="post">
       <div class="dot-icon"></div>
       <div class="brown-text"><a href="physics.html">물리</a></div>
@@ -257,6 +260,7 @@
       <div class="brown-text"><a href="bio.html">생명</a></div>
       <div class="blue-box">생선.</div>
     </div>
+
       <!-- Header -->
   <header>
     <div class="logo">봉봉뉴스</div>
@@ -267,6 +271,7 @@
     </div>
     
   </header>
+
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div class="logo"></div>
@@ -277,9 +282,13 @@
     </div>
     
   <p>봉봉 메뉴</p>
+    
   <a href="physics.html"><p style="font-size: 30px;">물리</a><br>
+    
   <a href="info.html"><p style="font-size: 30px;">정보</a><br>
+    
   <a href="bio.html"><p style="font-size: 30px;">생명</a><br>
+  
   </div>
   <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
 </div>
@@ -292,6 +301,7 @@ bannerSlider.style.width = `${images.length * 100}vw`;
 const dotsContainer = document.getElementById("bannerDots");
 let currentSlide = 0;
 const totalSlides = images.length;
+
 
 for (let i = 0; i < totalSlides; i++) {
   const dot = document.createElement("span");
@@ -321,14 +331,19 @@ function prevSlide() {
   updateSlide();
 }
 
+
 setInterval(nextSlide, 10000);
+
+
 let startX = 0;
 let isDragging = false;
+
 
 bannerSlider.addEventListener("touchstart", (e) => {
   startX = e.touches[0].clientX;
   isDragging = true;
 });
+
 
 bannerSlider.addEventListener("touchmove", (e) => {
   if (!isDragging) return;
@@ -355,6 +370,7 @@ bannerSlider.addEventListener("mousedown", (e) => {
   isDragging = true;
 });
 
+
 bannerSlider.addEventListener("mousemove", (e) => {
   if (!isDragging) return;
   const currentX = e.clientX;
@@ -373,10 +389,12 @@ bannerSlider.addEventListener("mousemove", (e) => {
 bannerSlider.addEventListener("mouseup", () => {
   isDragging = false;
 });
-   
+
+    
 bannerSlider.addEventListener("mouseleave", () => {
   isDragging = false;
 });
+
 
   function toggleSidebar() {    
     document.getElementById('sidebar').classList.toggle('open');
