@@ -68,7 +68,7 @@
       left: 0;
       width: calc(100% - 250px); 
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.5); /* 반투명한 검정 */
+      background-color: rgba(0, 0, 0, 0.5);
       display: none;
       z-index: 1000;
     }
@@ -89,7 +89,7 @@
     .red-box {
       background: red;
       height: 54px;
-      margin-top: 100px;
+      margin-top: 900px;
       margin-left: 30px;
       margin-right: 30px;
       margin-down: 0px;
@@ -131,7 +131,7 @@
 
     .banner-slider {
       display: flex;
-      transition: transform 1s ease-in-out;
+      transition: transform 0.5s ease-in-out;
     }
 
     .banner-slider img {
@@ -216,12 +216,56 @@
       justify-content: center;
     }
     
+    .popup {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      width: 300px;
+      max-width: 90vw;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      z-index: 2000;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .popup img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .popup label {
+      display: flex;
+      align-items: center;  
+      margin-top: 5px;
+      font-size: 0.9rem;
+    }
+
+    @keyframes fadeIn {  
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+        
   </style>
 </head>
 <body>
 
   <!-- Content -->
-  <div class="content">
+  <div class="content">  
+  
+  </header>  <div id="popup1" class="popup">
+    <a href="https://example.com/ad1" target="_blank">
+      <img src="adimages/Ads_1.png" alt="광고 1">
+    </a>
+    <label><input type="checkbox" id="hidePopup1"> 하루 동안 보지 않기</label>
+  </div>
+    <div id="popup2" class="popup" style="top: 340px">
+      <a href="https://example.com/ad2" target="_blank">
+        <img src="adimages/Ads_2.png" alt="광고 2">
+      </a>
+      <label><input type="checkbox" id="hidePopup2"> 하루 동안 보지 않기</label>
     
     <div class="red-box">통합소식</div>
 
@@ -294,6 +338,31 @@
 </div>
 
   <script>
+       function checkPopup(id) {
+      if (localStorage.getItem(id) === new Date().toDateString()) {
+        document.getElementById(id).style.display = 'none';
+      }
+    }
+    checkPopup('popup1');
+    checkPopup('popup2');
+
+    document.getElementById('hidePopup1').addEventListener('change', function() {
+      if (this.checked) {
+        localStorage.setItem('popup1', new Date().toDateString());
+        document.getElementById('popup1').style.display = 'none';
+      }
+    });
+    document.getElementById('hidePopup2').addEventListener('change', function() {
+      if (this.checked) {
+        localStorage.setItem('popup2', new Date().toDateString());
+        document.getElementById('popup2').style.display = 'none';
+      }
+    });
+
+
+
+
+    
     const bannerSlider = document.getElementById("bannerSlider");
 const images = bannerSlider.querySelectorAll("img");
 bannerSlider.style.width = `${images.length * 100}vw`;
