@@ -2,162 +2,169 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>슬라이드 배너</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>.</title>
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #f4f4f4; overflow-x: hidden; }
+    .banner-container { position: relative; width: 100%; max-width: 800px; margin: 50px auto; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #fff; }
 
-    .section-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .section-buttons button {
+    .top-buttons { display: flex; justify-content: center; margin-bottom: 10px; }
+    .top-buttons button {
       padding: 10px 20px;
-      font-size: 16px;
+      margin: 0 5px;
+      border: none;
+      background-color: #ccc;
       cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    .top-buttons button.active {
+      background-color: #666;
+      color: white;
     }
 
-    .slider-wrapper {
-      max-width: 800px;
-      margin: 40px auto;
-      overflow: hidden;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      position: relative;
-      height: 400px;
-    }
-
-    .slider-group {
-      display: none;
+    .main-wrapper { position: relative; width: 100%; height: 400px; }
+    .main-slide {
+      position: absolute;
       width: 100%;
       height: 100%;
+      opacity: 0;
+      transition: opacity 0.5s;
+      display: none;
     }
-
-    .slider-group.active {
+    .main-slide.active {
       display: block;
+      opacity: 1;
     }
 
-    .inner-slider {
-      display: flex;
-      width: 200%;
+    .sub-slide-wrapper { display: flex; transition: transform 0.5s ease; height: 100%; }
+    .sub-slide {
+      min-width: 100%;
       height: 100%;
-      transition: transform 0.5s ease-in-out;
-      touch-action: pan-y;
-    }
-
-    .slide {
-      width: 50%;
+      position: relative;
       flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+    .sub-slide.active { opacity: 1; }
+    .sub-slide img {
+      width: 100%;
       height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 40px;
-      background: #eee;
+      object-fit: contain;
     }
 
-    .slide:nth-child(even) {
-      background: #ddd;
+    .dots {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
     }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.3);
+      cursor: pointer;
+    }
+    .dot.active { background: rgba(0,0,0,0.8); }
   </style>
 </head>
 <body>
-
-  <div class="section-buttons">
-    <button onclick="showSection('A')">A</button>
-    <button onclick="showSection('B')">B</button>
-    <button onclick="showSection('C')">C</button>
-  </div>
-
-  <div class="slider-wrapper">
-    <!-- A 그룹 -->
-    <div id="sectionA" class="slider-group active">
-      <div class="inner-slider" data-group="A">
-        <div class="slide">A-1</div>
-        <div class="slide">A-2</div>
-      </div>
+  <div class="banner-container">
+    <div class="top-buttons">
+      <button class="main-btn active" data-index="0">A</button>
+      <button class="main-btn" data-index="1">B</button>
+      <button class="main-btn" data-index="2">C</button>
     </div>
-    <!-- B 그룹 -->
-    <div id="sectionB" class="slider-group">
-      <div class="inner-slider" data-group="B">
-        <div class="slide">B-1</div>
-        <div class="slide">B-2</div>
+    <div class="main-wrapper">
+      <!-- A -->
+      <div class="main-slide active">
+        <div class="sub-slide-wrapper">
+          <div class="sub-slide active"><img src="images/EX_picture1.png" alt="A-1" /></div>
+          <div class="sub-slide"><img src="imageA2.jpg" alt="A-2" /></div>
+        </div>
+        <div class="dots"></div>
       </div>
-    </div>
-    <!-- C 그룹 -->
-    <div id="sectionC" class="slider-group">
-      <div class="inner-slider" data-group="C">
-        <div class="slide">C-1</div>
-        <div class="slide">C-2</div>
+      <!-- B -->
+      <div class="main-slide">
+        <div class="sub-slide-wrapper">
+          <div class="sub-slide active"><img src="images/EX_picture2.png" alt="B-1" /></div>
+          <div class="sub-slide"><img src="imageB2.jpg" alt="B-2" /></div>
+        </div>
+        <div class="dots"></div>
+      </div>
+      <!-- C -->
+      <div class="main-slide">
+        <div class="sub-slide-wrapper">
+          <div class="sub-slide active"><img src="images/EX_picture3.jgp" alt="C-1" /></div>
+          <div class="sub-slide"><img src="imageC2.jpg" alt="C-2" /></div>
+        </div>
+        <div class="dots"></div>
       </div>
     </div>
   </div>
 
   <script>
-    const sections = ['A', 'B', 'C'];
-    let currentSection = 'A';
-    let slideIndex = { A: 0, B: 0, C: 0 };
-    let autoSlideInterval = null;
-    let startX = 0;
+    const mainButtons = document.querySelectorAll(".main-btn");
+    const mainSlides = document.querySelectorAll(".main-slide");
 
-    function showSection(section) {
-      sections.forEach(s => {
-        document.getElementById('section' + s).classList.remove('active');
-      });
-      document.getElementById('section' + section).classList.add('active');
-      currentSection = section;
-      resetSlide(section);
-    }
-
-    function resetSlide(section) {
-      const slider = document.querySelector(`[data-group="${section}"]`);
-      slider.style.transform = 'translateX(0%)';
-      slideIndex[section] = 0;
-      clearInterval(autoSlideInterval);
-      startAutoSlide(section);
-    }
-
-    function startAutoSlide(section) {
-      autoSlideInterval = setInterval(() => {
-        slideIndex[section] = (slideIndex[section] + 1) % 2;
-        const slider = document.querySelector(`[data-group="${section}"]`);
-        slider.style.transform = `translateX(-${slideIndex[section] * 50}%)`;
-      }, 4000);
-    }
-
-    // 초기 시작
-    startAutoSlide('A');
-
-    // 터치(슬라이드) 지원
-    document.querySelectorAll('.inner-slider').forEach(slider => {
-      slider.addEventListener('touchstart', e => {
-        startX = e.touches[0].clientX;
-      });
-
-      slider.addEventListener('touchend', e => {
-        const endX = e.changedTouches[0].clientX;
-        const diff = startX - endX;
-
-        if (Math.abs(diff) > 50) {
-          const group = slider.dataset.group;
-          if (diff > 0) {
-            // 왼쪽으로 스와이프
-            slideIndex[group] = Math.min(1, slideIndex[group] + 1);
+    mainButtons.forEach((btn, idx) => {
+      btn.addEventListener("click", () => {
+        mainButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        mainSlides.forEach((slide, i) => {
+          if (i === idx) {
+            slide.classList.add("active");
           } else {
-            // 오른쪽으로 스와이프
-            slideIndex[group] = Math.max(0, slideIndex[group] - 1);
+            slide.classList.remove("active");
           }
-          slider.style.transform = `translateX(-${slideIndex[group] * 50}%)`;
-          clearInterval(autoSlideInterval);
-          startAutoSlide(group);
+        });
+      });
+    });
+
+    mainSlides.forEach(main => {
+      const wrapper = main.querySelector(".sub-slide-wrapper");
+      const slides = main.querySelectorAll(".sub-slide");
+      const dotsContainer = main.querySelector(".dots");
+
+      slides.forEach((_, idx) => {
+        const dot = document.createElement("div");
+        dot.className = "dot";
+        if (idx === 0) dot.classList.add("active");
+        dot.addEventListener("click", () => showSlide(idx));
+        dotsContainer.appendChild(dot);
+      });
+
+      let current = 0;
+      const dots = dotsContainer.querySelectorAll(".dot");
+
+      const showSlide = (index) => {
+        slides[current].classList.remove("active");
+        dots[current].classList.remove("active");
+        slides[index].classList.add("active");
+        dots[index].classList.add("active");
+        current = index;
+      };
+
+      let timer = setInterval(() => {
+        let next = (current + 1) % slides.length;
+        showSlide(next);
+      }, 4000);
+
+      let startX = null;
+      wrapper.addEventListener("touchstart", e => startX = e.touches[0].clientX);
+      wrapper.addEventListener("touchend", e => {
+        if (startX === null) return;
+        let endX = e.changedTouches[0].clientX;
+        if (startX - endX > 50) {
+          showSlide((current + 1) % slides.length);
+        } else if (endX - startX > 50) {
+          showSlide((current - 1 + slides.length) % slides.length);
         }
+        startX = null;
       });
     });
   </script>
