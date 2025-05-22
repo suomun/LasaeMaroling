@@ -119,53 +119,6 @@
       margin-down: 10px;
     }
 
-    
-    .banner-slider-wrapper {
-      position: relative;
-      width: calc(100% - 40px);
-      margin: 500px auto 40px;
-      height: 500px;
-      overflow: hidden;
-      background: #fff;
-    }
-
-    .banner-slider {
-      display: flex;
-      transition: transform 1s ease-in-out;
-    }
-
-    .banner-slider img {
-      width: 100vw;
-      height: 500px;
-      object-fit: contain;
-      flex-shrink: 0;
-    }
-
-    .banner-dots {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      z-index: 11;
-    }
-
-    .banner-dots span {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      margin: 0 5px;
-      background-color: #ccc;
-      border-radius: 50%;
-      opacity: 0.5;
-      transition: opacity 0.3s;
-    }
-
-    .banner-dots span.active {
-      background-color: #333;
-      opacity: 1;
-    }
-
     .purple-box {
       background: indigo;
       height: 30px;
@@ -232,17 +185,6 @@
       </div>
     </div>
 
-    <div class="banner-slider-wrapper">
-     <div class="banner-slider" id="bannerSlider">
-      <img src="images/EX_picture1.png" alt="배너1">
-      <img src="images/EX_picture2.png" alt="배너2">
-      <img src="images/EX_picture3.jpg" alt="배너3">
-      <img src="images/EX_picture4.png" alt="배너4">
-      <img src="images/EX_picture5.png" alt="배너5">
-    </div>
-    <div class="banner-dots" id="bannerDots"></div>
-  </div>
-
     <div class="purple-box">분야별 최---신 근황</div>
 
     <div class="post">
@@ -294,106 +236,6 @@
 </div>
 
   <script>
-    const bannerSlider = document.getElementById("bannerSlider");
-const images = bannerSlider.querySelectorAll("img");
-bannerSlider.style.width = `${images.length * 100}vw`;
-
-const dotsContainer = document.getElementById("bannerDots");
-let currentSlide = 0;
-const totalSlides = images.length;
-
-
-for (let i = 0; i < totalSlides; i++) {
-  const dot = document.createElement("span");
-  dot.style.display = "inline-block";
-  dot.style.width = "10px";
-  dot.style.height = "10px";
-  dot.style.margin = "5px";
-  dot.style.borderRadius = "50%";
-  dot.style.background = i === 0 ? "black" : "gray";
-  dotsContainer.appendChild(dot);
-}
-const dots = dotsContainer.querySelectorAll("span");
-
-function updateSlide() {
-  bannerSlider.style.transform = `translateX(-${currentSlide * 100}vw)`;
-  dots.forEach(dot => dot.style.background = "gray");
-  dots[currentSlide].style.background = "black";
-}
-
-function nextSlide() {
-  currentSlide = (currentSlide + 1) % totalSlides;
-  updateSlide();
-}
-
-function prevSlide() {
-  currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-  updateSlide();
-}
-
-
-setInterval(nextSlide, 10000);
-
-
-let startX = 0;
-let isDragging = false;
-
-
-bannerSlider.addEventListener("touchstart", (e) => {
-  startX = e.touches[0].clientX;
-  isDragging = true;
-});
-
-
-bannerSlider.addEventListener("touchmove", (e) => {
-  if (!isDragging) return;
-  const currentX = e.touches[0].clientX;
-  const diffX = startX - currentX;
-
-  if (Math.abs(diffX) > 50) {
-    if (diffX > 0) {
-      nextSlide();
-    } else {
-      prevSlide();
-    }
-    isDragging = false;
-  }
-});
-
-bannerSlider.addEventListener("touchend", () => {
-  isDragging = false;
-});
-
-
-bannerSlider.addEventListener("mousedown", (e) => {
-  startX = e.clientX;
-  isDragging = true;
-});
-
-
-bannerSlider.addEventListener("mousemove", (e) => {
-  if (!isDragging) return;
-  const currentX = e.clientX;
-  const diffX = startX - currentX;
-
-  if (Math.abs(diffX) > 50) {
-    if (diffX > 0) {
-      nextSlide();
-    } else {
-      prevSlide();
-    }
-    isDragging = false;
-  }
-});
-
-bannerSlider.addEventListener("mouseup", () => {
-  isDragging = false;
-});
-
-    
-bannerSlider.addEventListener("mouseleave", () => {
-  isDragging = false;
-});
 
 
   function toggleSidebar() {    
