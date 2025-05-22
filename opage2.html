@@ -119,6 +119,72 @@
       margin-down: 10px;
     }
 
+       * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #f4f4f4; overflow-x: hidden; }
+    .banner-container { position: relative; width: 100%; max-width: 800px; margin: 50px auto; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #fff; }
+
+    .top-buttons { display: flex; justify-content: center; margin-bottom: 10px; }
+    .top-buttons button {
+      padding: 10px 20px;
+      margin: 0 5px;
+      border: none;
+      background-color: #ccc;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    .top-buttons button.active {
+      background-color: #666;
+      color: white;
+    }
+
+    .main-wrapper { position: relative; width: 100%; height: 400px; }
+    .main-slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.5s;
+      display: none;
+    }
+    .main-slide.active {
+      display: block;
+      opacity: 1;
+    }
+
+    .sub-slide-wrapper { display: flex; transition: transform 0.5s ease; height: 100%; }
+    .sub-slide {
+      min-width: 100%;
+      height: 100%;
+      position: relative;
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+    .sub-slide.active { opacity: 1; }
+    .sub-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.3);
+      cursor: pointer;
+    }
+    .dot.active { background: rgba(0,0,0,0.8); }
+
     .purple-box {
       background: indigo;
       height: 30px;
@@ -185,6 +251,40 @@
       </div>
     </div>
 
+     <div class="banner-container">
+    <div class="top-buttons">
+      <button class="main-btn active" data-index="0">A</button>
+      <button class="main-btn" data-index="1">B</button>
+      <button class="main-btn" data-index="2">C</button>
+    </div>
+    <div class="main-wrapper">
+      <!-- A -->
+      <div class="main-slide active">
+        <div class="sub-slide-wrapper">
+          <div class="sub-slide active"><img src="imageA1.jpg" alt="A-1" /></div>
+          <div class="sub-slide"><img src="imageA2.jpg" alt="A-2" /></div>
+        </div>
+        <div class="dots"></div>
+      </div>
+      <!-- B -->
+      <div class="main-slide">
+        <div class="sub-slide-wrapper">
+          <div class="sub-slide active"><img src="imageB1.jpg" alt="B-1" /></div>
+          <div class="sub-slide"><img src="imageB2.jpg" alt="B-2" /></div>
+        </div>
+        <div class="dots"></div>
+      </div>
+      <!-- C -->
+      <div class="main-slide">
+        <div class="sub-slide-wrapper">
+          <div class="sub-slide active"><img src="imageC1.jpg" alt="C-1" /></div>
+          <div class="sub-slide"><img src="imageC2.jpg" alt="C-2" /></div>
+        </div>
+        <div class="dots"></div>
+      </div>
+    </div>
+  </div>
+
     <div class="purple-box">분야별 최---신 근황</div>
 
     <div class="post">
@@ -237,6 +337,65 @@
 
   <script>
 
+        const mainButtons = document.querySelectorAll(".main-btn");
+    const mainSlides = document.querySelectorAll(".main-slide");
+
+    mainButtons.forEach((btn, idx) => {
+      btn.addEventListener("click", () => {
+        mainButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        mainSlides.forEach((slide, i) => {
+          if (i === idx) {
+            slide.classList.add("active");
+          } else {
+            slide.classList.remove("active");
+          }
+        });
+      });
+    });
+
+    mainSlides.forEach(main => {
+      const wrapper = main.querySelector(".sub-slide-wrapper");
+      const slides = main.querySelectorAll(".sub-slide");
+      const dotsContainer = main.querySelector(".dots");
+
+      slides.forEach((_, idx) => {
+        const dot = document.createElement("div");
+        dot.className = "dot";
+        if (idx === 0) dot.classList.add("active");
+        dot.addEventListener("click", () => showSlide(idx));
+        dotsContainer.appendChild(dot);
+      });
+
+      let current = 0;
+      const dots = dotsContainer.querySelectorAll(".dot");
+
+      const showSlide = (index) => {
+        slides[current].classList.remove("active");
+        dots[current].classList.remove("active");
+        slides[index].classList.add("active");
+        dots[index].classList.add("active");
+        current = index;
+      };
+
+      let timer = setInterval(() => {
+        let next = (current + 1) % slides.length;
+        showSlide(next);
+      }, 4000);
+
+      let startX = null;
+      wrapper.addEventListener("touchstart", e => startX = e.touches[0].clientX);
+      wrapper.addEventListener("touchend", e => {
+        if (startX === null) return;
+        let endX = e.changedTouches[0].clientX;
+        if (startX - endX > 50) {
+          showSlide((current + 1) % slides.length);
+        } else if (endX - startX > 50) {
+          showSlide((current - 1 + slides.length) % slides.length);
+        }
+        startX = null;
+      });
+    });
 
   function toggleSidebar() {    
     document.getElementById('sidebar').classList.toggle('open');
