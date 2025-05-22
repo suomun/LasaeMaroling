@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>망한 프제붕부우우</title>
+  <title>수박박</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: sans-serif; background: #f5f5f5; overflow-x: hidden; }
@@ -51,7 +51,77 @@
       border: none;
       padding: 8px 16px;
       margin: 0 4px;
-     보'
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .nav-buttons button.active {
+      background: #555;
+      color: white;
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 15px;
+      width: 100%;
+      text-align: center;
+    }
+    .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 50%;
+      margin: 0 4px;
+    }
+    .dot.active {
+      background: rgba(255,255,255,1);
+    }
+  </style>
+</head>
+<body>
+  <div class="slider-wrapper">
+    <div class="upper-slide-container" id="upperSlider">
+      <div class="upper-slide">
+        <div class="lower-slide-container">
+          <div class="lower-slide-track">
+            <div class="lower-slide"><img src="images/EX_picture1.png" alt="A-1"></div>
+            <div class="lower-slide"><img src="images/EX_picture2.png" alt="A-2"></div>
+          </div>
+          <div class="dots"></div>
+        </div>
+      </div>
+      <div class="upper-slide">
+        <div class="lower-slide-container">
+          <div class="lower-slide-track">
+            <div class="lower-slide"><img src="images/EX_picture3.jpg" alt="B-1"></div>
+            <div class="lower-slide"><img src="images/EX_picture4.png" alt="B-2"></div>
+          </div>
+          <div class="dots"></div>
+        </div>
+      </div>
+      <div class="upper-slide">
+        <div class="lower-slide-container">
+          <div class="lower-slide-track">
+            <div class="lower-slide"><img src="images/EX_picture5.png" alt="C-1"></div>
+            <div class="lower-slide"><img src="images/FNAF_EX_Picture.jpg" alt="C-2"></div>
+          </div>
+          <div class="dots"></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-buttons" id="upperNav"></div>
+  </div>
+
+  <script>
+    const upperSlider = document.getElementById('upperSlider');
+    const upperSlides = document.querySelectorAll('.upper-slide');
+    const navButtons = document.getElementById('upperNav');
+    let currentUpper = 0;
+
+    function renderNavButtons() {
+      upperSlides.forEach((_, i) => {
+        const btn = document.createElement('button');
+        btn.textContent = String.fromCharCode(65 + i); // 'A', 'B', 'C'
         btn.classList.toggle('active', i === currentUpper);
         btn.addEventListener('click', () => switchUpperSlide(i));
         navButtons.appendChild(btn);
