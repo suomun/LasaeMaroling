@@ -392,7 +392,7 @@
       let timer = setInterval(() => {
         let next = (current + 1) % slides.length;
         showSlide(next);
-      }, 10000);
+      }, 4000);
 
       let startX = null;
       wrapper.addEventListener("touchstart", e => startX = e.touches[0].clientX);
