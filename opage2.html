@@ -2,171 +2,409 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>여봉봉사이트</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: sans-serif; background: #f4f4f4; overflow-x: hidden; }
-    .banner-container { position: relative; width: 100%; max-width: 800px; margin: 50px auto; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #fff; }
-
-    .top-buttons { display: flex; justify-content: center; margin-bottom: 10px; }
-    .top-buttons button {
-      padding: 10px 20px;
-      margin: 0 5px;
-      border: none;
-      background-color: #ccc;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: background 0.3s;
-    }
-    .top-buttons button.active {
-      background-color: #666;
-      color: white;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    .main-wrapper { position: relative; width: 100%; height: 400px; }
-    .main-slide {
-      position: absolute;
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      font-family: snas-serif;
+      background:linear-gradient(45deg,#4d7af5,#000017);
+    }
+
+    header {
+      position: fixed;
+      top: 0;
       width: 100%;
-      height: 100%;
-      opacity: 0;
-      transition: opacity 0.5s;
-      display: none;
+      background: skyblue;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 1000;
     }
-    .main-slide.active {
+
+    .hamburger {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background: black;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -250px;
+      width: 250px;
+      height: 100%;
+      background: #333;
+      color: #fff;
+      padding: 20px;
+      transition: right 0.3s ease;
+      z-index: 2000;
+    }
+
+    .sidebar.open {
+      right: 0;
+    } 
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: calc(100% - 250px); 
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); /* 반투명한 검정 */
+      display: none;
+      z-index: 1000;
+    }
+
+    .overlay.active {
       display: block;
+    }
+
+    .content {
+      margin-top: 60px;
+      padding-bottom: 60px;
+    }
+
+    .section {
+      padding: 20px;
+    }   
+
+    .red-box {
+      background: red;
+      height: 54px;
+      margin-top: 100px;
+      margin-left: 30px;
+      margin-right: 30px;
+      margin-down: 0px;
+      color: white;
+      text-align: center;
+      line-height: 50px;
+    }
+
+    .orange-box {
+      background: orange;
+      margin-top: 0px;
+      margin-left: 30px;
+      margin-right: 30px;
+      margin-down: 50px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .yellow-image {
+      background: yellow;
+      width: 120px;
+      height: 120px;
+      margin-top: 10px;
+      margin-left: 0px;
+      margin-right: 30px;
+      margin-down: 10px;
+    }
+
+    
+    .banner-slider-wrapper {
+      position: relative;
+      width: calc(100% - 40px);
+      margin: 500px auto 40px;
+      height: 500px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .banner-slider {
+      display: flex;
+      transition: transform 1s ease-in-out;
+    }
+
+    .banner-slider img {
+      width: 100vw;
+      height: 500px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .banner-dots {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 11;
+    }
+
+    .banner-dots span {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin: 0 5px;
+      background-color: #ccc;
+      border-radius: 50%;
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+
+    .banner-dots span.active {
+      background-color: #333;
       opacity: 1;
     }
 
-    .sub-slide-wrapper { display: flex; transition: transform 0.5s ease; height: 100%; }
-    .sub-slide {
-      min-width: 100%;
-      height: 100%;
-      position: relative;
-      flex-shrink: 0;
-      opacity: 0;
-      transition: opacity 0.5s ease-in-out;
-    }
-    .sub-slide.active { opacity: 1; }
-    .sub-slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
+    .purple-box {
+      background: indigo;
+      height: 30px;
+      color: white;
+      padding: 5px 10px;
+      margin-top: 50px;
+      margin-left: 30px;
+      margin-right: 30px;
+      margin-down: 100px;
     }
 
-    .dots {
-      position: absolute;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
+    .post {
       display: flex;
-      gap: 10px;
+      align-items: center;
+      margin: 10px;
     }
-    .dot {
+
+    .dot-icon {
       width: 10px;
       height: 10px;
+      background: pink;
       border-radius: 50%;
-      background: rgba(0,0,0,0.3);
-      cursor: pointer;
+      margin-right: 10px;
     }
-    .dot.active { background: rgba(0,0,0,0.8); }
+
+    .brown-text {
+      background: brown;
+      color: white;
+      padding: 3px 6px;
+      margin-right: 10px;
+    }
+
+    .blue-box {
+      background: royalblue;
+      flex: 1;
+      color: white;
+      padding: 10px;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 40px;
+      background: skyblue;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
   </style>
 </head>
 <body>
-  <div class="banner-container">
-    <div class="top-buttons">
-      <button class="main-btn active" data-index="0">A</button>
-      <button class="main-btn" data-index="1">B</button>
-      <button class="main-btn" data-index="2">C</button>
-    </div>
-    <div class="main-wrapper">
-      <!-- A -->
-      <div class="main-slide active">
-        <div class="sub-slide-wrapper">
-          <div class="sub-slide active"><img src="images/EX_picture1.png" alt="A-1" /></div>
-          <div class="sub-slide"><img src="images/FNAF_EX_Picture.jpg" alt="A-2" /></div>
-        </div>
-        <div class="dots"></div>
-      </div>
-      <!-- B -->
-      <div class="main-slide">
-        <div class="sub-slide-wrapper">
-          <div class="sub-slide active"><img src="images/EX_picture2.png" alt="B-1" /></div>
-          <div class="sub-slide"><img src="imageB2.jpg" alt="B-2" /></div>
-        </div>
-        <div class="dots"></div>
-      </div>
-      <!-- C -->
-      <div class="main-slide">
-        <div class="sub-slide-wrapper">
-          <div class="sub-slide active"><img src="images/EX_picture3.jgp" alt="C-1" /></div>
-          <div class="sub-slide"><img src="imageC2.jpg" alt="C-2" /></div>
-        </div>
-        <div class="dots"></div>
+
+  <!-- Content -->
+  <div class="content">
+    
+    <div class="red-box">통합소식</div>
+
+    <div class="orange-box">
+      <div class="yellow-image">
+        <!-- 이미지 삽입 -->
+        <img src="images/FNAF_EX_Picture.jpg" alt="이미지" style="width:100%; height:100%;">
       </div>
     </div>
+
+    <div class="banner-slider-wrapper">
+     <div class="banner-slider" id="bannerSlider">
+      <img src="images/EX_picture1.png" alt="배너1">
+      <img src="images/EX_picture2.png" alt="배너2">
+      <img src="images/EX_picture3.jpg" alt="배너3">
+      <img src="images/EX_picture4.png" alt="배너4">
+      <img src="images/EX_picture5.png" alt="배너5">
+    </div>
+    <div class="banner-dots" id="bannerDots"></div>
   </div>
 
+    <div class="purple-box">분야별 최---신 근황</div>
+
+    <div class="post">
+      <div class="dot-icon"></div>
+      <div class="brown-text"><a href="physics.html">물리</a></div>
+      <div class="blue-box">생선.</div>
+    </div>
+    <div class="post">
+      <div class="dot-icon"></div>
+      <div class="brown-text"><a href="info.html">정보</a></div>
+      <div class="blue-box">생선.</div>
+    </div>
+    <div class="post">
+      <div class="dot-icon"></div>
+      <div class="brown-text"><a href="bio.html">생명</a></div>
+      <div class="blue-box">생선.</div>
+    </div>
+
+      <!-- Header -->
+  <header>
+    <div class="logo">봉봉뉴스</div>
+    <div class="hamburger" onclick="toggleSidebar()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    
+  </header>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="logo"></div>
+    <div class="hamburger" onclick="toggleSidebar()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    
+  <p>봉봉 메뉴</p>
+    
+  <a href="physics.html"><p style="font-size: 30px;">물리</a><br>
+    
+  <a href="info.html"><p style="font-size: 30px;">정보</a><br>
+    
+  <a href="bio.html"><p style="font-size: 30px;">생명</a><br>
+  
+  </div>
+  <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+</div>
+
   <script>
-    const mainButtons = document.querySelectorAll(".main-btn");
-    const mainSlides = document.querySelectorAll(".main-slide");
+    const bannerSlider = document.getElementById("bannerSlider");
+const images = bannerSlider.querySelectorAll("img");
+bannerSlider.style.width = `${images.length * 100}vw`;
 
-    mainButtons.forEach((btn, idx) => {
-      btn.addEventListener("click", () => {
-        mainButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        mainSlides.forEach((slide, i) => {
-          if (i === idx) {
-            slide.classList.add("active");
-          } else {
-            slide.classList.remove("active");
-          }
-        });
-      });
-    });
+const dotsContainer = document.getElementById("bannerDots");
+let currentSlide = 0;
+const totalSlides = images.length;
 
-    mainSlides.forEach(main => {
-      const wrapper = main.querySelector(".sub-slide-wrapper");
-      const slides = main.querySelectorAll(".sub-slide");
-      const dotsContainer = main.querySelector(".dots");
 
-      slides.forEach((_, idx) => {
-        const dot = document.createElement("div");
-        dot.className = "dot";
-        if (idx === 0) dot.classList.add("active");
-        dot.addEventListener("click", () => showSlide(idx));
-        dotsContainer.appendChild(dot);
-      });
+for (let i = 0; i < totalSlides; i++) {
+  const dot = document.createElement("span");
+  dot.style.display = "inline-block";
+  dot.style.width = "10px";
+  dot.style.height = "10px";
+  dot.style.margin = "5px";
+  dot.style.borderRadius = "50%";
+  dot.style.background = i === 0 ? "black" : "gray";
+  dotsContainer.appendChild(dot);
+}
+const dots = dotsContainer.querySelectorAll("span");
 
-      let current = 0;
-      const dots = dotsContainer.querySelectorAll(".dot");
+function updateSlide() {
+  bannerSlider.style.transform = `translateX(-${currentSlide * 100}vw)`;
+  dots.forEach(dot => dot.style.background = "gray");
+  dots[currentSlide].style.background = "black";
+}
 
-      const showSlide = (index) => {
-        slides[current].classList.remove("active");
-        dots[current].classList.remove("active");
-        slides[index].classList.add("active");
-        dots[index].classList.add("active");
-        current = index;
-      };
+function nextSlide() {
+  currentSlide = (currentSlide + 1) % totalSlides;
+  updateSlide();
+}
 
-      let timer = setInterval(() => {
-        let next = (current + 1) % slides.length;
-        showSlide(next);
-      }, 4000);
+function prevSlide() {
+  currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+  updateSlide();
+}
 
-      let startX = null;
-      wrapper.addEventListener("touchstart", e => startX = e.touches[0].clientX);
-      wrapper.addEventListener("touchend", e => {
-        if (startX === null) return;
-        let endX = e.changedTouches[0].clientX;
-        if (startX - endX > 50) {
-          showSlide((current + 1) % slides.length);
-        } else if (endX - startX > 50) {
-          showSlide((current - 1 + slides.length) % slides.length);
-        }
-        startX = null;
-      });
-    });
+
+setInterval(nextSlide, 10000);
+
+
+let startX = 0;
+let isDragging = false;
+
+
+bannerSlider.addEventListener("touchstart", (e) => {
+  startX = e.touches[0].clientX;
+  isDragging = true;
+});
+
+
+bannerSlider.addEventListener("touchmove", (e) => {
+  if (!isDragging) return;
+  const currentX = e.touches[0].clientX;
+  const diffX = startX - currentX;
+
+  if (Math.abs(diffX) > 50) {
+    if (diffX > 0) {
+      nextSlide();
+    } else {
+      prevSlide();
+    }
+    isDragging = false;
+  }
+});
+
+bannerSlider.addEventListener("touchend", () => {
+  isDragging = false;
+});
+
+
+bannerSlider.addEventListener("mousedown", (e) => {
+  startX = e.clientX;
+  isDragging = true;
+});
+
+
+bannerSlider.addEventListener("mousemove", (e) => {
+  if (!isDragging) return;
+  const currentX = e.clientX;
+  const diffX = startX - currentX;
+
+  if (Math.abs(diffX) > 50) {
+    if (diffX > 0) {
+      nextSlide();
+    } else {
+      prevSlide();
+    }
+    isDragging = false;
+  }
+});
+
+bannerSlider.addEventListener("mouseup", () => {
+  isDragging = false;
+});
+
+    
+bannerSlider.addEventListener("mouseleave", () => {
+  isDragging = false;
+});
+
+
+  function toggleSidebar() {    
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('active');
+  }
+
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
+  }
   </script>
 </body>
 </html>
