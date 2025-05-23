@@ -3,34 +3,48 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>슬라이드 배너</title>
+<title>슬라이드 배너 - 상위/하위 페이지 구조</title>
 <style>
   * {
     box-sizing: border-box;
   }
   body {
-    margin:0; padding:0;
+    margin: 0; padding: 0;
     font-family: Arial, sans-serif;
+    background: #f0f0f0;
   }
-  .banner-container {
+
+  .slider-container {
     width: 600px;
-    margin: 20px auto;
+    margin: 40px auto;
+    background: white;
+    border: 1px solid #ccc;
+    overflow: hidden;
     user-select: none;
     position: relative;
   }
 
-  /* 상위 페이지 버튼 (상태 표시용) */
+  /* 상위 페이지 버튼 영역 */
   .top-buttons {
     display: flex;
     justify-content: center;
-    margin-bottom: 10px;
+    gap: 10px;
+    padding: 10px 0;
+    background: #222;
   }
+
   .top-button {
-    width: 40px; height: 40px;
-    margin: 0 8px;
+    width: 60px;
+    height: 30px;
     background-color: #007bff;
-    border-radius: 50%;
+    border-radius: 4px;
     opacity: 0.4;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 30px;
+    text-align: center;
+    user-select: none;
     cursor: default;
     transition: opacity 0.3s ease;
   }
@@ -38,246 +52,253 @@
     opacity: 1;
   }
 
-  /* 상위 페이지 영역 */
-  .top-pages-wrapper {
+  /* 상위 페이지 슬라이드 영역 */
+  .top-slider {
     position: relative;
-    overflow: hidden;
     width: 100%;
     height: 350px;
-    touch-action: pan-y; /* 수직 스크롤 허용 */
-  }
-  .top-page {
-    position: absolute;
-    top:0; left:0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.5s ease;
-    will-change: transform;
-  }
-  /* 상위 페이지 기본는 화면 밖으로 배치 */
-  .top-page.inactive-left {
-    transform: translateX(-100%);
-  }
-  .top-page.inactive-right {
-    transform: translateX(100%);
-  }
-  .top-page.active {
-    transform: translateX(0);
-  }
-
-  /* 하위 페이지 래퍼 */
-  .sub-pages-wrapper {
-    position: relative;
-    width: 90%;
-    height: 280px;
     overflow: hidden;
   }
-  /* 하위 페이지 */
-  .sub-page {
-    position: absolute;
-    top:0; left:0;
-    width: 100%;
+
+  .top-slide {
+    display: flex;
+    width: 300%; /* 3상위페이지 */
     height: 100%;
-    opacity: 0;
-    transition: opacity 0.7s ease;
-  }
-  .sub-page.active {
-    opacity: 1;
-    z-index: 2;
+    transition: transform 0.3s ease;
   }
 
-  /* 하위 페이지 점 표시 */
-  .sub-indicators {
+  /* 각 상위페이지(하위페이지 2개 포함) */
+  .top-page {
+    width: 33.3333%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* 하위 페이지 슬라이더 */
+  .sub-slider {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .sub-slide {
     position: absolute;
-    bottom: 15px;
+    width: 100%;
+    height: 100%;
+    top: 0; left: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .sub-slide.active {
+    opacity: 1;
+    position: relative;
+  }
+
+  /* 하위 페이지 이미지 */
+  .sub-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* 하위 페이지 슬라이드 위치 점 */
+  .dots-container {
+    position: absolute;
+    bottom: 12px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 8px;
-    z-index: 10;
+    gap: 6px;
   }
-  .sub-indicators .dot {
-    width: 12px; height: 12px;
+  .dot {
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background-color: #bbb;
-    opacity: 0.5;
-    transition: opacity 0.3s ease, background-color 0.3s ease;
+    background: rgba(255,255,255,0.6);
+    cursor: default;
+    transition: background 0.3s ease;
   }
-  .sub-indicators .dot.active {
-    background-color: #444;
-    opacity: 1;
+  .dot.active {
+    background: rgba(255,255,255,1);
   }
 </style>
 </head>
 <body>
 
-<div class="banner-container">
-  <!-- 상위 페이지 상태 표시 버튼 -->
+<div class="slider-container">
+
+  <!-- 상위 페이지 버튼 -->
   <div class="top-buttons">
-    <div class="top-button active" data-index="0" title="A"></div>
-    <div class="top-button" data-index="1" title="B"></div>
-    <div class="top-button" data-index="2" title="C"></div>
+    <div class="top-button active" data-index="0">A</div>
+    <div class="top-button" data-index="1">B</div>
+    <div class="top-button" data-index="2">C</div>
   </div>
 
-  <!-- 상위 페이지 래퍼 -->
-  <div class="top-pages-wrapper" id="topPagesWrapper">
-    <!-- A 상위 페이지 -->
-    <div class="top-page active" data-index="0">
-      <div class="sub-pages-wrapper">
-        <img src="https://picsum.photos/id/1015/540/280" alt="A-1" class="sub-page active" />
-        <img src="https://picsum.photos/id/1016/540/280" alt="A-2" class="sub-page" />
-        <div class="sub-indicators">
-          <span class="dot active"></span>
-          <span class="dot"></span>
+  <!-- 상위 페이지 슬라이드 -->
+  <div class="top-slider" id="topSlider">
+    <div class="top-slide" id="topSlide">
+      <!-- 상위페이지 A -->
+      <div class="top-page" data-top-index="0">
+        <div class="sub-slider" data-sub-index="0">
+          <div class="sub-slide active">
+            <img src="https://picsum.photos/id/1015/600/350" alt="A-1" />
+          </div>
+          <div class="sub-slide">
+            <img src="https://picsum.photos/id/1016/600/350" alt="A-2" />
+          </div>
+          <div class="dots-container">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- B 상위 페이지 -->
-    <div class="top-page inactive-right" data-index="1">
-      <div class="sub-pages-wrapper">
-        <img src="https://picsum.photos/id/1018/540/280" alt="B-1" class="sub-page active" />
-        <img src="https://picsum.photos/id/1019/540/280" alt="B-2" class="sub-page" />
-        <div class="sub-indicators">
-          <span class="dot active"></span>
-          <span class="dot"></span>
+      <!-- 상위페이지 B -->
+      <div class="top-page" data-top-index="1">
+        <div class="sub-slider" data-sub-index="1">
+          <div class="sub-slide active">
+            <img src="https://picsum.photos/id/1025/600/350" alt="B-1" />
+          </div>
+          <div class="sub-slide">
+            <img src="https://picsum.photos/id/1026/600/350" alt="B-2" />
+          </div>
+          <div class="dots-container">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- C 상위 페이지 -->
-    <div class="top-page inactive-right" data-index="2">
-      <div class="sub-pages-wrapper">
-        <img src="https://picsum.photos/id/1021/540/280" alt="C-1" class="sub-page active" />
-        <img src="https://picsum.photos/id/1022/540/280" alt="C-2" class="sub-page" />
-        <div class="sub-indicators">
-          <span class="dot active"></span>
-          <span class="dot"></span>
+      <!-- 상위페이지 C -->
+      <div class="top-page" data-top-index="2">
+        <div class="sub-slider" data-sub-index="2">
+          <div class="sub-slide active">
+            <img src="https://picsum.photos/id/1035/600/350" alt="C-1" />
+          </div>
+          <div class="sub-slide">
+            <img src="https://picsum.photos/id/1036/600/350" alt="C-2" />
+          </div>
+          <div class="dots-container">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
 </div>
 
 <script>
-(() => {
-  const topPagesWrapper = document.getElementById('topPagesWrapper');
-  const topPages = topPagesWrapper.querySelectorAll('.top-page');
-  const topButtons = document.querySelectorAll('.top-button');
+  (function(){
+    const topSlide = document.getElementById('topSlide');
+    const topButtons = document.querySelectorAll('.top-button');
+    const topSlider = document.getElementById('topSlider');
 
-  let currentTopIndex = 0;
-  let currentSubIndex = 0;
-  let subSlideInterval = null;
+    let topIndex = 0;  // 현재 상위 페이지 인덱스 (0,1,2)
+    let startX = 0;
+    let currentTranslate = 0;
+    let isDragging = false;
 
-  // 현재 하위 페이지 점 업데이트
-  function updateSubIndicators() {
-    const currentTopPage = topPages[currentTopIndex];
-    const dots = currentTopPage.querySelectorAll('.sub-indicators .dot');
-    dots.forEach((dot, idx) => {
-      dot.classList.toggle('active', idx === currentSubIndex);
-    });
-  }
+    // 하위페이지 자동 슬라이드 관련
+    const subSliders = document.querySelectorAll('.sub-slider');
+    const subIntervalTime = 4000; // 4초마다 슬라이드 전환
+    let subTimers = [];
 
-  // 하위 페이지 자동 슬라이드 시작
-  function startSubSlide() {
-    stopSubSlide();
-    subSlideInterval = setInterval(() => {
-      const currentTopPage = topPages[currentTopIndex];
-      const subPages = currentTopPage.querySelectorAll('.sub-page');
+    // 하위페이지 자동 슬라이드 함수 초기화
+    function initSubSliders(){
+      subSliders.forEach((subSlider, idx) => {
+        let subIndex = 0;
+        const slides = subSlider.querySelectorAll('.sub-slide');
+        const dots = subSlider.querySelectorAll('.dot');
 
-      subPages[currentSubIndex].classList.remove('active');
-      currentSubIndex = (currentSubIndex + 1) % subPages.length;
-      subPages[currentSubIndex].classList.add('active');
+        function showSubSlide(i){
+          slides.forEach((slide, si) => {
+            if(si === i){
+              slide.classList.add('active');
+              dots[si].classList.add('active');
+            } else {
+              slide.classList.remove('active');
+              dots[si].classList.remove('active');
+            }
+          });
+        }
 
-      updateSubIndicators();
-    }, 3000);
-  }
+        function nextSubSlide(){
+          subIndex = (subIndex +1) % slides.length;
+          showSubSlide(subIndex);
+        }
 
-  // 하위 페이지 자동 슬라이드 멈춤
-  function stopSubSlide() {
-    if(subSlideInterval) {
-      clearInterval(subSlideInterval);
-      subSlideInterval = null;
+        showSubSlide(subIndex);
+
+        if(subTimers[idx]) clearInterval(subTimers[idx]);
+        subTimers[idx] = setInterval(nextSubSlide, subIntervalTime);
+      });
     }
-  }
 
-  // 상위 페이지 상태 표시 업데이트 (버튼 투명도)
-  function updateTopButtons() {
-    topButtons.forEach((btn, idx) => {
-      btn.classList.toggle('active', idx === currentTopIndex);
-    });
-  }
+    // 상위페이지 이동 함수 (translateX)
+    function moveTopSlide(index){
+      currentTranslate = -index * 100/3; // 100% / 3 상위페이지수 = 33.3333%
+      topSlide.style.transform = `translateX(${currentTranslate}%)`;
+      topIndex = index;
 
-  // 상위 페이지 스와이프 제어
-  let startX = 0;
-  let isDragging = false;
+      // 상위 버튼 투명도 표시
+      topButtons.forEach((btn, i) => {
+        if(i === topIndex){
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
 
-  topPagesWrapper.addEventListener('touchstart', e => {
-    if(e.touches.length !== 1) return;
-    startX = e.touches[0].clientX;
-    isDragging = true;
-    stopSubSlide();
-  });
+    // 터치/마우스 이벤트 처리 : 상위페이지 스와이프 이동
+    function touchStart(e){
+      isDragging = true;
+      startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+    }
+    function touchMove(e){
+      if(!isDragging) return;
+      const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+      const diff = currentX - startX;
 
-  topPagesWrapper.addEventListener('touchmove', e => {
-    if(!isDragging) return;
-    const moveX = e.touches[0].clientX;
-    const diffX = moveX - startX;
+      // 제한 범위 안에서만 슬라이드 이동
+      // 여기서는 스와이프 중 실제 transform 값은 바꾸지 않고 종료 후에만 이동처리
+      e.preventDefault();
+    }
+    function touchEnd(e){
+      if(!isDragging) return;
+      isDragging = false;
+      const endX = e.type.includes('mouse') ? e.pageX : e.changedTouches[0].clientX;
+      const diff = endX - startX;
 
-    // 여기선 드래그 시 애니메이션은 빼고 터치 이동 방향만 체크
-  });
-
-  topPagesWrapper.addEventListener('touchend', e => {
-    if(!isDragging) return;
-    isDragging = false;
-    const endX = e.changedTouches[0].clientX;
-    const diffX = endX - startX;
-
-    if(Math.abs(diffX) > 50) {
-      if(diffX < 0 && currentTopIndex < topPages.length - 1) {
-        // 왼쪽으로 스와이프 → 다음 상위 페이지
-        moveToTopPage(currentTopIndex + 1);
-      } else if(diffX > 0 && currentTopIndex > 0) {
-        // 오른쪽으로 스와이프 → 이전 상위 페이지
-        moveToTopPage(currentTopIndex - 1);
+      if(Math.abs(diff) > 50){
+        if(diff < 0 && topIndex < 2){
+          moveTopSlide(topIndex +1);
+        } else if(diff > 0 && topIndex > 0){
+          moveTopSlide(topIndex -1);
+        }
       }
     }
-    startSubSlide();
-  });
 
-  // 상위 페이지 이동 처리
-  function moveToTopPage(newIndex) {
-    if(newIndex === currentTopIndex) return;
+    // 초기 셋업
+    moveTopSlide(0);
+    initSubSliders();
 
-    // 현재 top page를 좌측 또는 우측으로 밀어내고
-    if(newIndex > currentTopIndex) {
-      topPages[currentTopIndex].classList.remove('active');
-      topPages[currentTopIndex].classList.add('inactive-left');
+    // 이벤트 리스너 등록
+    topSlider.addEventListener('touchstart', touchStart);
+    topSlider.addEventListener('touchmove', touchMove, { passive:false });
+    topSlider.addEventListener('touchend', touchEnd);
 
-      topPages[newIndex].classList.remove('inactive-right');
-      topPages[newIndex].classList.add('active');
-    } else {
-      topPages[currentTopIndex].classList.remove('active');
-      topPages[currentTopIndex].classList.add('inactive-right');
+    topSlider.addEventListener('mousedown', touchStart);
+    topSlider.addEventListener('mousemove', touchMove);
+    topSlider.addEventListener('mouseup', touchEnd);
+    topSlider.addEventListener('mouseleave', touchEnd);
 
-      topPages[newIndex].classList.remove('inactive-left');
-      topPages[newIndex].classList.add('active');
-    }
-
-    currentTopIndex = newIndex;
-    currentSubIndex = 0; // 하위 페이지 초기화
-    updateTopButtons();
-    updateSubIndicators();
-  }
-
-  // 초기 시작
-  updateTopButtons();
-  updateSubIndicators();
-  startSubSlide();
-})();
+  })();
 </script>
 
 </body>
