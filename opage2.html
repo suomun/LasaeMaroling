@@ -170,126 +170,121 @@
       justify-content: center;
     }  
    
-   * {
-    box-sizing: border-box;
-   }
+    body {
+      margin: 0; padding: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      box-sizing: border-box;
+    }
+
+    .slider-container {
+      width: 600px;
+      margin: 40px auto;
+      background: white;
+      border: 1px solid #ccc;
+      overflow: hidden;
+      user-select: none;
+      position: relative;
+    }
+
+    .top-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 0;
+      background-color: rgba(0, 0, 0, 0);
+    }
+
+    .top-button {
+      width: 60px;
+      height: 30px;
+      background-color: #007bff;
+      border-radius: 4px;
+      opacity: 0.4;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      line-height: 30px;
+      text-align: center; 
+      user-select: none; 
+      cursor: default; 
+      transition: opacity 0.3s ease;
+    }
     
-   body {
-    margin: 0; padding: 0;
-    font-family: Arial, sans-serif;
-    background: #f0f0f0;
+    .top-button.active {
+      opacity: 1;
+    }
+ 
+    .top-slider {
+      position: relative;
+      width: 100%;
+      height: 350px;
+      overflow: hidden;
+    }
+
+    .top-slide {
+      display: flex;
+      width: 300%;
+      height: 100%;
+      transition: transform 0.3s ease;
   }
 
-  .slider-container {
-    width: 600px;
-    margin: 40px auto;
-    background: white;
-    border: 1px solid #ccc;
-    overflow: hidden;
-    user-select: none;
-    position: relative;
-  }
+    .top-page {
+      width: 33.3333%;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+    }
 
-  /* 상위 페이지 버튼 영역 */
-  .top-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px 0;
-    background-color: rgba(0, 0, 0, 0);
-  }
+    .sub-slider {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+ 
+    .sub-slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0; left: 0;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
 
-  .top-button {
-    width: 60px;
-    height: 30px;
-    background-color: #007bff;
-    border-radius: 4px;
-    opacity: 0.4;
-    color: white;
-    font-weight: bold;
-    font-size: 18px;
-    line-height: 30px;
-    text-align: center;
-    user-select: none;
-    cursor: default;
-    transition: opacity 0.3s ease;
-  }
-  .top-button.active {
-    opacity: 1;
-  }
+    .sub-slide.active {
+      opacity: 1;
+      position: relative;
+    }
 
-  /* 상위 페이지 슬라이드 영역 */
-  .top-slider {
-    position: relative;
-    width: 100%;
-    height: 350px;
-    overflow: hidden;
-  }
+    .sub-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+  }    
 
-  .top-slide {
-    display: flex;
-    width: 300%; /* 3상위페이지 */
-    height: 100%;
-    transition: transform 0.3s ease;
-  }
-
-  /* 각 상위페이지(하위페이지 2개 포함) */
-  .top-page {
-    width: 33.3333%;
-    height: 100%;
-    overflow: hidden;
-    position: relative;
-  }
-
-  /* 하위 페이지 슬라이더 */
-  .sub-slider {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .sub-slide {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0; left: 0;
-    opacity: 0;
-    transition: opacity 0.6s ease;
-  }
-  .sub-slide.active {
-    opacity: 1;
-    position: relative;
-  }
-
-  /* 하위 페이지 이미지 */
-  .sub-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  /* 하위 페이지 슬라이드 위치 점 */
-  .dots-container {
-    position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 6px;
-  }
-  .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.6);
-    cursor: default;
-    transition: background 0.3s ease;
-  }
-  .dot.active {
-    background: rgba(255,255,255,1);
-  }
+    .dots-container {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+    }
+    
+    .dot { 
+      width: 12px; 
+      height: 12px;
+      border-radius: 50%; 
+      background: rgba(255,255,255,0.6); 
+      cursor: default;
+      transition: background 0.3s ease;
+    }
+  
+    .dot.active {   
+      background: rgba(255,255,255,1);
+    }
 
    
     
@@ -299,82 +294,81 @@
 
   <!-- Content -->
   <div class="content">
-
-   <div class="slider-container">
-
-  <!-- 상위 페이지 버튼 -->
-  <div class="top-buttons">
-    <div class="top-button active" data-index="0">A</div>
-    <div class="top-button" data-index="1">B</div>
-    <div class="top-button" data-index="2">C</div>
-  </div>
-
-  <!-- 상위 페이지 슬라이드 -->
-  <div class="top-slider" id="topSlider">
-    <div class="top-slide" id="topSlide">
-      <!-- 상위페이지 A -->
-      <div class="top-page" data-top-index="0">
-        <div class="sub-slider" data-sub-index="0">
-          <div class="sub-slide active">
-           <a href="physics.html" target="_blank" rel="noopener noreferrer">
-            <img src="images/EX_picture1.pngimages/EX_picture1.png" alt="A-1" /></a>
-          </div>
-          <div class="sub-slide">
-            <a href="physics.html" target="_blank" rel="noopener noreferrer">
-            <img src="images/EX_picture2.png" alt="A-2" /></a>
-          </div>
-          <div class="dots-container">
-            <div class="dot active"></div>
-            <div class="dot"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 상위페이지 B -->
-      <div class="top-page" data-top-index="1">
-        <div class="sub-slider" data-sub-index="1">
-          <div class="sub-slide active">
-           <a href="info.html" target="_blank" rel="noopener noreferrer">
-            <img src="images/EX_picture3.jpg" alt="B-1" /></a>
-          </div>
-          <div class="sub-slide">
-           <a href="info.html" target="_blank" rel="noopener noreferrer">
-            <img src="images/EX_picture4.png" alt="B-2" /></a>
-          </div>
-          <div class="dots-container">
-            <div class="dot active"></div>
-            <div class="dot"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 상위페이지 C -->
-      <div class="top-page" data-top-index="2">
-        <div class="sub-slider" data-sub-index="2">
-          <div class="sub-slide active">
-           <a href="bio.html" target="_blank" rel="noopener noreferrer">
-            <img src="images/EX_picture5.png" alt="C-1" /></a>
-          </div>
-          <div class="sub-slide">
-            <a href="bio.html" target="_blank" rel="noopener noreferrer">
-             <img src="images/FNAF_EX_Picture.jpg" alt="C-2" /></a>
-          </div>
-          <div class="dots-container">
-            <div class="dot active"></div>
-            <div class="dot"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-    
     <div class="red-box">통합소식</div>
-
+    
     <div class="orange-box">
       <div class="yellow-image">
         <!-- 이미지 삽입 -->
         <img src="images/FNAF_EX_Picture.jpg" alt="이미지" style="width:100%; height:100%;">
+      </div>
+    </div>
+
+    <div class="slider-container">
+      <div class="top-buttons">
+        <div class="top-button active" data-index="0">A</div>    
+        <div class="top-button" data-index="1">B</div>   
+        <div class="top-button" data-index="2">C</div>
+      </div>
+
+  <!-- 상위 페이지 슬라이드 -->
+      <div class="top-slider" id="topSlider">
+        <div class="top-slide" id="topSlide">
+      
+        <!-- 상위페이지 A -->
+          <div class="top-page" data-top-index="0">
+            <div class="sub-slider" data-sub-index="0">
+              <div class="sub-slide active">
+                <a href="physics.html" target="_blank" rel="noopener noreferrer">
+                  <img src="images/EX_picture1.pngimages/EX_picture1.png" alt="A-1" /></a>    
+              </div>     
+              <div class="sub-slide">      
+                <a href="physics.html" target="_blank" rel="noopener noreferrer">    
+                  <img src="images/EX_picture2.png" alt="A-2" /></a>   
+              </div>  
+              <div class="dots-container">   
+                <div class="dot active"></div> 
+                <div class="dot"></div>     
+              </div>    
+            </div>    
+          </div>
+      
+        <!-- 상위페이지 B -->
+          <div class="top-page" data-top-index="1">  
+            <div class="sub-slider" data-sub-index="1">     
+              <div class="sub-slide active">     
+                <a href="info.html" target="_blank" rel="noopener noreferrer">  
+                  <img src="images/EX_picture3.jpg" alt="B-1" /></a>    
+              </div>   
+              <div class="sub-slide"> 
+                <a href="info.html" target="_blank" rel="noopener noreferrer">   
+                  <img src="images/EX_picture4.png" alt="B-2" /></a>     
+              </div>   
+              <div class="dots-container"> 
+                <div class="dot active"></div>
+                  <div class="dot"></div>    
+              </div> 
+            </div> 
+          </div>
+      
+        <!-- 상위페이지 C -->   
+          <div class="top-page" data-top-index="2">        
+            <div class="sub-slider" data-sub-index="2">          
+              <div class="sub-slide active">         
+                <a href="bio.html" target="_blank" rel="noopener noreferrer">        
+                  <img src="images/EX_picture5.png" alt="C-1" /></a>    
+              </div>    
+              <div class="sub-slide">    
+                <a href="bio.html" target="_blank" rel="noopener noreferrer">
+                  <img src="images/FNAF_EX_Picture.jpg" alt="C-2" /></a>
+              </div>
+    
+              <div class="dots-container">      
+                <div class="dot active"></div>    
+                <div class="dot"></div>     
+              </div>    
+            </div> 
+          </div> 
+        </div>
       </div>
     </div>
 
