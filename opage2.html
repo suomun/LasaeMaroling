@@ -2,251 +2,162 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>여봉봉사이트</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>조건에 맞는 슬라이드 배너</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-      font-family: snas-serif;
-      background:linear-gradient(0deg,#000000,#4d7af5)!important;
+      background: linear-gradient(45deg, #4d7af5, #000017);
+      overflow-x: hidden;
     }
 
-    header {
-      position: fixed;
-      top: 0;
+    .banner-container {
+      position: relative;
       width: 100%;
-      background: skyblue;
-      height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      z-index: 1000;
+      height: 500px;
+      overflow: hidden;
     }
 
-    .hamburger {
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .hamburger div {
-      width: 25px;
-      height: 3px;
-      background: black;
-    }
-
-    .sidebar {
-      position: fixed;
-      top: 0;
-      right: -250px;
-      width: 250px;
+    .main-slide {
+      display: none;
+      width: 100%;
       height: 100%;
-      background: #333;
-      color: #fff;
-      padding: 20px;
-      transition: right 0.3s ease;
-      z-index: 2000;
-    }
-
-    .sidebar.open {
-      right: 0;
-    } 
-
-    .overlay {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
-      width: calc(100% - 250px); 
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5); /* 반투명한 검정 */
-      display: none;
-      z-index: 1000;
     }
 
-    .overlay.active {
+    .main-slide.active {
       display: block;
     }
 
-    .content {
-      margin-top: 60px;
-      padding-bottom: 60px;
+    .sub-slide-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
     }
 
-    .section {
-      padding: 20px;
-    }   
-
-    .red-box {
-      background: red;
-      height: 54px;
-      margin-top: 700px;
-      margin-left: 30px;
-      margin-right: 30px;
-      margin-down: 0px;
-      color: white;
-      text-align: center;
-      line-height: 50px;
-      background-color: rgba(0, 0, 0, 0);
+    .sub-slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.5s ease;
     }
 
-    .orange-box {
-      background: orange;
-      margin-top: 0px;
-      margin-left: 30px;
-      margin-right: 30px;
-      margin-down: 50px;
-      padding: 10px;
+    .sub-slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+
+    .sub-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
-      align-items: center;
+      gap: 10px;
+      z-index: 2;
     }
 
-    .yellow-image {
-      background: yellow;
-      width: 120px;
-      height: 120px;
-      margin-top: 10px;
-      margin-left: 0px;
-      margin-right: 30px;
-      margin-down: 10px;
-    }
-
-    .purple-box {
-      background: indigo;
-      height: 30px;
-      color: white;
-      padding: 5px 10px;
-      margin-top: 50px;
-      margin-left: 30px;
-      margin-right: 30px;
-      margin-down: 100px;
-    }
-
-    .post {
-      display: flex;
-      align-items: center;
-      margin: 10px;
-    }
-
-    .dot-icon {
+    .dot {
       width: 10px;
       height: 10px;
-      background: pink;
       border-radius: 50%;
-      margin-right: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      cursor: pointer;
     }
 
-    .brown-text {
-      background: brown;
-      color: white;
-      padding: 3px 6px;
-      margin-right: 10px;
+    .dot.active {
+      background: rgba(0, 0, 0, 0.8);
     }
-
-    .blue-box {
-      background: royalblue;
-      flex: 1;
-      color: white;
-      padding: 10px;
-    }
-
-    footer {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      height: 40px;
-      background: skyblue;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
   </style>
 </head>
 <body>
-
-  <!-- Content -->
-  <div class="content">
-    
-    <div class="red-box">통합소식</div>
-
-    <div class="orange-box">
-      <div class="yellow-image">
-        <!-- 이미지 삽입 -->
-        <img src="images/FNAF_EX_Picture.jpg" alt="이미지" style="width:100%; height:100%;">
+  <div class="banner-container" id="banner">
+    <div class="main-slide active">
+      <div class="sub-slide-wrapper">
+        <div class="sub-slide active"><img src="imageA1.png" alt="A-1"></div>
+        <div class="sub-slide"><img src="imageA2.png" alt="A-2"></div>
+        <div class="dots"></div>
       </div>
     </div>
-
-    <div class="purple-box">분야별 최---신 근황</div>
-
-    <div class="post">
-      <div class="dot-icon"></div>
-      <div class="brown-text"><a href="physics.html">물리</a></div>
-      <div class="blue-box">생선.</div>
+    <div class="main-slide">
+      <div class="sub-slide-wrapper">
+        <div class="sub-slide active"><img src="imageB1.png" alt="B-1"></div>
+        <div class="sub-slide"><img src="imageB2.png" alt="B-2"></div>
+        <div class="dots"></div>
+      </div>
     </div>
-    <div class="post">
-      <div class="dot-icon"></div>
-      <div class="brown-text"><a href="info.html">정보</a></div>
-      <div class="blue-box">생선.</div>
+    <div class="main-slide">
+      <div class="sub-slide-wrapper">
+        <div class="sub-slide active"><img src="imageC1.png" alt="C-1"></div>
+        <div class="sub-slide"><img src="imageC2.png" alt="C-2"></div>
+        <div class="dots"></div>
+      </div>
     </div>
-    <div class="post">
-      <div class="dot-icon"></div>
-      <div class="brown-text"><a href="bio.html">생명</a></div>
-      <div class="blue-box">생선.</div>
-    </div>
-
-      <!-- Header -->
-  <header>
-    <div class="logo">봉봉뉴스</div>
-    <div class="hamburger" onclick="toggleSidebar()">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-    
-  </header>
-
-  <!-- Sidebar -->
-  <div class="sidebar" id="sidebar">
-    <div class="logo"></div>
-    <div class="hamburger" onclick="toggleSidebar()">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-    
-  <p>봉봉 메뉴</p>
-    
-  <a href="physics.html"><p style="font-size: 30px;">물리</a><br>
-    
-  <a href="info.html"><p style="font-size: 30px;">정보</a><br>
-    
-  <a href="bio.html"><p style="font-size: 30px;">생명</a><br>
-  
   </div>
-  <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
-</div>
 
   <script>
+    const mainSlides = document.querySelectorAll(".main-slide");
+    let currentMain = 0;
 
-  function toggleSidebar() {    
-    document.getElementById('sidebar').classList.toggle('open');
-    document.getElementById('overlay').classList.toggle('active');
-  }
+    // 스와이프 제어
+    let startX = null;
+    document.getElementById("banner").addEventListener("touchstart", e => startX = e.touches[0].clientX);
+    document.getElementById("banner").addEventListener("touchend", e => {
+      if (startX === null) return;
+      let endX = e.changedTouches[0].clientX;
+      if (startX - endX > 50) {
+        switchMain((currentMain + 1) % mainSlides.length);
+      } else if (endX - startX > 50) {
+        switchMain((currentMain - 1 + mainSlides.length) % mainSlides.length);
+      }
+      startX = null;
+    });
 
-  function closeSidebar() {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').classList.remove('active');
-  }
+    function switchMain(index) {
+      mainSlides[currentMain].classList.remove("active");
+      mainSlides[index].classList.add("active");
+      currentMain = index;
+    }
+
+    // 하위 슬라이드 자동 전환 + dots
+    mainSlides.forEach(main => {
+      const wrapper = main.querySelector(".sub-slide-wrapper");
+      const slides = wrapper.querySelectorAll(".sub-slide");
+      const dotsContainer = wrapper.querySelector(".dots");
+
+      let current = 0;
+      slides.forEach((_, idx) => {
+        const dot = document.createElement("div");
+        dot.className = "dot";
+        if (idx === 0) dot.classList.add("active");
+        dot.addEventListener("click", () => showSlide(idx));
+        dotsContainer.appendChild(dot);
+      });
+      const dots = dotsContainer.querySelectorAll(".dot");
+
+      function showSlide(index) {
+        slides[current].classList.remove("active");
+        dots[current].classList.remove("active");
+        slides[index].classList.add("active");
+        dots[index].classList.add("active");
+        current = index;
+      }
+
+      setInterval(() => {
+        const next = (current + 1) % slides.length;
+        showSlide(next);
+      }, 4000);
+    });
   </script>
 </body>
 </html>
