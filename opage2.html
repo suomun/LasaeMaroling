@@ -24,7 +24,7 @@
       top: 0;
       width: 100%;
       background: skyblue;
-      height: 120px;
+      height: 100px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -102,8 +102,8 @@
     .orange-box {
       background: orange;
       margin-top: 0px;
-      margin-left: 30px;
-      margin-right: 30px;
+      margin-left: 150px;
+      margin-right: 150px;
       margin-down: 50px;
       padding: 10px;
       display: flex;
@@ -126,8 +126,8 @@
       color: white;
       padding: 5px 10px;
       margin-top: 50px;
-      margin-left: 30px;
-      margin-right: 30px;
+      margin-left: 150px;
+      margin-right: 250px;
       margin-down: 100px;
     }
 
@@ -157,6 +157,7 @@
       flex: 1;
       color: white;
       padding: 10px;
+      margin-right: 150px;
     }
 
     footer {
@@ -303,7 +304,7 @@
       display: none;
       padding-left: 20px;
       background-color: rgba(0,0,0,0);
-      margin: 30px 0;
+      margin: 100px 0;
     }
 
     .submenu.open {
@@ -442,7 +443,7 @@
    
     
   <p>봉봉 메뉴</p>
-    <div class="menu">
+      <div class="menu">
     <div class="menu-item" onclick="toggleSubmenu(this)">
       <span>분야</span>
       <span class="arrow">▶</span>
@@ -451,29 +452,21 @@
       <a href="physics.html"><p style="font-size: 30px;">물리</a><br>
       <a href="info.html"><p style="font-size: 30px;">정보</a><br>
       <a href="bio.html"><p style="font-size: 30px;">생명</a><br>
-      <span>분야</span>
-      <span class="arrow">▶</span>
-     </div>
+  
     </div>
-  <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
-</div>
-    
-    <div class="menu">
-    <div class="menu-item" onclick="toggleSubmenu(this)">
-      <span>분야</span>
-      <span class="arrow">▶</span>
-    </div>
-    <div class="submenu">
-      <a href="physics.html"><p style="font-size: 30px;">물리</a><br>
-      <a href="info.html"><p style="font-size: 30px;">정보</a><br>
-      <a href="bio.html"><p style="font-size: 30px;">생명</a><br>
-      <span>분야</span>
-      <span class="arrow">▶</span>
-     </div>
-    </div>
-  <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
-</div>
 
+    <div class="menu-item" onclick="toggleSubmenu(this)">
+      <span>봉봉관련소식</span>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="submenu">
+      <div>공식설문</div>
+      <div>공식인스타</div>
+    </div>
+  </div>
+
+  <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+</div>
 
   <script>
 
