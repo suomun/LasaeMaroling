@@ -286,8 +286,37 @@
       background: rgba(255,255,255,1);
     }
 
-   
-    
+        body {
+      font-family: sans-serif;
+    }
+
+    .menu-item {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .submenu {
+      display: none;
+      padding-left: 20px;
+      background-color: #f9f9f9;
+    }
+
+    .submenu.open {
+      display: block;
+    }
+
+    .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .arrow.rotate {
+      transform: rotate(90deg);
+    }
+
   </style>
 </head>
 <body>
@@ -298,7 +327,6 @@
     
     <div class="orange-box">
       <div class="yellow-image">
-        <!-- 이미지 삽입 -->
         <img src="images/FNAF_EX_Picture.jpg" alt="이미지" style="width:100%; height:100%;">
       </div>
     </div>
@@ -413,13 +441,16 @@
    
     
   <p>봉봉 메뉴</p>
-    
-  <a href="physics.html"><p style="font-size: 30px;">물리</a><br>
-    
-  <a href="info.html"><p style="font-size: 30px;">정보</a><br>
-    
-  <a href="bio.html"><p style="font-size: 30px;">생명</a><br>
-  
+    <div class="menu">
+    <div class="menu-item" onclick="toggleSubmenu(this)">
+      <span>분야</span>
+      <span class="arrow">▶</span>
+    </div>
+    <div class="submenu">
+      <a href="physics.html"><p style="font-size: 30px;">물리</a><br>
+      <a href="info.html"><p style="font-size: 30px;">정보</a><br>
+      <a href="bio.html"><p style="font-size: 30px;">생명</a><br>
+    </div>
   </div>
   <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
 </div>
@@ -431,17 +462,17 @@
     const topButtons = document.querySelectorAll('.top-button');
     const topSlider = document.getElementById('topSlider');
 
-    let topIndex = 0;  // 현재 상위 페이지 인덱스 (0,1,2)
+    let topIndex = 0; 
     let startX = 0;
     let currentTranslate = 0;
     let isDragging = false;
 
-    // 하위페이지 자동 슬라이드 관련
+  
     const subSliders = document.querySelectorAll('.sub-slider');
-    const subIntervalTime = 4000; // 4초마다 슬라이드 전환
+    const subIntervalTime = 4000; 
     let subTimers = [];
 
-    // 하위페이지 자동 슬라이드 함수 초기화
+
     function initSubSliders(){
       subSliders.forEach((subSlider, idx) => {
         let subIndex = 0;
@@ -472,13 +503,13 @@
       });
     }
 
-    // 상위페이지 이동 함수 (translateX)
+ 
     function moveTopSlide(index){
-      currentTranslate = -index * 100/3; // 100% / 3 상위페이지수 = 33.3333%
+      currentTranslate = -index * 100/3; 
       topSlide.style.transform = `translateX(${currentTranslate}%)`;
       topIndex = index;
 
-      // 상위 버튼 투명도 표시
+
       topButtons.forEach((btn, i) => {
         if(i === topIndex){
           btn.classList.add('active');
@@ -488,7 +519,6 @@
       });
     }
 
-    // 터치/마우스 이벤트 처리 : 상위페이지 스와이프 이동
     function touchStart(e){
       isDragging = true;
       startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
@@ -498,8 +528,7 @@
       const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
       const diff = currentX - startX;
 
-      // 제한 범위 안에서만 슬라이드 이동
-      // 여기서는 스와이프 중 실제 transform 값은 바꾸지 않고 종료 후에만 이동처리
+
       e.preventDefault();
     }
     function touchEnd(e){
@@ -517,11 +546,9 @@
       }
     }
 
-    // 초기 셋업
     moveTopSlide(0);
     initSubSliders();
 
-    // 이벤트 리스너 등록
     topSlider.addEventListener('touchstart', touchStart);
     topSlider.addEventListener('touchmove', touchMove, { passive:false });
     topSlider.addEventListener('touchend', touchEnd);
@@ -541,6 +568,14 @@
   function closeSidebar() {
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('overlay').classList.remove('active');
+  }
+
+  function toggleSubmenu(menuItem) {
+    const submenu = menuItem.nextElementSibling;
+    const arrow = menuItem.querySelector('.arrow');
+      
+    submenu.classList.toggle('open');
+    arrow.classList.toggle('rotate');
   }
   </script>
 </body>
