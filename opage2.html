@@ -16,7 +16,7 @@
       margin: 0;
       padding: 0;
       font-family: snas-serif;
-      background:linear-gradient(0deg,#4d7af5,#000000)!important;
+      background:linear-gradient(0deg,#0a0236,#000000)!important;
     }
 
     header {
@@ -303,6 +303,7 @@
       display: none;
       padding-left: 20px;
       background-color: rgba(0,0,0,0);
+      margin: 30px 0;
     }
 
     .submenu.open {
@@ -454,14 +455,25 @@
       <span class="arrow">▶</span>
      </div>
     </div>
+  <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+</div>
+    
+    <div class="menu">
+    <div class="menu-item" onclick="toggleSubmenu(this)">
+      <span>분야</span>
+      <span class="arrow">▶</span>
+    </div>
     <div class="submenu">
       <a href="physics.html"><p style="font-size: 30px;">물리</a><br>
       <a href="info.html"><p style="font-size: 30px;">정보</a><br>
       <a href="bio.html"><p style="font-size: 30px;">생명</a><br>
+      <span>분야</span>
+      <span class="arrow">▶</span>
+     </div>
     </div>
-  </div>
   <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
 </div>
+
 
   <script>
 
