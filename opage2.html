@@ -88,7 +88,8 @@
 
     .red-box {
       background: red;
-      height: 54px;
+      width: 100vw; 
+      height: 100%;
       margin-top: 700px;
       margin-left: 30px;
       margin-right: 30px;
@@ -101,9 +102,11 @@
 
     .orange-box {
       background: orange;
+      width: 100vw; 
+      height: 100%;
       margin-top: 0px;
-      margin-left: 150px;
-      margin-right: 150px;
+      margin-left: 30px;
+      margin-right: 30px;
       margin-down: 50px;
       padding: 10px;
       display: flex;
@@ -122,7 +125,8 @@
 
     .purple-box {
       background: indigo;
-      height: 30px;
+      width: 100vw; 
+      height: 100%;
       color: white;
       padding: 5px 10px;
       margin-top: 50px;
@@ -304,7 +308,6 @@
       display: none;
       padding-left: 20px;
       background-color: rgba(0,0,0,0);
-      margin: 100px 0;
     }
 
     .submenu.open {
@@ -449,10 +452,9 @@
       <span class="arrow">▶</span>
     </div>
     <div class="submenu">
-      <a href="physics.html"><p style="font-size: 30px;">물리</a><br>
-      <a href="info.html"><p style="font-size: 30px;">정보</a><br>
-      <a href="bio.html"><p style="font-size: 30px;">생명</a><br>
-  
+      <a href="physics.html"><p style="font-size: 20px;"><div style="margin: 30px 0;">물리</a><br></div>
+      <a href="info.html"><p style="font-size: 20px;"><div style="margin: 30px 0;">정보</a><br></div>
+      <a href="bio.html"><p style="font-size: 20px;"><div style="margin: 30px 0;">생명</a><br></div>
     </div>
 
     <div class="menu-item" onclick="toggleSubmenu(this)">
@@ -460,8 +462,8 @@
       <span class="arrow">▶</span>
     </div>
     <div class="submenu">
-      <div>공식설문</div>
-      <div>공식인스타</div>
+      <div style="margin: 20px 0;">공식설문</div>
+      <div style="margin: 20px 0;">공식인스타</div>
     </div>
   </div>
 
