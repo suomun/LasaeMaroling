@@ -16,7 +16,7 @@
       margin: 0;
       padding: 0;
       font-family: snas-serif;
-      background:linear-gradient(0deg,#000000,#4d7af5)!important;
+      background:linear-gradient(0deg,#4d7af5,#000000)!important;
     }
 
     header {
@@ -277,13 +277,13 @@
       width: 12px; 
       height: 12px;
       border-radius: 50%; 
-      background: rgba(255,255,255,0.6); 
+      background: rgba(0,0,0,0.6); 
       cursor: default;
       transition: background 0.3s ease;
     }
   
     .dot.active {   
-      background: rgba(255,255,255,1);
+      background: rgba(0,0,0,1);
     }
 
         body {
@@ -302,7 +302,7 @@
     .submenu {
       display: none;
       padding-left: 20px;
-      background-color: #f9f9f9;
+      background-color: rgba(0,0,0,0);
     }
 
     .submenu.open {
@@ -445,6 +445,14 @@
     <div class="menu-item" onclick="toggleSubmenu(this)">
       <span>분야</span>
       <span class="arrow">▶</span>
+    </div>
+    <div class="submenu">
+      <a href="physics.html"><p style="font-size: 30px;">물리</a><br>
+      <a href="info.html"><p style="font-size: 30px;">정보</a><br>
+      <a href="bio.html"><p style="font-size: 30px;">생명</a><br>
+      <span>분야</span>
+      <span class="arrow">▶</span>
+     </div>
     </div>
     <div class="submenu">
       <a href="physics.html"><p style="font-size: 30px;">물리</a><br>
