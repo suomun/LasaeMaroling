@@ -78,15 +78,15 @@
     </style>
 </head>
 <body>
-    <header>
+  <header>
     <div class="logo"><p style="font-size: 50px;">봉봉뉴스</p></div>
     <div class="hamburger" onclick="toggleSidebar()">
       <div></div>
       <div></div>
       <div></div>
     </div>
- 
   </header>
+  
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div class="logo"></div>
@@ -95,8 +95,15 @@
       <div></div>
       <div></div>
     </div>
-  
-  <p><div style="margin: 30px 0;">봉봉 메뉴</div></p>
+    
+    <p><div style="margin: 30px 0;">봉봉 메뉴</div></p>
+    <a href="physics.html"><p style="font-size: 20px;"><div style="margin: 30px 0;">물리</a><br></div>
+    <a href="info.html"><p style="font-size: 20px;"><div style="margin: 30px 0;">정보</a><br></div>
+    <a href="bio.html"><p style="font-size: 20px;"><div style="margin: 30px 0;">생명</a><br></div>
+    
+    <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+  </div>
+
 
 <script>
     function toggleSidebar() {    
