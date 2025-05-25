@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 반응형 뷰포트 설정 -->
-  <title>생명 과목</title>
+  <title>물리 과목</title>
   <style>
+    
+    
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -12,81 +14,164 @@
       background-color: #f4f4f4;
     }
 
+    
     header {
-      background-color: #333;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 2rem;
-    }
-
-    p {
-      font-size: 1.2rem;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: skyblue;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 0 20px;
+      z-index: 1000;
     }
 
-    a {
-      display: inline-block;
-      margin-top: 20px;
-      font-size: 1rem;
-      color: #007bff;
+      .red-box {
+      margin-top: 100px;
+      height: 200px; 
+      width: 100%;
+      color: white;
+      text-align: left;
+      padding-left: 20px;
+      padding-top: 40px;
+      line-height: 50px;
+      background-color: red;
+      font-weight: bold;
+      font-size: 50px;
+    }
+
+    .allc {
+      color: #fff;
+      text-align: left;
+      line-height: 35px;
+      font-size: 25px;
+    }
+
+    .allc a:link {
+      color: white;
       text-decoration: none;
-      padding: 10px 20px;
-      background-color: #f1f1f1;
-      border-radius: 5px;
+    }
+  
+    .allc a:visited {
+      color: white;
+      text-decoration: none;
     }
 
-    a:hover {
-      background-color: #ddd;
+    .allc a:hover {
+      color: blue;
+      text-decoration: none;
     }
 
-    /* 모바일 반응형 */
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 1.5rem; /* 화면 크기가 작아지면 제목 크기 축소 */
-      }
-
-      p {
-        font-size: 1rem; /* 본문 텍스트 크기 축소 */
-        padding: 0 10px;
-      }
-
-      a {
-        font-size: 0.9rem;
-        padding: 8px 16px;
-      }
+    .allc a:active {
+      color: red;
+      text-decoration: none;
     }
 
-    /* 더 작은 화면(예: 스마트폰) */
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 1.2rem; /* 더 작은 화면에서는 제목 크기를 더 축소 */
-      }
-
-      p {
-        font-size: 0.9rem;
-        padding: 0 5px;
-      }
-
-      a {
-        font-size: 0.8rem;
-        padding: 6px 12px;
-      }
+    .hamburger {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-right: 50px;
     }
-  </style>
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background: black;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 30%;
+      height: 100%;
+      background: #333;
+      color: #fff;
+      padding: 20px;
+      transition: right 0.5s ease;
+      z-index: 1002;
+    }
+
+    .sidebar.open {
+      right: 0;
+    } 
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 1001;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    .section {
+      padding: 20px;
+    }   
+
+    </style>
 </head>
 <body>
-
   <header>
-    <h1>생명 뉴스 페이지</h1>
+    <div class="logo"><p style="font-size: 50px;">봉봉뉴스</p></div>
+    <div class="hamburger" onclick="toggleSidebar()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   </header>
 
-  <p>생명과 관련된 뉴스를 여기에 표시합니다.</p>
+  <div class="red-box">제목입력</div>
+  
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="logo"></div>
+    <div class="hamburger" onclick="toggleSidebar()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    
+    <p><div style="margin: 30px 0;">봉봉 메뉴</div></p>
+    <div class="allc">
+     <a href="opage2.html">봉봉메인</a><br>
+     <a href="physics.html">물리</a><br>
+     <a href="info.html">정보</a><br>
+     <a href="bio.html">생명</a><br>
+   </div>
+  </div>
+  <div id="overlay" class="overlay" onclick="closeSidebar()">   
+</div>
 
-  <a href="index.html">← 메인으로 돌아가기</a>
 
+<script>
+  function toggleSidebar() {    
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('active');
+  }
+
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
+  }
+
+  function toggleSubmenu(menuItem) {
+    const submenu = menuItem.nextElementSibling;
+    const arrow = menuItem.querySelector('.arrow');
+      
+    submenu.classList.toggle('open');
+    arrow.classList.toggle('rotate');
+  }
+  </script>
 </body>
 </html>
