@@ -106,7 +106,7 @@
 
 
 <script>
-    function toggleSidebar() {    
+  function toggleSidebar() {    
     document.getElementById('sidebar').classList.toggle('open');
     document.getElementById('overlay').classList.toggle('active');
   }
@@ -115,6 +115,11 @@
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('overlay').classList.remove('active');
   }
+
+  function toggleSubmenu(menuItem) {
+    const submenu = menuItem.nextElementSibling;
+    const arrow = menuItem.querySelector('.arrow');
+      
     submenu.classList.toggle('open');
     arrow.classList.toggle('rotate');
   }
