@@ -38,6 +38,22 @@
       font-size: 30px;
     }
 
+    .allc {
+      color: #fff;
+      text-align: left;
+      line-height: 50px;
+      font-size: 30px;
+    }
+
+    .allc : hover {
+      color: green;
+      text-decoration: underline;
+    }
+
+    .allc : active {
+      color: red;
+    }
+
     
     @media (min-width: 900px){    
       .sidebar {
@@ -139,10 +155,12 @@
     </div>
     
     <p><div style="margin: 30px 0;">봉봉 메뉴</div></p>
-    <a href="opage2.html"><p style="font-size: 20px;"><div style="margin: 30px 0;">봉봉메인</a><br></div>
-    <a href="physics.html"><p style="font-size: 20px;"><div style="margin: 30px 0;">물리</a><br></div>
-    <a href="info.html"><p style="font-size: 20px;"><div style="margin: 30px 0;">정보</a><br></div>
-    <a href="bio.html"><p style="font-size: 20px;"><div style="margin: 30px 0;">생명</a><br></div>
+    <div class="allc">
+      <a href="opage2.html">봉봉메인</a>
+     <a href="physics.html">물리</a>
+     <a href="info.html">정보</a>
+     <a href="bio.html">생명</a>
+   </div>
     
     <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
   </div>
