@@ -38,6 +38,32 @@
       font-size: 30px;
     }
 
+    
+    @media (min-width: 1024px){    
+      .sidebar {
+        position: fixed;
+        top: 0;
+        right: -400px;
+        width: 50%;
+        height: 100%;   
+        background: #333;  
+        color: #fff;   
+        padding: 20px;    
+        transition: right 0.1s ease;   
+        z-index: 2000; 
+      }
+      
+      .overlay {     
+        position: fixed;    
+        top: 0;  
+        left: 0;   
+        width: calc(100% - 50%);     
+        height: 100%;  
+        background-color: rgba(0, 0, 0, 0.5);  
+        display: none;
+        z-index: 1500;
+      }
+    }
 
     .hamburger {
       cursor: pointer;
