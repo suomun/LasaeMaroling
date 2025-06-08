@@ -482,92 +482,96 @@
 
   <script>
 
-(function(){
-  const topSlide = document.getElementById('topSlide');
-  const topButtons = document.querySelectorAll('.top-button');
-  const topSlider = document.getElementById('topSlider');
 
-  let topIndex = 0;
-  let startX = 0;
-  let currentTranslate = 0;
-  let isDragging = false;
+     (function(){
+    const topSlide = document.getElementById('topSlide');
+    const topButtons = document.querySelectorAll('.top-button');
+    const topSlider = document.getElementById('topSlider');
 
-  const subSliders = document.querySelectorAll('.sub-slider');
-  const subIntervalTime = 4000;
-  let subTimers = [];
+    let topIndex = 0; 
+    let startX = 0;
+    let currentTranslate = 0;
+    let isDragging = false;
 
-  function initSubSliders(){
-    subSliders.forEach((subSlider, idx) => {
-      let subIndex = 0;
-      const slides = subSlider.querySelectorAll('.sub-slide');
-      const dots = subSlider.querySelectorAll('.dot');
+  
+    const subSliders = document.querySelectorAll('.sub-slider');
+    const subIntervalTime = 4000; 
+    let subTimers = [];
 
-      function showSubSlide(i){
-        slides.forEach((slide, si) => {
-          slide.classList.toggle('active', si === i);
-          dots[si]?.classList.toggle('active', si === i);
-        });
-      }
 
-      function nextSubSlide(){
-        subIndex = (subIndex + 1) % slides.length;
+    function initSubSliders(){
+      subSliders.forEach((subSlider, idx) => {
+        let subIndex = 0;
+        const slides = subSlider.querySelectorAll('.sub-slide');
+        const dots = subSlider.querySelectorAll('.dot');
+
+        function showSubSlide(i){
+          slides.forEach((slide, si) => {
+            if(si === i){
+              slide.classList.add('active');
+              dots[si].classList.add('active');
+            } else {
+              slide.classList.remove('active');
+              dots[si].classList.remove('active');
+            }
+          });
+        }
+
+        function nextSubSlide(){
+          subIndex = (subIndex +1) % slides.length;
+          showSubSlide(subIndex);
+        }
+
         showSubSlide(subIndex);
-      }
 
-      showSubSlide(subIndex);
-
-      if(subTimers[idx]) clearInterval(subTimers[idx]);
-      subTimers[idx] = setInterval(nextSubSlide, subIntervalTime);
-    });
-  }
-
-  function moveTopSlide(index){
-    currentTranslate = -index * 100;
-    topSlide.style.transition = 'transform 0.3s ease';
-    topSlide.style.transform = `translateX(${currentTranslate}%)`;
-    topIndex = index;
-
-    topButtons.forEach((btn, i) => {
-      btn.classList.toggle('active', i === topIndex);
-    });
-  }
-
-  function touchStart(e){
-    isDragging = true;
-    startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-    topSlide.style.transition = 'none';
-  }
-
-  function touchMove(e){
-    if(!isDragging) return;
-    const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-    const diff = currentX - startX;
-    const width = topSlider.offsetWidth;
-    const movePercent = (diff / width) * 100;
-    topSlide.style.transform = `translateX(${currentTranslate + movePercent}%)`;
-    e.preventDefault();
-  }
-
-  function touchEnd(e){
-    if(!isDragging) return;
-    isDragging = false;
-    const endX = e.type.includes('mouse') ? e.pageX : e.changedTouches[0].clientX;
-    const diff = endX - startX;
-    const width = topSlider.offsetWidth;
-    const movePercent = (diff / width) * 100;
-
-    if(Math.abs(movePercent) > 10){
-      if(diff < 0 && topIndex < 2){
-        moveTopSlide(topIndex + 1);
-      } else if(diff > 0 && topIndex > 0){
-        moveTopSlide(topIndex - 1);
-      } else {
-        moveTopSlide(topIndex);
-      }
-    } else {
-      moveTopSlide(topIndex);
+        if(subTimers[idx]) clearInterval(subTimers[idx]);
+        subTimers[idx] = setInterval(nextSubSlide, subIntervalTime);
+      });
     }
-  }
+
+ 
+    function moveTopSlide(index){
+      currentTranslate = -index * 100/3; 
+      topSlide.style.transform = `translateX(${currentTranslate}%)`;
+      topIndex = index;
+
+
+      topButtons.forEach((btn, i) => {
+        if(i === topIndex){
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function touchStart(e){
+      isDragging = true;
+      startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+    }
+    function touchMove(e){
+      if(!isDragging) return;
+      const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+      const diff = currentX - startX;
+
+
+      e.preventDefault();
+    }
+    function touchEnd(e){
+      if(!isDragging) return;
+      isDragging = false;
+      const endX = e.type.includes('mouse') ? e.pageX : e.changedTouches[0].clientX;
+      const diff = endX - startX;
+
+      if(Math.abs(diff) > 50){
+        if(diff < 0 && topIndex < 2){
+          moveTopSlide(topIndex +1);
+        } else if(diff > 0 && topIndex > 0){
+          moveTopSlide(topIndex -1);
+        }
+      }
+    }
+
 
   moveTopSlide(0);
   initSubSliders();
