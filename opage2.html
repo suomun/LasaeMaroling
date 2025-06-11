@@ -33,7 +33,6 @@
     }
     
     .opentd {
-      margin-left: 10px;
       color: #fff;
     }
 
@@ -136,7 +135,7 @@
       display: flex;
       justify-content: center;
       font-size: 50px;
-      border: 5px soild #fff ; 
+      border: 5px solid #fff ; 
     }
 
     .red-box {
@@ -463,7 +462,7 @@
       <!-- Header -->
   <header>
     <div class="logo"><p style="font-size: 50px;"><b>봉봉뉴스</b></p></div>
-    <div class="opentd" onclick="class)"><div class="opentd">모든뉴스</div></div>
+    <div class="opentd" onclick="toggleOpen(this)">전체뉴스</div>
     <div class="hamburger" onclick="toggleSidebar()">
       <div></div>
       <div></div>
@@ -637,14 +636,14 @@
     submenu.classList.toggle('open');
     arrow.classList.toggle('rotate');
   }
- 
+
+ function toggleOpen(element) {
   if (element.classList.contains('open')) {
     element.classList.remove('open');
-  } 
-  else {
+  } else {
     element.classList.add('open');
   }
-
+}
 
 
   </script>
