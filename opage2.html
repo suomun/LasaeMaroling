@@ -37,6 +37,20 @@
       color: #fff;
     }
 
+    optd{
+      background-color: #fff;
+      top: -1000;
+      width: 100%;
+      height: 45%;
+      transition: top 0.3s ease;
+      z-index: 2000;
+      position: fixed;
+    }
+
+    optd.open {
+      top: 100;
+    }
+
     .hamburger {
       cursor: pointer;
       display: flex;
@@ -437,7 +451,6 @@
   </div>
 </div>
 
-
   <div class="purple-box">분야별 최---신 근황</div>
   <div class="blue-box"><a href="physics.html">물리</a></div>
   <div class="blue-box"><a href="physics.html">물리</a></div>
@@ -493,7 +506,10 @@
   </div>
 </div>
     <div id="overlay" class="overlay" onclick="closeSidebar()">    
-  </div>
+    </div>
+
+    <div class="opentd" onclick="class)">
+    
 
   <script>
  (function () {
@@ -623,15 +639,16 @@
     submenu.classList.toggle('open');
     arrow.classList.toggle('rotate');
   }
+ 
+  if (element.classList.contains('open')) {
+    element.classList.remove('open');
+  } 
+  else {
+    element.classList.add('open');
+  }
 
 
 
-
-
-
-
-
-    
   </script>
 </body>
 </html>
