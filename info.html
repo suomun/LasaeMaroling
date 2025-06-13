@@ -2,11 +2,10 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 반응형 뷰포트 설정 -->
-  <title>정보기사</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>정보보기사</title>
   <style>
-    
-    
+     
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -14,32 +13,24 @@
       background-color: #000000;
     }
 
-    
     header {
       position: fixed;
       top: 0;
       width: 100%;
-      background: skyblue;
+      background: black;
       height: 100px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 20px;
       z-index: 1000;
+      border-bottom-width:5px;
+      border-bottom-style: solid;
+      border-bottom-color: white;
     }
 
-      .red-box {
-      margin-top: 100px;
-      height: 200px; 
-      width: 100%;
-      color: white;
-      text-align: left;
-      padding-left: 20px;
-      padding-top: 40px;
-      line-height: 50px;
-      background-color: red;
-      font-weight: bold;
-      font-size: 50px;
+    .logo{
+      color: #fff;
     }
 
     .allc {
@@ -75,12 +66,13 @@
       flex-direction: column;
       gap: 5px;
       margin-right: 50px;
+      color: #fff;
     }
 
     .hamburger div {
       width: 25px;
       height: 3px;
-      background: black;
+      background: #fff;
     }
 
     .sidebar {
@@ -89,15 +81,18 @@
       right: -1000px;
       width: 30%;
       height: 100%;
-      background: #333;
+      background: #0f0f0f;
       color: #fff;
       padding: 20px;
       transition: right 0.5s ease;
       z-index: 1002;
+      opacity : 0;
     }
 
     .sidebar.open {
       right: 0;
+      opacity : 1;
+
     } 
 
     .overlay {
@@ -118,12 +113,56 @@
     .section {
       padding: 20px;
     }   
+    
+    .slider-container {
+      margin-top: 350px;
+      margin-bottom: 350px;
+      overflow: hidden;
+      width: 100%;
+      position: relative;
+    }
 
+    .slider-track {
+      display: flex;
+      transition: transform 0.3s ease;
+      touch-action: pan-y;
+     }
+
+    .slide {
+      flex: 0 0 100%;
+     }
+
+     .slide img {
+       width: 90%;
+       height: auto;
+       object-fit: contain;
+       display: block;
+       margin: 0 auto;
+    }
+
+     .indicator-dots {
+       text-align: center;
+       margin-top: 10px;
+    }  
+
+     .indicator-dots span {
+       display: inline-block;
+       width: 10px;
+       height: 10px;
+       margin: 0 5px;
+       background:rgba(255,255,255,0.6);
+       border-radius: 50%;
+    }
+
+     .indicator-dots .active {
+       background:rgba(255,255,255,1);
+   }
+ 
     </style>
 </head>
 <body>
   <header>
-    <div class="logo"><p style="font-size: 50px;">봉봉뉴스</p></div>
+    <div class="logo"><p style="font-size: 50px;"><strong>봉봉뉴스</strong></p></div>
     <div class="hamburger" onclick="toggleSidebar()">
       <div></div>
       <div></div>
@@ -131,9 +170,13 @@
     </div>
   </header>
 
-  <div class="red-box">제목입력</div>
-  
-  <!-- Sidebar -->
+  <div class="slider-container">  
+    <div class="slider-track">    
+      <div class="slide"><img src="inf/inf-001.png" alt="slide1" /></div>    
+    </div> 
+    <div class="indicator-dots" id="dots"></div>
+  </div>
+
   <div class="sidebar" id="sidebar">
     <div class="logo"></div>
     <div class="hamburger" onclick="toggleSidebar()">
@@ -142,7 +185,7 @@
       <div></div>
     </div>
     
-    <p><div style="margin: 30px 0;">봉봉 메뉴</div></p>
+    <p><font size=5><div style="margin: 30px 0;"><strong>봉봉 메뉴</strong></div></font></p>
     <div class="allc">
      <a href="index.html">봉봉메인</a><br>
      <a href="physics.html">물리</a><br>
@@ -172,6 +215,76 @@
     submenu.classList.toggle('open');
     arrow.classList.toggle('rotate');
   }
-  </script>
+ 
+  const track = document.querySelector('.slider-track');
+  const slides = document.querySelectorAll('.slide');
+  const dotsContainer = document.getElementById('dots');
+
+  let currentSlide = 0;
+  let startX = 0;
+  let currentX = 0;
+  let isDragging = false;
+  let currentTranslate = 0;
+  let prevTranslate = 0;
+
+  function updateSlidePosition() {
+    track.style.transition = 'transform 0.3s ease';
+    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    updateDots();
+    prevTranslate = -currentSlide * track.clientWidth / slides.length;
+    currentTranslate = prevTranslate;
+  }
+
+  function updateDots() {
+    dotsContainer.innerHTML = '';
+    slides.forEach((_, index) => { 
+      const dot = document.createElement('span');     
+      if (index === currentSlide) dot.classList.add('active');      
+      dotsContainer.appendChild(dot);
+    });
+  }
+
+  function handleTouchStart(e) {
+    isDragging = true;
+    startX = e.touches ? e.touches[0].clientX : e.clientX;
+    track.style.transition = 'none'; 
+    e.preventDefault();  
+  }
+
+  function handleTouchMove(e) {
+    if (!isDragging) return;
+    currentX = e.touches ? e.touches[0].clientX : e.clientX; 
+    const diff = currentX - startX;
+    track.style.transform = `translateX(${prevTranslate + diff}px)`;
+    e.preventDefault();
+  }
+
+  function handleTouchEnd(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    const diff = currentX - startX;
+    const threshold = 50;
+    if (diff > threshold && currentSlide > 0) {  
+      currentSlide--;
+    } else if (diff < -threshold && currentSlide < slides.length - 1) {
+      currentSlide++; 
+    } 
+    updateSlidePosition();
+    e.preventDefault();
+  }
+
+  updateDots();
+  updateSlidePosition();
+
+  track.addEventListener('mousedown', handleTouchStart);
+  track.addEventListener('mousemove', handleTouchMove);
+  track.addEventListener('mouseup', handleTouchEnd);
+  track.addEventListener('mouseleave', () => { if(isDragging) handleTouchEnd(); });
+  track.addEventListener('touchstart', handleTouchStart, {passive:false});
+  track.addEventListener('touchmove', handleTouchMove, {passive:false});
+  track.addEventListener('touchend', handleTouchEnd);
+
+  
+</script>
 </body>
 </html>
