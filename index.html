@@ -35,27 +35,6 @@
       border-bottom-color: black;
     }
     
-    .opentd {
-      color: #fff;
-      margin-left: 10px;
-    }
-
-    .optd{
-      background-color: #fff;
-      top: 0px;
-      width: 100%;
-      height: 50%;
-      z-index: 500;
-      opacity: 0;
-      position: fixed;
-    }
-
-    .optd.open {
-      opacity: 1;
-      position: fixed;
-      top: 500px;
-    }
-
     .hamburger {
       cursor: pointer;
       display: flex;
@@ -72,19 +51,18 @@
 
     .sidebar {
       position: fixed;
-      top: 0;
-      right: -250px;
-      width: 250px;
-      height: 100%;
+      top: -250px;
+      width: 100%;
+      height: 500px;
       background: #333;
-      color: #fff;
+      color: white;
       padding: 20px;
-      transition: right 0.3s ease;
-      z-index: 1002;
+      transition: top 0.3s ease;
+      z-index: 900;
     }
 
     .sidebar.open {
-      right: 0;
+      top: 0;
     } 
 
     .overlay {
@@ -469,8 +447,6 @@
       <!-- Header -->
   <header>
     <div class="logo"><p style="font-size: 50px;"><b>봉봉뉴스</b></p></div>
-    <div class="opentd" onclick="toggleOpen(document.getElementById('myPanel'))">열기</div>
-    <div id="myPanel" class="optd">패널 내용</div>
     <div class="hamburger" onclick="toggleSidebar()">
       <div></div>
       <div></div>
@@ -644,16 +620,7 @@
     submenu.classList.toggle('open');
     arrow.classList.toggle('rotate');
   }
-
- function toggleOpen(element) {
-  if (element.classList.contains('open')) {
-    element.classList.remove('open');
-  } else {
-    element.classList.add('open');
-  }
-}
-
-
+    
   </script>
 </body>
 </html>
