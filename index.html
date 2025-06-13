@@ -111,29 +111,18 @@
       text-decoration: none;
     }
 
-    .big-picture {
-      height: 100%;
-      width: 90%;
-      background: rgda(0,0,0,0);
-      border: 7px solid #fff;
-      opacity: 0.5;
-      margin-top: 500px;
-      
+    .main_image {
       position: relative;
-      
+    }
+     
+    .main_image_text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate( -50%, -50% );
+      color: white;
     }
   
-    .small-text{
-      height: 100%;
-      width: 100%;
-      background: rgda(0,0,0,0);
-      color: #fff;
-      justify-content: center;
-      font-size: 25px;
-      position: absolute;
-    }
-
-    
     .purple-box {
       background: rgba(0, 0, 0, 0);
       width: 100%; 
@@ -321,12 +310,13 @@
 </head>
 <body>
   
-  <div class= "big-picture">
-     <img src= "citynight.jpg" alt= "night" style="width:100%; height:100%;">
+<div class="main_image">
+      <img src="beach.jpg" width="100%" height="500px">
+
+
+    <h1 class= "main_image_text"><strong>전공지식의 허브<br>이공견문록</strong></h1>
+</div>
     
-    <h1 class= "small_text"><strong>전공지식의 허브<br>이공견문록</strong></h1>
-  </div>
-   
   <div class="slider-container">
   <div class="top-buttons">
     <div class="top-button active" data-index="0">물리</div>
