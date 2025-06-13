@@ -111,20 +111,33 @@
       text-decoration: none;
     }
 
-    .main_image {
-      margin: 300px 20px;
+    .myslide {
       position: relative;
-      border: 5px solid #fff;
-      background-size: contain;
-      background-image: url('citynight.jpg')
+      flex: 0 0 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
     }
-     
-    .main_image_text {
+
+    .myslide img {
+      width: 90%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .slide-caption {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate( -50%, -50% );
+      transform: translate(-50%, -50%);
       color: white;
+      font-size: 2rem;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 10px 20px;  
+      border-radius: 10px;
+      text-align: center;
     }
   
     .purple-box {
@@ -314,11 +327,9 @@
 </head>
 <body>
   
-<div class="main_image">
-      <div style="opacity: 0.5;"><img src="citynight.jpg"></div>
-
-
-    <h1 class= "main_image_text"><strong>전공지식의<br>허브<br>이공견문록</strong></h1>
+<div class="myslide">
+  <img src="citynight.jpg" alt="cityq">
+  <div class="slide-caption">전공지식의<br>허브<br>이공견문록</div>
 </div>
     
   <div class="slider-container">
