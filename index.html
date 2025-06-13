@@ -168,7 +168,7 @@
     }
 
     .bottom-space {
-      background: red;
+      background: rgba(0, 0, 0, 0);
       height: 100%;
       width: 100%;
       flex: 1;
@@ -296,12 +296,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      color: rgba(255,255,255,0);
     }
 
     .submenu {
       display: none;
       padding-left: 20px;
       background-color: rgba(255,255,255,0);
+      color: rgba(255,255,255,0);
     }
 
     .submenu.open {
@@ -402,9 +404,8 @@
     <div class="blue-box"><font size=6><a href="bio.html"><strong>생명</strong></a></font>:<font size=5> 뇌 컴퓨터 인터페이스</font></div>
     <div class="blue-box"><font size=6><a href="bio.html"><strong>생명</strong></a></font>:<font size=5> 플라스미드를 활용한 유전자 치료 기</font></div>
   </div>
-  <dic class="bottom-space">
+  <dic class="bottom-space"></dic>
 
-      <!-- Header -->
   <header>
     <div class="logo"><p style="font-size: 50px;"><b>봉봉뉴스</b></p></div>
     <div class="hamburger" onclick="toggleSidebar()">
