@@ -2,11 +2,10 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 반응형 뷰포트 설정 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
   <title>생명기사</title>
   <style>
-    
-    
+     
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -14,7 +13,6 @@
       background-color: #000000;
     }
 
-    
     header {
       position: fixed;
       top: 0;
@@ -26,20 +24,6 @@
       justify-content: space-between;
       padding: 0 20px;
       z-index: 1000;
-    }
-
-      .red-box {
-      margin-top: 100px;
-      height: 200px; 
-      width: 100%;
-      color: white;
-      text-align: left;
-      padding-left: 20px;
-      padding-top: 40px;
-      line-height: 50px;
-      background-color: red;
-      font-weight: bold;
-      font-size: 50px;
     }
 
     .allc {
@@ -118,7 +102,48 @@
     .section {
       padding: 20px;
     }   
+    
+    .slider-container {
+      overflow: hidden;
+      width: 100%;
+      position: relative;
+    }
 
+    .slider-track {
+      display: flex;
+      transition: transform 0.3s ease;
+      touch-action: pan-y;
+     }
+
+    .slide {
+      flex: 0 0 100%;
+      height: 300px;
+     }
+
+     .slide img {
+       width: 100%;
+       height: 100%;
+       object-fit: cover;
+    }
+
+     .indicator-dots {
+       text-align: center;
+       margin-top: 10px;
+    }  
+
+     .indicator-dots span {
+       display: inline-block;
+       width: 10px;
+       height: 10px;
+       margin: 0 5px;
+       background: #bbb;
+       border-radius: 50%;
+    }
+
+     .indicator-dots .active {
+       background: #333;
+   }
+ 
     </style>
 </head>
 <body>
@@ -131,9 +156,14 @@
     </div>
   </header>
 
-  <div class="red-box">제목입력</div>
-  
-  <!-- Sidebar -->
+  <div class="slider-container">  
+    <div class="slider-track">    
+      <div class="slide"><img src="bio/bio-001.png" alt="slide1" /></div>    
+      <div class="slide"><img src="bio/bio-002.png" alt="slide2" /></div>  
+    </div> 
+    <div class="indicator-dots" id="dots"></div>
+  </div>
+
   <div class="sidebar" id="sidebar">
     <div class="logo"></div>
     <div class="hamburger" onclick="toggleSidebar()">
@@ -172,7 +202,62 @@
     submenu.classList.toggle('open');
     arrow.classList.toggle('rotate');
   }
-  </script>
+ 
+  const track = document.querySelector('.slider-track');
+  const slides = document.querySelectorAll('.slide');
+  const dotsContainer = document.getElementById('dots');
+
+  let currentSlide = 0;
+  let startX = 0;
+  let currentX = 0;
+  let isDragging = false;
+
+  function updateSlidePosition() {
+    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    updateDots();
+  }
+
+  function updateDots() {
+    dotsContainer.innerHTML = '';
+    slides.forEach((_, index) => { 
+      const dot = document.createElement('span'); 
+      if (index === currentSlide) dot.classList.add('active');  
+      dotsContainer.appendChild(dot);
+    });
+  }
+
+  function handleTouchStart(e) {
+    isDragging = true;
+    startX = e.touches ? e.touches[0].clientX : e.clientX;
+  }
+
+  function handleTouchMove(e) {
+    if (!isDragging) return;
+    currentX = e.touches ? e.touches[0].clientX : e.clientX; 
+  }
+ 
+  function handleTouchEnd() {
+    if (!isDragging) return;
+    const diff = currentX - startX;
+    if (diff > 50 && currentSlide > 0) {  
+      currentSlide--;
+    } else if (diff < -50 && currentSlide < slides.length - 1) {
+      currentSlide++; 
+    }
+
+    updateSlidePosition();
+    isDragging = false;
+  }
+
+  track.addEventListener('mousedown', handleTouchStart);
+  track.addEventListener('mousemove', handleTouchMove);
+  track.addEventListener('mouseup', handleTouchEnd);
+  track.addEventListener('touchstart', handleTouchStart);
+  track.addEventListener('touchmove', handleTouchMove);
+  track.addEventListener('touchend', handleTouchEnd);
+
+  
+</script>
 </body>
 </html>
 
