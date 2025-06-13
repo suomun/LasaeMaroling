@@ -224,17 +224,22 @@
   let startX = 0;
   let currentX = 0;
   let isDragging = false;
+  let currentTranslate = 0;
+  let prevTranslate = 0;
 
   function updateSlidePosition() {
+    track.style.transition = 'transform 0.3s ease';
     track.style.transform = `translateX(-${currentSlide * 100}%)`;
     updateDots();
+    prevTranslate = -currentSlide * track.clientWidth / slides.length;
+    currentTranslate = prevTranslate;
   }
 
   function updateDots() {
     dotsContainer.innerHTML = '';
     slides.forEach((_, index) => { 
-      const dot = document.createElement('span'); 
-      if (index === currentSlide) dot.classList.add('active');  
+      const dot = document.createElement('span');     
+      if (index === currentSlide) dot.classList.add('active');      
       dotsContainer.appendChild(dot);
     });
   }
@@ -242,31 +247,41 @@
   function handleTouchStart(e) {
     isDragging = true;
     startX = e.touches ? e.touches[0].clientX : e.clientX;
+    track.style.transition = 'none'; 
+    e.preventDefault();  
   }
 
   function handleTouchMove(e) {
     if (!isDragging) return;
     currentX = e.touches ? e.touches[0].clientX : e.clientX; 
-  }
- 
-  function handleTouchEnd() {
-    if (!isDragging) return;
     const diff = currentX - startX;
-    if (diff > 50 && currentSlide > 0) {  
-      currentSlide--;
-    } else if (diff < -50 && currentSlide < slides.length - 1) {
-      currentSlide++; 
-    }
-
-    updateSlidePosition();
-    isDragging = false;
+    track.style.transform = `translateX(${prevTranslate + diff}px)`;
+    e.preventDefault();
   }
+
+  function handleTouchEnd(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    const diff = currentX - startX;
+    const threshold = 50;
+    if (diff > threshold && currentSlide > 0) {  
+      currentSlide--;
+    } else if (diff < -threshold && currentSlide < slides.length - 1) {
+      currentSlide++; 
+    } 
+    updateSlidePosition();
+    e.preventDefault();
+  }
+
+  updateDots();
+  updateSlidePosition();
 
   track.addEventListener('mousedown', handleTouchStart);
   track.addEventListener('mousemove', handleTouchMove);
   track.addEventListener('mouseup', handleTouchEnd);
-  track.addEventListener('touchstart', handleTouchStart);
-  track.addEventListener('touchmove', handleTouchMove);
+  track.addEventListener('mouseleave', () => { if(isDragging) handleTouchEnd(); });
+  track.addEventListener('touchstart', handleTouchStart, {passive:false});
+  track.addEventListener('touchmove', handleTouchMove, {passive:false});
   track.addEventListener('touchend', handleTouchEnd);
 
   
