@@ -111,45 +111,24 @@
       text-decoration: none;
     }
 
-    .explan{
-      margin: 200px 50px;
-      width: 75%;
-      height: 35%;
+    .big-picture {
+      height: 75%;
+      width: 100%;
+      background: rgda(0,0,0,0);
+      border: 4px solid #fff;
+      opacity: 0.5;
+    }
+  
+    .small-text{
+      height: 100%;
+      width: 100%;
+      background: rgda(0,0,0,0);
       color: #fff;
-      background-color: rgba(0,0,0,0);
-      display: flex;
       justify-content: center;
-      font-size: 35px;
-      border: 5px solid #fff ; 
+      font-size: 25px;
     }
 
-    .red-box {
-      margin-top: 150px;
-      height: 100%; 
-      width: 100%;
-      color: white;
-      text-align: center;
-      line-height: 50px;
-      background-color: rgba(0,0,0,0);
-    }
-
-    .orange-box {
-      background: rgba(0,0,0,0);
-      height: 100%; 
-      width: 100%;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      margin-bottom: 150px;
-    }
-
-    .yellow-image {
-      background: yellow;
-      width: 120px;
-      height: 120px;
-      margin-left: 20px;
-    }
-
+    
     .purple-box {
       background: rgba(0, 0, 0, 0);
       width: 100%; 
@@ -340,19 +319,13 @@
   </style>
 </head>
 <body>
-
-  <!-- Content -->
-    <div class= "explan"><strong>전공지식의 허브<br>이공견문록</strong></div>
-    <div class="red-box">통합소식</div>
-    <div class="orange-box">
-      <div class="yellow-image">
-        <img src="images/FNAF_EX_Picture.jpg" alt="이미지" style="width:100%; height:100%;">
-      </div>
-    </div>
-
+  
+  <div class= "big-picture">
+    <img src= "citynight.jpg" alt= "night" style="width:100%; height:100%;">
+    <div class= "small_text"><strong>전공지식의 허브<br>이공견문록</strong></div>
+  </div>
+   
   <div class="slider-container">
-
-  <!-- 탭 버튼 영역 -->
   <div class="top-buttons">
     <div class="top-button active" data-index="0">물리</div>
     <div class="top-button" data-index="1">정보</div>
@@ -367,15 +340,15 @@
       <div class="top-page" data-top-index="0">
         <div class="sub-slider" data-sub-index="0">
           <div class="sub-slide active">
-            <a href="physics.html" target="_blank" rel="noopener noreferrer">
+            <a href="https://suomun.github.io/LasaeMaroling/physics.html" target="_blank" rel="noopener noreferrer">
               <img src="phy/post1" alt="A-1" /></a>
           </div>
           <div class="sub-slide">
-            <a href="physics.html" target="_blank" rel="noopener noreferrer">
+            <a href="https://suomun.github.io/LasaeMaroling/physics.html" target="_blank" rel="noopener noreferrer">
               <img src="phy/post2" alt="A-2" /></a>
           </div>
           <div class="sub-slide">
-            <a href="physics.html" target="_blank" rel="noopener noreferrer">
+            <a href="https://suomun.github.io/LasaeMaroling/physics.html" target="_blank" rel="noopener noreferrer">
               <img src="phy/post3" alt="A-3" /></a>
           </div>
           <div class="dots-container">
@@ -436,13 +409,14 @@
   </div>
 </div>
 
-  <div class="purple-box">분야별 최---신 근황</div>
-  <div class="blue-box"><a href="physics.html">물리</a></div>
-  <div class="blue-box"><a href="physics.html">물리</a></div>
-  <div class="blue-box"><a href="info.html">정보</a></div>
-  <div class="blue-box"><a href="info.html">정보</a></div>
-  <div class="blue-box"><a href="bio.html">생명</a></div>
-  <div class="blue-box"><a href="bio.html">생명</a></div>
+  <div class="purple-box">분야별 최신 근황</div>
+  <div class="blue-box"><a href="physics.html">물리</a>: 항복의 공학</div>
+  <div class="blue-box"><a href="physics.html">물리</a>: 컨테이너 벨트와 다물체 동역학</div>
+  <div class="blue-box"><a href="physics.html">물리</a>: 전산유체역학과 시뮬레이션</div>
+  <div class="blue-box"><a href="info.html">정보</a>: </div>
+  <div class="blue-box"><a href="info.html">정보</a>: </div>
+  <div class="blue-box"><a href="bio.html">생명</a>: </div>
+  <div class="blue-box"><a href="bio.html">생명</a>: </div>
   <dic class="bottom-space">
 
       <!-- Header -->
