@@ -115,33 +115,33 @@
       text-decoration: none;
     }
 
-    .myslide {
+    .center-image-container {
       position: relative;
-      flex: 0 0 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+      width: 400px;      
+      margin: 100px auto 0 auto; 
+      text-align: center;
     }
 
-    .myslide img {
-      width: 90%;
-      height: auto;
+    .center-image-container img {
+      width: 100%;       
+      height: auto;      
+      opacity: 0.5;      
       display: block;
-      object-fit: contain;
+      border-radius: 10px;
     }
 
-    .slide-caption {
+    .center-text {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       color: white;
       font-size: 2rem;
-      background-color: rgba(0, 0, 0, 0.3);
-      padding: 10px 20px;  
-      border-radius: 10px;
-      text-align: center;
+      font-weight: bold;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap; 
+      width: 100%;
     }
   
     .purple-box {
@@ -169,12 +169,12 @@
       justify-content: center;
     }
 
-    .bottom-space {
+    .Qspace {
       background: rgba(0, 0, 0, 0);
       height: 100%;
       width: 100%;
-      flex: 1;
-      margin: 400px;
+      margin-top: 200px;
+      margin-bottom: 200px;
     }
    
     .slider-container {
@@ -324,10 +324,10 @@
 </head>
 <body>
   
-<div class="myslide">
-  <img src="citynight.jpg" alt="cityq">
-  <div class="slide-caption">전공지식의<br>허브<br>이공견문록</div>
-</div>
+<div class="center-image-container">
+  <img src="your-image.jpg" alt="background" />
+  <div class="center-text"><strong>정공지식의<br>허브<br>이공견문록</strong></div>
+</div
     
   <div class="slider-container">
   <div class="top-buttons">
@@ -406,7 +406,7 @@
     <div class="blue-box"><font size=6><a href="bio.html"><strong>생명</strong></a></font>:<font size=5> 뇌 컴퓨터 인터페이스</font></div>
     <div class="blue-box"><font size=6><a href="bio.html"><strong>생명</strong></a></font>:<font size=5> 플라스미드를 활용한 유전자 치료 기</font></div>
   </div>
-  <dic class="bottom-space">
+  <dic class="Qspace">
   </dic>
 
   <header>
