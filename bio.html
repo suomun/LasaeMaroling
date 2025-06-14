@@ -217,73 +217,66 @@
     arrow.classList.toggle('rotate');
   }
  
-  const track = document.querySelector('.slider-track');
-  const slides = document.querySelectorAll('.slide');
-  const dotsContainer = document.getElementById('dots');
+const sliderContainers = document.querySelectorAll('.slider-container');
 
-  let currentSlide = 0;
-  let startX = 0;
-  let currentX = 0;
-  let isDragging = false;
-  let currentTranslate = 0;
-  let prevTranslate = 0;
+  sliderContainers.forEach((container) => {
+    const track = container.querySelector('.slider-track');
+    const slides = container.querySelectorAll('.slide');
+    const dotsContainer = container.querySelector('.indicator-dots');
 
-  function updateSlidePosition() {
-    track.style.transition = 'transform 0.3s ease';
-    track.style.transform = `translateX(-${currentSlide * 100}%)`;
-    updateDots();
-    prevTranslate = -currentSlide * track.clientWidth / slides.length;
-    currentTranslate = prevTranslate;
-  }
+    let currentSlide = 0;
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
 
-  function updateDots() {
-    dotsContainer.innerHTML = '';
-    slides.forEach((_, index) => { 
-      const dot = document.createElement('span');     
-      if (index === currentSlide) dot.classList.add('active');      
-      dotsContainer.appendChild(dot);
-    });
-  }
+    function updateSlidePosition() {
+      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+      updateDots();
+    }
 
-  function handleTouchStart(e) {
-    isDragging = true;
-    startX = e.touches ? e.touches[0].clientX : e.clientX;
-    track.style.transition = 'none'; 
-    e.preventDefault();  
-  }
+    function updateDots() {
+      dotsContainer.innerHTML = '';
+      slides.forEach((_, index) => {
+        const dot = document.createElement('span');
+        if (index === currentSlide) dot.classList.add('active');
+        dotsContainer.appendChild(dot);
+      });
+    }
 
-  function handleTouchMove(e) {
-    if (!isDragging) return;
-    currentX = e.touches ? e.touches[0].clientX : e.clientX; 
-    const diff = currentX - startX;
-    track.style.transform = `translateX(${prevTranslate + diff}px)`;
-    e.preventDefault();
-  }
+    function handleTouchStart(e) {
+      isDragging = true;
+      startX = e.touches ? e.touches[0].clientX : e.clientX;
+    }
 
-  function handleTouchEnd(e) {
-    if (!isDragging) return;
-    isDragging = false;
-    const diff = currentX - startX;
-    const threshold = 50;
-    if (diff > threshold && currentSlide > 0) {  
-      currentSlide--;
-    } else if (diff < -threshold && currentSlide < slides.length - 1) {
-      currentSlide++; 
-    } 
+    function handleTouchMove(e) {
+      if (!isDragging) return;
+      currentX = e.touches ? e.touches[0].clientX : e.clientX;
+    }
+
+    function handleTouchEnd() {
+      if (!isDragging) return;
+      const diff = currentX - startX;
+      if (diff > 50 && currentSlide > 0) {
+        currentSlide--;
+      } else if (diff < -50 && currentSlide < slides.length - 1) {
+        currentSlide++;
+      }
+
+      updateSlidePosition();
+      isDragging = false;
+    }
+
     updateSlidePosition();
-    e.preventDefault();
-  }
 
-  updateDots();
-  updateSlidePosition();
+    track.addEventListener('mousedown', handleTouchStart);
+    track.addEventListener('mousemove', handleTouchMove);
+    track.addEventListener('mouseup', handleTouchEnd);
+    track.addEventListener('mouseleave', handleTouchEnd); // 마우스를 밖으로 빼도 drag 종료
 
-  track.addEventListener('mousedown', handleTouchStart);
-  track.addEventListener('mousemove', handleTouchMove);
-  track.addEventListener('mouseup', handleTouchEnd);
-  track.addEventListener('mouseleave', () => { if(isDragging) handleTouchEnd(); });
-  track.addEventListener('touchstart', handleTouchStart, {passive:false});
-  track.addEventListener('touchmove', handleTouchMove, {passive:false});
-  track.addEventListener('touchend', handleTouchEnd);
+    track.addEventListener('touchstart', handleTouchStart);
+    track.addEventListener('touchmove', handleTouchMove);
+    track.addEventListener('touchend', handleTouchEnd);
+  });
 
   
 </script>
