@@ -38,6 +38,35 @@
     .logo{
       color: white;
     }
+
+    .center-image-container {
+      position: relative;
+      width: 400px;      
+      margin: 100px auto 0 auto;
+      text-align: center;
+    }
+
+    .center-image-container img {
+      width: 100%;      
+      height: auto;    
+      opacity: 0.5;     
+      display: block;
+      border-radius: 10px; 
+    }
+
+     .center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 2rem;
+      font-weight: bold;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap; 
+      width: 100%;
+     }
     
     .hamburger {
       cursor: pointer;
