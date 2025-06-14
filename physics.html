@@ -176,7 +176,7 @@
       <div class="slide"><img src="phy/phy_001-2.png" alt="slide1" /></div> 
       <div class="slide"><img src="phy/phy_001-3.png" alt="slide1" /></div> 
     </div> 
-    <div class="indicator-dots" id="dots"></div>
+    <div class="indicator-dots"></div>
   </div>
 
     <div class="slider-container">     
@@ -186,7 +186,7 @@
         <div class="slide"><img src="phy/phy_002-3.png" alt="slide3" /></div>  
         <div class="slide"><img src="phy/phy_002-4.png" alt="slide3" /></div>  
       </div> 
-      <div class="indicator-dots" id="dots"></div>
+      <div class="indicator-dots"></div>
     </div>
   
   <div class="slider-container">     
@@ -195,7 +195,7 @@
       <div class="slide"><img src="phy/phy_003-2.png" alt="slide5" /></div>      
       <div class="slide"><img src="phy/phy_003-3.png" alt="slide5" /></div>    
     </div>   
-    <div class="indicator-dots" id="dots"></div>
+    <div class="indicator-dots"></div>
   </div>
 
   <div class="sidebar" id="sidebar">
@@ -238,59 +238,66 @@
   }
  
  
-  const track = document.querySelector('.slider-track');
- 
-  const slides = document.querySelectorAll('.slide');
-  const dotsContainer = document.getElementById('dots');
+const sliderContainers = document.querySelectorAll('.slider-container');
 
-  let currentSlide = 0;
-  let startX = 0;
-  let currentX = 0;
-  let isDragging = false;
+  sliderContainers.forEach((container) => {
+    const track = container.querySelector('.slider-track');
+    const slides = container.querySelectorAll('.slide');
+    const dotsContainer = container.querySelector('.indicator-dots');
 
-  function updateSlidePosition() {
-    track.style.transform = `translateX(-${currentSlide * 100}%)`;
-    updateDots();
-  }
+    let currentSlide = 0;
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
 
-  function updateDots() {
-    dotsContainer.innerHTML = '';
-    slides.forEach((_, index) => { 
-      const dot = document.createElement('span'); 
-      if (index === currentSlide) dot.classList.add('active');  
-      dotsContainer.appendChild(dot);
-    });
-  }
+    function updateSlidePosition() {
+      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+      updateDots();
+    }
 
-  function handleTouchStart(e) {
-    isDragging = true;
-    startX = e.touches ? e.touches[0].clientX : e.clientX;
-  }
+    function updateDots() {
+      dotsContainer.innerHTML = '';
+      slides.forEach((_, index) => {
+        const dot = document.createElement('span');
+        if (index === currentSlide) dot.classList.add('active');
+        dotsContainer.appendChild(dot);
+      });
+    }
 
-  function handleTouchMove(e) {
-    if (!isDragging) return;
-    currentX = e.touches ? e.touches[0].clientX : e.clientX; 
-  }
- 
-  function handleTouchEnd() {
-    if (!isDragging) return;
-    const diff = currentX - startX;
-    if (diff > 50 && currentSlide > 0) {  
-      currentSlide--;
-    } else if (diff < -50 && currentSlide < slides.length - 1) {
-      currentSlide++; 
+    function handleTouchStart(e) {
+      isDragging = true;
+      startX = e.touches ? e.touches[0].clientX : e.clientX;
+    }
+
+    function handleTouchMove(e) {
+      if (!isDragging) return;
+      currentX = e.touches ? e.touches[0].clientX : e.clientX;
+    }
+
+    function handleTouchEnd() {
+      if (!isDragging) return;
+      const diff = currentX - startX;
+      if (diff > 50 && currentSlide > 0) {
+        currentSlide--;
+      } else if (diff < -50 && currentSlide < slides.length - 1) {
+        currentSlide++;
+      }
+
+      updateSlidePosition();
+      isDragging = false;
     }
 
     updateSlidePosition();
-    isDragging = false;
-  }
 
-  track.addEventListener('mousedown', handleTouchStart);
-  track.addEventListener('mousemove', handleTouchMove);
-  track.addEventListener('mouseup', handleTouchEnd);
-  track.addEventListener('touchstart', handleTouchStart);
-  track.addEventListener('touchmove', handleTouchMove);
-  track.addEventListener('touchend', handleTouchEnd);
+    track.addEventListener('mousedown', handleTouchStart);
+    track.addEventListener('mousemove', handleTouchMove);
+    track.addEventListener('mouseup', handleTouchEnd);
+    track.addEventListener('mouseleave', handleTouchEnd); // 마우스를 밖으로 빼도 drag 종료
+
+    track.addEventListener('touchstart', handleTouchStart);
+    track.addEventListener('touchmove', handleTouchMove);
+    track.addEventListener('touchend', handleTouchEnd);
+  });
 
   
 </script>
