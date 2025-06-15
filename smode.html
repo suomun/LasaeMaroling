@@ -1,137 +1,132 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>secret mode</title>
-  <style>
-    body {
-      background: #111;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      margin: 0;
-      color: white;
-      font-family: Arial, sans-serif;
-      user-select: none;
-      padding: 20px;
-      gap: 30px;
-    }
-    #tetris {
-      border: 4px solid #333;
-      background: #222;
-      display: grid;
-      grid-template-rows: repeat(20, 30px);
-      grid-template-columns: repeat(10, 30px);
-      gap: 2px;
-      position: relative;
-    }
-    .cell {
-      width: 30px;
-      height: 30px;
-      background: #111;
-      border-radius: 4px;
-      box-sizing: border-box;
-      transition: background 0.2s;
-    }
-    .filled {
-      box-shadow: 0 0 10px;
-    }
-    .I { background: #0ff; box-shadow-color: #0ff; }
-    .J { background: #00f; box-shadow-color: #00f; }
-    .L { background: #f60; box-shadow-color: #f60; }
-    .O { background: #ff0; box-shadow-color: #ff0; }
-    .S { background: #0f0; box-shadow-color: #0f0; }
-    .T { background: #a0f; box-shadow-color: #a0f; }
-    .Z { background: #f00; box-shadow-color: #f00; }
-    /* 그림자 표시 */
-    .ghost {
-      opacity: 0.3;
-      background: #888 !important;
-      box-shadow: none !important;
-    }
-
-    /* 컨트롤 영역 */
-    #sidebar {
-      width: 180px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    #score, #level, #hi-score {
-      font-size: 20px;
-      text-align: center;
-    }
-    #next, #hold {
-      background: #222;
-      border: 2px solid #444;
-      padding: 10px;
-      border-radius: 8px;
-      text-align: center;
-      user-select: none;
-    }
-    #next div, #hold div {
-      margin-top: 10px;
-      display: grid;
-      grid-template-columns: repeat(4, 30px);
-      grid-template-rows: repeat(4, 30px);
-      gap: 2px;
-      justify-content: center;
-    }
-    #next .cell, #hold .cell {
-      border-radius: 4px;
-      background: #111;
-    }
-    #instructions {
-      font-size: 14px;
-      line-height: 1.4;
-      color: #ccc;
-      user-select: none;
-    }
-    button {
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: none;
-      background-color: #333;
-      color: white;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 0.2s;
-    }
-    button:hover {
-      background-color: #555;
-    }
-
-    /* 모바일 터치 컨트롤 버튼 */
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>테트리스 with 모바일 터치 지원</title>
+<style>
+  body {
+    background: #111;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    color: white;
+    font-family: Arial, sans-serif;
+    user-select: none;
+    padding: 20px;
+    gap: 30px;
+  }
+  #tetris {
+    border: 4px solid #333;
+    background: #222;
+    display: grid;
+    grid-template-rows: repeat(20, 30px);
+    grid-template-columns: repeat(10, 30px);
+    gap: 2px;
+    position: relative;
+  }
+  .cell {
+    width: 30px;
+    height: 30px;
+    background: #111;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: background 0.2s;
+  }
+  .filled {
+    box-shadow: 0 0 10px;
+  }
+  .I { background: #0ff; box-shadow-color: #0ff; }
+  .J { background: #00f; box-shadow-color: #00f; }
+  .L { background: #f60; box-shadow-color: #f60; }
+  .O { background: #ff0; box-shadow-color: #ff0; }
+  .S { background: #0f0; box-shadow-color: #0f0; }
+  .T { background: #a0f; box-shadow-color: #a0f; }
+  .Z { background: #f00; box-shadow-color: #f00; }
+  .ghost {
+    opacity: 0.3;
+    background: #888 !important;
+    box-shadow: none !important;
+  }
+  #sidebar {
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  #score, #level, #hi-score {
+    font-size: 20px;
+    text-align: center;
+  }
+  #next, #hold {
+    background: #222;
+    border: 2px solid #444;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    user-select: none;
+  }
+  #next div, #hold div {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 30px);
+    grid-template-rows: repeat(4, 30px);
+    gap: 2px;
+    justify-content: center;
+  }
+  #next .cell, #hold .cell {
+    border-radius: 4px;
+    background: #111;
+  }
+  #instructions {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #ccc;
+    user-select: none;
+  }
+  button {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s;
+  }
+  button:hover {
+    background-color: #555;
+  }
+  #mobile-controls {
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+    user-select: none;
+  }
+  .control-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 0 8px #000;
+    touch-action: manipulation;
+  }
+  @media (min-width: 600px) {
     #mobile-controls {
-      position: fixed;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
-      z-index: 1000;
-      user-select: none;
+      display: none;
     }
-    .control-btn {
-      width: 50px;
-      height: 50px;
-      font-size: 24px;
-      background: #333;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      box-shadow: 0 0 8px #000;
-      touch-action: manipulation;
-    }
-    @media (min-width: 600px) {
-      #mobile-controls {
-        display: none; /* PC에서는 숨김 */
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
   <div id="tetris"></div>
@@ -160,7 +155,6 @@
     </div>
   </div>
 
-  <!-- 모바일 터치 컨트롤 버튼 -->
   <div id="mobile-controls">
     <button id="btn-left" class="control-btn">←</button>
     <button id="btn-right" class="control-btn">→</button>
@@ -171,133 +165,410 @@
   </div>
 
   <script>
-    (() => {
-      const COLS = 10;
-      const ROWS = 20;
+  (() => {
+    const COLS = 10;
+    const ROWS = 20;
 
-      const tetris = document.getElementById('tetris');
-      const scoreElem = document.getElementById('score');
-      const levelElem = document.getElementById('level');
-      const hiScoreElem = document.getElementById('hi-score');
-      const nextElem = document.querySelector('#next div');
-      const holdElem = document.querySelector('#hold div');
-      const holdBtn = document.getElementById('holdBtn');
-      const pauseBtn = document.getElementById('pauseBtn');
+    const tetris = document.getElementById('tetris');
+    const scoreElem = document.getElementById('score');
+    const levelElem = document.getElementById('level');
+    const hiScoreElem = document.getElementById('hi-score');
+    const nextElem = document.querySelector('#next div');
+    const holdElem = document.querySelector('#hold div');
+    const holdBtn = document.getElementById('holdBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
 
-      // 필드 초기화
-      let field = [];
+    let field = [];
+    for(let r=0; r<ROWS; r++) {
+      field[r] = [];
+      for(let c=0; c<COLS; c++) {
+        field[r][c] = '';
+      }
+    }
+
+    const TETROMINOS = {
+      I: [
+        [0,0,0,0],
+        [1,1,1,1],
+        [0,0,0,0],
+        [0,0,0,0],
+      ],
+      J: [
+        [1,0,0],
+        [1,1,1],
+        [0,0,0],
+      ],
+      L: [
+        [0,0,1],
+        [1,1,1],
+        [0,0,0],
+      ],
+      O: [
+        [1,1],
+        [1,1],
+      ],
+      S: [
+        [0,1,1],
+        [1,1,0],
+        [0,0,0],
+      ],
+      T: [
+        [0,1,0],
+        [1,1,1],
+        [0,0,0],
+      ],
+      Z: [
+        [1,1,0],
+        [0,1,1],
+        [0,0,0],
+      ],
+    };
+
+    const COLORS = {
+      I: 'I',
+      J: 'J',
+      L: 'L',
+      O: 'O',
+      S: 'S',
+      T: 'T',
+      Z: 'Z',
+    };
+
+    let current = null;
+    let next = null;
+    let hold = null;
+    let holdUsed = false;
+
+    let score = 0;
+    let level = 1;
+    let linesCleared = 0;
+    let hiScore = localStorage.getItem('tetris_hi_score') || 0;
+    hiScoreElem.textContent = `최고 점수: ${hiScore}`;
+
+    let cells = [];
+    for(let r=0; r<ROWS; r++) {
+      for(let c=0; c<COLS; c++) {
+        let cell = document.createElement('div');
+        cell.classList.add('cell');
+        tetris.appendChild(cell);
+        cells.push(cell);
+      }
+    }
+
+    function createMiniGrid(parent) {
+      parent.innerHTML = '';
+      for(let i=0; i<16; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        parent.appendChild(cell);
+      }
+    }
+    createMiniGrid(nextElem);
+    createMiniGrid(holdElem);
+
+    function randomTetromino() {
+      const types = Object.keys(TETROMINOS);
+      const randType = types[Math.floor(Math.random() * types.length)];
+      return {
+        shape: TETROMINOS[randType].map(row => row.slice()),
+        x: Math.floor(COLS / 2) - Math.ceil(TETROMINOS[randType][0].length / 2),
+        y: 0,
+        type: randType,
+      };
+    }
+
+    function rotate(matrix) {
+      const N = matrix.length;
+      let ret = [];
+      for(let i=0; i<N; i++) {
+        ret[i] = [];
+        for(let j=0; j<N; j++) {
+          ret[i][j] = matrix[N - j - 1][i] || 0;
+        }
+      }
+      return ret;
+    }
+
+    function valid(pos, shape) {
+      for(let y=0; y<shape.length; y++) {
+        for(let x=0; x<shape[y].length; x++) {
+          if(shape[y][x]) {
+            let nx = pos.x + x;
+            let ny = pos.y + y;
+            if(nx < 0 || nx >= COLS || ny >= ROWS) return false;
+            if(ny >= 0 && field[ny][nx]) return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function place(pos, shape, type) {
+      for(let y=0; y<shape.length; y++) {
+        for(let x=0; x<shape[y].length; x++) {
+          if(shape[y][x]) {
+            let nx = pos.x + x;
+            let ny = pos.y + y;
+            if(ny >= 0 && ny < ROWS && nx >= 0 && nx < COLS) {
+              field[ny][nx] = type;
+            }
+          }
+        }
+      }
+    }
+
+    function clearLines() {
+      let lines = 0;
+      for(let y=ROWS-1; y>=0; y--) {
+        if(field[y].every(cell => cell !== '')) {
+          field.splice(y,1);
+          field.unshift(new Array(COLS).fill(''));
+          lines++;
+          y++; // 한 줄 밀려서 다시 검사
+        }
+      }
+      if(lines > 0) {
+        linesCleared += lines;
+        score += lines * lines * 100;
+        if(linesCleared >= level * 10) {
+          level++;
+        }
+        scoreElem.textContent = `점수: ${score}`;
+        levelElem.textContent = `레벨: ${level}`;
+        if(score > hiScore) {
+          hiScore = score;
+          hiScoreElem.textContent = `최고 점수: ${hiScore}`;
+          localStorage.setItem('tetris_hi_score', hiScore);
+        }
+      }
+    }
+
+    function drawField() {
+      for(let r=0; r<ROWS; r++) {
+        for(let c=0; c<COLS; c++) {
+          let cell = cells[r * COLS + c];
+          cell.className = 'cell';
+          if(field[r][c]) {
+            cell.classList.add(field[r][c]);
+            cell.classList.add('filled');
+          }
+        }
+      }
+    }
+
+    function drawShape(pos, shape, type, ghost=false) {
+      for(let y=0; y<shape.length; y++) {
+        for(let x=0; x<shape[y].length; x++) {
+          if(shape[y][x]) {
+            let nx = pos.x + x;
+            let ny = pos.y + y;
+            if(ny >= 0 && ny < ROWS && nx >= 0 && nx < COLS) {
+              let cell = cells[ny * COLS + nx];
+              cell.classList.add(type);
+              cell.classList.add('filled');
+              if(ghost) cell.classList.add('ghost');
+            }
+          }
+        }
+      }
+    }
+
+    function drawMini(shape, type, container) {
+      let miniCells = container.querySelectorAll('.cell');
+      for(let i=0; i<miniCells.length; i++) {
+        miniCells[i].className = 'cell';
+      }
+      for(let y=0; y<shape.length; y++) {
+        for(let x=0; x<shape[y].length; x++) {
+          if(shape[y][x]) {
+            let idx = y * 4 + x;
+            if(miniCells[idx]) {
+              miniCells[idx].classList.add(type);
+              miniCells[idx].classList.add('filled');
+            }
+          }
+        }
+      }
+    }
+
+    function getGhostPosition() {
+      let ghostPos = {x: current.x, y: current.y};
+      while(valid({x: ghostPos.x, y: ghostPos.y + 1}, current.shape)) {
+        ghostPos.y++;
+      }
+      return ghostPos;
+    }
+
+    function render() {
+      drawField();
+      // 고스트 블록
+      let ghostPos = getGhostPosition();
+      drawShape(ghostPos, current.shape, current.type, true);
+      // 현재 블록
+      drawShape(current, current.shape, current.type);
+      // 다음, 홀드
+      drawMini(next.shape, next.type, nextElem);
+      if(hold) {
+        drawMini(hold.shape, hold.type, holdElem);
+      } else {
+        holdElem.querySelectorAll('.cell').forEach(c => c.className = 'cell');
+      }
+    }
+
+    function spawn() {
+      current = next || randomTetromino();
+      next = randomTetromino();
+      holdUsed = false;
+      if(!valid(current, current.shape)) {
+        gameOver();
+      }
+    }
+
+    function gameOver() {
+      alert('게임 오버!');
+      reset();
+    }
+
+    function reset() {
+      field = [];
       for(let r=0; r<ROWS; r++) {
         field[r] = [];
         for(let c=0; c<COLS; c++) {
           field[r][c] = '';
         }
       }
+      score = 0;
+      level = 1;
+      linesCleared = 0;
+      scoreElem.textContent = `점수: 0`;
+      levelElem.textContent = `레벨: 1`;
+      spawn();
+      render();
+      isPaused = false;
+      dropInterval = 1000;
+      dropCounter = 0;
+      lastTime = 0;
+      requestAnimationFrame(update);
+    }
 
-      // 테트리스 블록 정의
-      const TETROMINOS = {
-        I: [
-          [0,0,0,0],
-          [1,1,1,1],
-          [0,0,0,0],
-          [0,0,0,0],
-        ],
-        J: [
-          [1,0,0],
-          [1,1,1],
-          [0,0,0],
-        ],
-        L: [
-          [0,0,1],
-          [1,1,1],
-          [0,0,0],
-        ],
-        O: [
-          [1,1],
-          [1,1],
-        ],
-        S: [
-          [0,1,1],
-          [1,1,0],
-          [0,0,0],
-        ],
-        T: [
-          [0,1,0],
-          [1,1,1],
-          [0,0,0],
-        ],
-        Z: [
-          [1,1,0],
-          [0,1,1],
-          [0,0,0],
-        ],
-      };
-
-      const COLORS = {
-        I: 'I',
-        J: 'J',
-        L: 'L',
-        O: 'O',
-        S: 'S',
-        T: 'T',
-        Z: 'Z',
-      };
-
-      // 현재 블록, 다음 블록, 홀드 블록
-      let current = null;
-      let next = null;
-      let hold = null;
-      let holdUsed = false; // 홀드 한번만 가능
-
-      // 점수, 레벨, 라인
-      let score = 0;
-      let level = 1;
-      let linesCleared = 0;
-
-      // 하이스코어 로드
-      let hiScore = localStorage.getItem('tetris_hi_score') || 0;
-      hiScoreElem.textContent = `최고 점수: ${hiScore}`;
-
-      // 셀들 생성
-      let cells = [];
-      for(let r=0; r<ROWS; r++) {
-        for(let c=0; c<COLS; c++) {
-          let cell = document.createElement('div');
-          cell.classList.add('cell');
-          tetris.appendChild(cell);
-          cells.push(cell);
-        }
-      }
-
-      // 다음, 홀드 박스 셀 생성 (4x4)
-      function createMiniGrid(parent) {
-        parent.innerHTML = '';
-        for(let i=0; i<16; i++) {
-          const cell = document.createElement('div');
-          cell.classList.add('cell');
-          parent.appendChild(cell);
-        }
-      }
-      createMiniGrid(nextElem);
-      createMiniGrid(holdElem);
-
-      // 랜덤 블록 생성
-      function randomTetromino() {
-        const types = Object.keys(TETROMINOS);
-        const randType = types[Math.floor(Math.random() * types.length)];
-        return {
-          shape: TETROMINOS[randType].map(row => row.slice()),
-          x: Math.floor(COLS / 2) - Math.ceil(TETROMINOS[randType][0].length / 2),
-          y: 0,
-          type: randType,
+    function holdBlock() {
+      if(holdUsed) return;
+      if(!hold) {
+        hold = {
+          shape: current.shape.map(row => row.slice()),
+          type: current.type,
         };
+        spawn();
+      } else {
+        let temp = {
+          shape: current.shape.map(row => row.slice()),
+          type: current.type,
+        };
+        current.shape = hold.shape.map(row => row.slice());
+        current.type = hold.type;
+        current.x = Math.floor(COLS/2) - Math.ceil(current.shape[0].length/2);
+        current.y = 0;
+        hold = temp;
+        if(!valid(current, current.shape)) {
+          gameOver();
+          return;
+        }
       }
+      holdUsed = true;
+      render();
+    }
 
-      // 블록 그리기
-      function draw() {
-        // 필드 클리어
-        for(let r=0; r<ROWS; r++) {
-          for(let c=0; c<COLS; c++) {
-            let cell = cells[r * COLS + c];
-            cell.className = 'cell';
-            if(field[r][c]) {
-              cell.classList.add
+    function move(dir) {
+      let newPos = {x: current.x + dir, y: current.y};
+      if(valid(newPos, current.shape)) {
+        current.x = newPos.x;
+        render();
+      }
+    }
+
+    function rotateCurrent() {
+      let rotated = rotate(current.shape);
+      if(valid(current, rotated)) {
+        current.shape = rotated;
+        render();
+      }
+    }
+
+    function drop() {
+      let newPos = {x: current.x, y: current.y + 1};
+      if(valid(newPos, current.shape)) {
+        current.y++;
+      } else {
+        place(current, current.shape, current.type);
+        clearLines();
+        spawn();
+      }
+      render();
+    }
+
+    function hardDrop() {
+      while(valid({x: current.x, y: current.y+1}, current.shape)) {
+        current.y++;
+      }
+      place(current, current.shape, current.type);
+      clearLines();
+      spawn();
+      render();
+    }
+
+    // 타이머
+    let dropInterval = 1000;
+    let dropCounter = 0;
+    let lastTime = 0;
+    let isPaused = false;
+
+    function update(time=0) {
+      if(isPaused) {
+        lastTime = time;
+        requestAnimationFrame(update);
+        return;
+      }
+      const deltaTime = time - lastTime;
+      lastTime = time;
+      dropCounter += deltaTime;
+      if(dropCounter > dropInterval) {
+        drop();
+        dropCounter = 0;
+      }
+      requestAnimationFrame(update);
+    }
+
+    // 키보드 이벤트
+    window.addEventListener('keydown', e => {
+      if(isPaused && e.key.toLowerCase() !== 'p') return;
+      switch(e.key) {
+        case 'ArrowLeft':
+          move(-1);
+          break;
+        case 'ArrowRight':
+          move(1);
+          break;
+        case 'ArrowDown':
+          drop();
+          break;
+        case 'ArrowUp':
+          rotateCurrent();
+          break;
+        case ' ':
+          e.preventDefault();
+          hardDrop();
+          break;
+        case 'c':
+        case 'C':
+          holdBlock();
+          break;
+        case 'p':
+        case 'P':
+          togglePause();
+          break;
+      }
+    });
+
+    // 버튼 이벤트
+    holdBtn.onclick = holdBlock;
+    pauseBtn.onclick = toggle
