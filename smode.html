@@ -1,154 +1,159 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mobile Tetris with Controls Info</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>테트리스 - 하드 드롭 포함</title>
   <style>
     body {
       background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+      flex-wrap: wrap;
+    }
+    #game-area {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 0;
-      color: white;
-      font-family: sans-serif;
     }
     canvas {
-      border: 2px solid #fff;
-      background: #000;
-      margin-top: 10px;
+      border: 2px solid white;
+      background: black;
+      display: block;
       touch-action: none;
+    }
+    #tetris {
+      width: 240px;
+      height: 400px;
+      image-rendering: pixelated;
+    }
+    #nextBlock {
+      width: 80px;
+      height: 80px;
+      margin-top: 10px;
+      image-rendering: pixelated;
+      border: 2px solid white;
+      background: #222;
     }
     .info {
       display: flex;
       justify-content: space-between;
       width: 240px;
+      margin-top: 10px;
+      font-size: 1.2em;
     }
-    #score, #level {
-      font-size: 1.2rem;
-    }
-    #restartBtn, #pauseBtn, #musicToggleBtn {
-      margin: 5px 5px 5px 0;
-      padding: 5px 10px;
-      font-size: 1rem;
+    button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      font-size: 1em;
       cursor: pointer;
-      border-radius: 5px;
+      border-radius: 6px;
       border: none;
       background: #333;
       color: white;
-    }
-    #nextBlock {
-      margin-top: 10px;
-      background: #222;
-      border: 2px solid #fff;
-    }
-    #highScore {
-      margin-top: 10px;
     }
     .mobile-controls {
       display: flex;
       justify-content: center;
       margin-top: 10px;
       gap: 10px;
+      flex-wrap: wrap;
+      max-width: 280px;
     }
     .mobile-controls button {
+      flex: 1 1 60px;
       padding: 10px;
       font-size: 1rem;
       border-radius: 8px;
-      border: none;
       background: #333;
       color: white;
+      border: none;
       cursor: pointer;
-      user-select: none;
     }
-    #controlsInfo {
-      color: white;
-      font-family: sans-serif;
-      margin-top: 10px;
-      width: 240px;
-      background: #222;
-      border: 2px solid #fff;
-      border-radius: 8px;
-      padding: 10px;
-    }
-    #controlsInfo h3 {
-      margin: 5px 0;
-      font-size: 1.1rem;
-      text-align: center;
-    }
-    #controlsInfo ul {
-      list-style: none;
-      padding-left: 10px;
+    #key-guide {
+      max-width: 180px;
+      border: 2px solid #444;
+      padding: 15px;
+      border-radius: 10px;
       font-size: 0.9rem;
-      line-height: 1.4rem;
+      line-height: 1.4;
+      background: #222;
+      user-select: none;
+      height: fit-content;
     }
-    #controlsInfo ul li strong {
-      width: 60px;
-      display: inline-block;
+    #key-guide h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="info">
-    <div id="score">Score: 0</div>
-    <div id="level">Level: 1</div>
-  </div>
-  <canvas id="tetris" width="240" height="400"></canvas>
-  <canvas id="nextBlock" width="80" height="80"></canvas>
-  <div>
-    <button id="restartBtn">Restart Game</button>
-    <button id="pauseBtn">Pause</button>
-    <button id="musicToggleBtn">Music On</button>
-  </div>
-  <div id="highScore">High Score: 0</div>
+  <div id="game-area">
+    <div class="info">
+      <div id="score">Score: 0</div>
+      <div id="level">Level: 1</div>
+    </div>
+    <canvas id="tetris" width="12" height="20"></canvas>
+    <canvas id="nextBlock" width="4" height="4"></canvas>
 
-  <div class="mobile-controls">
-    <button onclick="playerMove(-1)">◀</button>
-    <button onclick="playerDrop()">▼</button>
-    <button onclick="playerMove(1)">▶</button>
-    <button onclick="playerRotate(1)">⟳</button>
+    <div>
+      <button id="restartBtn">Restart Game</button>
+      <button id="pauseBtn">Pause</button>
+      <button id="musicBtn">Music On</button>
+    </div>
+
+    <div class="mobile-controls">
+      <button onclick="playerMove(-1)">◀</button>
+      <button onclick="playerDrop()">▼</button>
+      <button onclick="playerHardDrop()">⇩⇩</button>
+      <button onclick="playerMove(1)">▶</button>
+      <button onclick="playerRotate(1)">⟳</button>
+    </div>
   </div>
 
-  <div id="controlsInfo">
-    <h3>Keyboard Controls</h3>
-    <ul>
-      <li><strong>←</strong>: Move Left</li>
-      <li><strong>→</strong>: Move Right</li>
-      <li><strong>↓</strong>: Soft Drop</li>
-      <li><strong>Q</strong>: Rotate Left</li>
-      <li><strong>W</strong>: Rotate Right</li>
-      <li><strong>Restart</strong>: Restart Game Button</li>
-      <li><strong>Pause</strong>: Pause / Resume Button</li>
-    </ul>
-    <h3>Mobile Controls</h3>
-    <ul>
-      <li>◀ : Move Left</li>
-      <li>▶ : Move Right</li>
-      <li>▼ : Soft Drop</li>
-      <li>⟳ : Rotate Right</li>
-    </ul>
+  <div id="key-guide">
+    <h3>키보드 조작 안내</h3>
+    <p><strong>◀ / ▶</strong> : 좌/우 이동</p>
+    <p><strong>↓</strong> : 한 칸 아래로 이동</p>
+    <p><strong>Space</strong> : 바로 바닥으로 하드 드롭</p>
+    <p><strong>Q</strong> : 반시계 회전</p>
+    <p><strong>W</strong> : 시계 회전</p>
+    <p><strong>P</strong> : 일시정지 / 재개</p>
+    <p><strong>Restart</strong> 버튼 : 게임 재시작</p>
+    <p><strong>Music On/Off</strong> 버튼 : 배경음악 켜기/끄기</p>
+    <p><strong>모바일 버튼</strong> : 좌/우 이동, 아래 한 칸 이동, 하드 드롭, 회전</p>
   </div>
 
   <audio id="bgm" loop src="ads/Tetris.mp3"></audio>
-  <audio id="lineClearSfx" src="ads/linebroken1.wav"></audio>
+  <audio id="lineClearSound" src="ads/linebroken1.wav"></audio>
 
   <script>
     const canvas = document.getElementById('tetris');
     const context = canvas.getContext('2d');
     context.scale(20, 20);
+
     const nextCanvas = document.getElementById('nextBlock');
     const nextContext = nextCanvas.getContext('2d');
     nextContext.scale(20, 20);
+
+    const bgm = document.getElementById('bgm');
+    const lineClearSound = document.getElementById('lineClearSound');
+    let musicPlaying = false;
 
     let dropInterval = 1000;
     let dropCounter = 0;
     let lastTime = 0;
     let isPaused = false;
-    let musicPlaying = false;
 
     const colors = [null, '#FF0D72', '#0DC2FF', '#0DFF72', '#F538FF', '#FF8E0D', '#FFE138', '#3877FF'];
+
     const arena = createMatrix(12, 20);
+
     const player = {
       pos: { x: 0, y: 0 },
       matrix: null,
@@ -157,22 +162,6 @@
       level: 1,
       lines: 0,
     };
-
-    // 오디오 요소
-    const bgm = document.getElementById('bgm');
-    const lineClearSfx = document.getElementById('lineClearSfx');
-
-    document.getElementById('musicToggleBtn').addEventListener('click', () => {
-      if (musicPlaying) {
-        bgm.pause();
-        musicPlaying = false;
-        document.getElementById('musicToggleBtn').innerText = 'Music Off';
-      } else {
-        if (!isPaused) bgm.play();
-        musicPlaying = true;
-        document.getElementById('musicToggleBtn').innerText = 'Music On';
-      }
-    });
 
     function createMatrix(w, h) {
       const matrix = [];
@@ -199,7 +188,11 @@
       const [m, o] = [player.matrix, player.pos];
       for (let y = 0; y < m.length; ++y) {
         for (let x = 0; x < m[y].length; ++x) {
-          if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) return true;
+          if (
+            m[y][x] !== 0 &&
+            (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0
+          )
+            return true;
         }
       }
       return false;
@@ -224,19 +217,20 @@
         arena.unshift(new Array(arena[0].length).fill(0));
         player.score += rowCount * 10;
         player.lines++;
-        rowCount *= 2;
         linesCleared++;
-        y++; // 새로 생긴 행 다시 검사
+        rowCount *= 2;
+        y++;
       }
-      if (linesCleared > 0) {
-        lineClearSfx.currentTime = 0;
-        lineClearSfx.play();
+      if(linesCleared > 0){
+        lineClearSound.currentTime = 0;
+        lineClearSound.play();
       }
       updateScore();
       updateLevel();
     }
 
     function playerDrop() {
+      if(isPaused) return;
       player.pos.y++;
       if (collide(arena, player)) {
         player.pos.y--;
@@ -245,14 +239,32 @@
         arenaSweep();
       }
       dropCounter = 0;
+      draw();
+    }
+
+    function playerHardDrop() {
+      if (isPaused) return;
+      while (
+        !collide(arena, { ...player, pos: { x: player.pos.x, y: player.pos.y + 1 } })
+      ) {
+        player.pos.y++;
+      }
+      merge(arena, player);
+      playerReset();
+      arenaSweep();
+      dropCounter = 0;
+      draw();
     }
 
     function playerMove(dir) {
+      if(isPaused) return;
       player.pos.x += dir;
       if (collide(arena, player)) player.pos.x -= dir;
+      draw();
     }
 
     function playerRotate(dir) {
+      if(isPaused) return;
       const pos = player.pos.x;
       let offset = 1;
       rotate(player.matrix, dir);
@@ -265,6 +277,7 @@
           return;
         }
       }
+      draw();
     }
 
     function rotate(matrix, dir) {
@@ -277,39 +290,32 @@
       else matrix.reverse();
     }
 
-    function update(time = 0) {
-      if (isPaused) {
-        requestAnimationFrame(update);
-        return;
+    function playerReset() {
+      player.matrix = player.next || createPiece(randomPiece());
+      player.next = createPiece(randomPiece());
+      player.pos.y = 0;
+      player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
+
+      if (collide(arena, player)) {
+        arena.forEach(row => row.fill(0));
+        player.score = 0;
+        player.level = 1;
+        player.lines = 0;
+        updateScore();
+        updateLevel();
       }
-      const deltaTime = time - lastTime;
-      lastTime = time;
-      dropCounter += deltaTime;
-      if (dropCounter > dropInterval) playerDrop();
-      draw();
-      requestAnimationFrame(update);
+      drawNext();
     }
 
-    function updateScore() {
-      document.getElementById('score').innerText = 'Score: ' + player.score;
-      const high = Math.max(player.score, +localStorage.getItem('tetrisHigh') || 0);
-      localStorage.setItem('tetrisHigh', high);
-      document.getElementById('highScore').innerText = 'High Score: ' + high;
-    }
-
-    function updateLevel() {
-      player.level = Math.floor(player.lines / 10) + 1;
-      document.getElementById('level').innerText = 'Level: ' + player.level;
-      dropInterval = 1000 - (player.level - 1) * 50;
-      if (dropInterval < 100) dropInterval = 100;
-    }
-
-    function drawMatrix(matrix, offset, ctx = context, ghost = false) {
+    function drawMatrix(matrix, offset, ctx = context) {
       matrix.forEach((row, y) => {
         row.forEach((value, x) => {
           if (value !== 0) {
-            ctx.fillStyle = ghost ? 'rgba(255,255,255,0.3)' : colors[value];
+            ctx.fillStyle = colors[value];
             ctx.fillRect(x + offset.x, y + offset.y, 1, 1);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 0.1;
+            ctx.strokeRect(x + offset.x, y + offset.y, 1, 1);
           }
         });
       });
@@ -319,94 +325,100 @@
       context.fillStyle = '#000';
       context.fillRect(0, 0, canvas.width, canvas.height);
       drawMatrix(arena, { x: 0, y: 0 });
-      drawGhost();
       drawMatrix(player.matrix, player.pos);
     }
 
     function drawNext() {
       nextContext.fillStyle = '#000';
       nextContext.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
-      drawMatrix(player.next, { x: 1, y: 1 }, nextContext);
+      drawMatrix(player.next, { x: 0, y: 0 }, nextContext);
     }
 
-    function drawGhost() {
-      let offset = { ...player.pos };
-      while (!collide(arena, { ...player, pos: offset })) offset.y++;
-      offset.y--;
-      drawMatrix(player.matrix, offset, context, true);
+    function updateScore() {
+      document.getElementById('score').textContent = 'Score: ' + player.score;
     }
-
-    function playerReset() {
-      player.matrix = player.next || createPiece(randomPiece());
-      player.next = createPiece(randomPiece());
-      player.pos.y = 0;
-      player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
-      if (collide(arena, player)) {
-        alert('Game Over! Your score: ' + player.score);
-        arena.forEach(row => row.fill(0));
-        player.score = 0;
-        player.lines = 0;
-        updateScore();
-        updateLevel();
-      }
-      drawNext();
-    }
-
-    function togglePause() {
-      isPaused = !isPaused;
-      if (isPaused) {
-        document.getElementById('pauseBtn').innerText = 'Resume';
-        bgm.pause();
-      } else {
-        document.getElementById('pauseBtn').innerText = 'Pause';
-        if (musicPlaying) bgm.play();
+    function updateLevel() {
+      const newLevel = Math.min(10, Math.floor(player.lines / 10) + 1);
+      if (newLevel !== player.level) {
+        player.level = newLevel;
+        dropInterval = 1000 - (player.level - 1) * 80;
+        document.getElementById('level').textContent = 'Level: ' + player.level;
       }
     }
 
-    // 키보드 이벤트 처리
+    function update(time = 0) {
+      if(isPaused) {
+        lastTime = time;
+        requestAnimationFrame(update);
+        return;
+      }
+      const deltaTime = time - lastTime;
+      lastTime = time;
+
+      dropCounter += deltaTime;
+      if (dropCounter > dropInterval) {
+        playerDrop();
+      }
+      draw();
+      requestAnimationFrame(update);
+    }
+
     document.addEventListener('keydown', event => {
-      if (isPaused) return;
-      switch(event.key) {
-        case 'ArrowLeft':
-          playerMove(-1);
-          break;
-        case 'ArrowRight':
-          playerMove(1);
-          break;
-        case 'ArrowDown':
-          playerDrop();
-          break;
-        case 'q':
-        case 'Q':
-          playerRotate(-1);
-          break;
-        case 'w':
-        case 'W':
-          playerRotate(1);
-          break;
-      }
+      if (event.repeat) return;
+      if (event.key === 'ArrowLeft') playerMove(-1);
+      else if (event.key === 'ArrowRight') playerMove(1);
+      else if (event.key === 'ArrowDown') playerDrop();
+      else if (event.key === ' ') playerHardDrop();
+      else if (event.key === 'q' || event.key === 'Q') playerRotate(-1);
+      else if (event.key === 'w' || event.key === 'W') playerRotate(1);
+      else if (event.key === 'p' || event.key === 'P') togglePause();
     });
 
-    // 버튼 이벤트
-    document.getElementById('restartBtn').addEventListener('click', () => {
+    document.getElementById('restartBtn').onclick = () => {
       arena.forEach(row => row.fill(0));
       player.score = 0;
+      player.level = 1;
       player.lines = 0;
       updateScore();
       updateLevel();
       playerReset();
-      if (!isPaused && musicPlaying) bgm.play();
-    });
+      if(isPaused) togglePause();
+      draw();
+    };
 
-    document.getElementById('pauseBtn').addEventListener('click', () => {
-      togglePause();
-    });
+    document.getElementById('pauseBtn').onclick = togglePause;
 
-    // 모바일 컨트롤용 함수 (버튼에서 호출)
-    function playerMove(dir) {
+    function togglePause() {
+      isPaused = !isPaused;
+      document.getElementById('pauseBtn').textContent = isPaused ? 'Resume' : 'Pause';
+      if(!isPaused) {
+        lastTime = performance.now();
+        update();
+      }
+    }
+
+    document.getElementById('musicBtn').onclick = () => {
+      if(musicPlaying) {
+        bgm.pause();
+        musicPlaying = false;
+        document.getElementById('musicBtn').textContent = 'Music On';
+      } else {
+        bgm.play();
+        musicPlaying = true;
+        document.getElementById('musicBtn').textContent = 'Music Off';
+      }
+    };
+
+    // 모바일 버튼 함수
+    function playerHardDrop() {
       if (isPaused) return;
-      player.pos.x += dir;
-      if (collide(arena, player)) player.pos.x -= dir;
+      while (!collide(arena, { ...player, pos: { x: player.pos.x, y: player.pos.y + 1 } })) {
+        player.pos.y++;
+      }
+      merge(arena, player);
+      playerReset();
+      arenaSweep();
+      dropCounter = 0;
       draw();
     }
     function playerDrop() {
@@ -419,6 +431,12 @@
         arenaSweep();
       }
       dropCounter = 0;
+      draw();
+    }
+    function playerMove(dir) {
+      if (isPaused) return;
+      player.pos.x += dir;
+      if (collide(arena, player)) player.pos.x -= dir;
       draw();
     }
     function playerRotate(dir) {
@@ -438,12 +456,9 @@
       draw();
     }
 
-    // 초기 시작
-    updateScore();
-    updateLevel();
+    // 초기화 시작
     playerReset();
     update();
-
   </script>
 </body>
 </html>
