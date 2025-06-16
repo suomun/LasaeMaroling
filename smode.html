@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Tetris 완성본</title>
+  <title>Tetris 이스터에그그</title>
   <style>
     body {
       background: #000;
@@ -44,12 +44,6 @@
       border: 2px solid #555;
       margin-top: 10px;
       display: block;
-    }
-    #right-panel {
-      max-width: 220px;
-      color: #eee;
-      font-size: 14px;
-      text-align: left;
     }
     #controls {
       margin-top: 15px;
@@ -103,20 +97,6 @@
       <canvas id="tetris" width="240" height="400"></canvas>
       <canvas id="nextBlock" width="80" height="80"></canvas>
     </div>
-    <div id="right-panel">
-      <h3>조작법</h3>
-      <ul>
-        <li>◀ : 왼쪽 이동</li>
-        <li>↺ : 왼쪽 회전</li>
-        <li>↻ : 오른쪽 회전</li>
-        <li>▶ : 오른쪽 이동</li>
-        <li>▼ : 한 칸 내리기</li>
-        <li>▼▼ : 빠르게 내리기</li>
-        <li>일시정지 : 게임 일시정지/재개</li>
-        <li>시작 : 게임 시작</li>
-        <li>음악 : 배경음악 켜기/끄기</li>
-      </ul>
-    </div>
   </div>
 
   <div id="controls">
@@ -154,12 +134,12 @@
     const startBtn = document.getElementById('startBtn');
 
     // 배경음악 & 효과음 준비
-    const bgm = new Audio('https://cdn.pixabay.com/download/audio/2021/12/08/audio_7b3302ebd8.mp3?filename=8-bit-loop-5690.mp3');
+    const bgm = new Audio('ads/Tetris.mp3');
     bgm.loop = true;
     let musicOn = false;
 
-    const lineClearSound = new Audio('https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg');
-    const blockLandSound = new Audio('https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg');
+    const lineClearSound = new Audio('ads/linebroken2.wav');
+    const blockLandSound = new Audio('ads/linebroken1.wav');
 
     function toggleMusic() {
       if (!musicOn) {
@@ -347,6 +327,25 @@
       }
     }
 
+    function rotate(matrix, dir) {
+      for (let y = 0; y < matrix.length; ++y) {
+        for (let x = 0; x < y; ++x) {
+          [
+            matrix[x][y],
+            matrix[y][x],
+          ] = [
+            matrix[y][x],
+            matrix[x][y],
+          ];
+        }
+      }
+      if(dir > 0){
+        matrix.forEach(row => row.reverse());
+      } else {
+        matrix.reverse();
+      }
+    }
+
     function playerRotate(dir) {
       const pos = player.pos.x;
       let offset = 1;
@@ -362,49 +361,80 @@
       }
     }
 
-    function rotate(matrix, dir) {
-      for (let y = 0; y < matrix.length; ++y) {
-        for (let x = 0; x < y; ++x) {
-          [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
-        }
-      }
-      if (dir > 0) {
-        matrix.forEach(row => row.reverse());
+    function gameOver() {
+      pauseGame();
+      alert('게임 오버! 점수: ' + player.score);
+    }
+
+    function startGame() {
+      arena.forEach(row => row.fill(0));
+      player.score = 0;
+      player.level = 1;
+      player.lines = 0;
+      dropInterval = 1000;
+      playerReset();
+      updateScore();
+      dropCounter = 0;
+      lastTime = 0;
+      paused = false;
+      pauseBtn.classList.remove('paused');
+      requestAnimationFrame(update);
+    }
+
+    function pauseGame() {
+      paused = true;
+      pauseBtn.classList.add('paused');
+    }
+
+    function resumeGame() {
+      paused = false;
+      pauseBtn.classList.remove('paused');
+      lastTime = 0;
+      requestAnimationFrame(update);
+    }
+
+    function togglePause() {
+      if (paused) {
+        resumeGame();
       } else {
-        matrix.reverse();
+        pauseGame();
       }
     }
 
-    let dropCounter = 0;
-    let dropInterval = 1000;
-    let lastTime = 0;
-    let paused = false;
-    let gameStarted = false;
+    let arena = createMatrix(12, 20);
 
     const colors = [
       null,
-      '#FF0D72', '#0DC2FF', '#0DFF72',
-      '#F538FF', '#FF8E0D', '#FFE138', '#3877FF'
+      '#FF0D72',
+      '#0DC2FF',
+      '#0DFF72',
+      '#F538FF',
+      '#FF8E0D',
+      '#FFE138',
+      '#3877FF',
     ];
 
-    const arena = createMatrix(12, 20);
+    let dropCounter = 0;
+    let dropInterval = 1000;
+
+    let lastTime = 0;
+    let paused = true;
 
     const player = {
-      pos: {x: 0, y: 0},
+      pos: {x:0, y:0},
       matrix: null,
       next: null,
       score: 0,
       level: 1,
       lines: 0,
-      highscore: localStorage.getItem('tetrisHighscore') ? parseInt(localStorage.getItem('tetrisHighscore')) : 0
+      highscore: Number(localStorage.getItem('tetrisHighscore') || '0'),
     };
 
-    highscoreEl.textContent = player.highscore;
-
     function update(time = 0) {
-      if (!gameStarted || paused) return;
+      if (paused) return;
       const deltaTime = time - lastTime;
       lastTime = time;
+
       dropCounter += deltaTime;
       if (dropCounter > dropInterval) {
         playerDrop();
@@ -413,67 +443,21 @@
       requestAnimationFrame(update);
     }
 
-    function togglePause() {
-      if (!gameStarted) return;
-      paused = !paused;
-      pauseBtn.classList.toggle('paused', paused);
-      if (!paused) {
-        update();
-      }
-    }
-
-    function startGame() {
-      if (gameStarted) return;
-      arena.forEach(row => row.fill(0));
-      player.score = 0;
-      player.level = 1;
-      player.lines = 0;
-      dropInterval = 1000;
-      paused = false;
-      gameStarted = true;
-      pauseBtn.classList.remove('paused');
-      playerReset();
-      updateScore();
-      update();
-    }
-
-    function gameOver() {
-      alert('게임 오버!');
-      gameStarted = false;
-    }
-
-    // 모바일 터치 대응: 좌우 슬라이드, 터치 버튼 누름은 별도 작업 필요(여기선 생략)
-
-    // 키보드 제어
     document.addEventListener('keydown', event => {
-      if (!gameStarted || paused) return;
-      if (event.repeat) return;
-      switch(event.key){
-        case 'ArrowLeft':
-          playerMove(-1);
-          break;
-        case 'ArrowRight':
-          playerMove(1);
-          break;
-        case 'ArrowDown':
-          playerDrop();
-          break;
-        case 'ArrowUp':
-          playerRotate(1);
-          break;
-        case 'z':
-        case 'Z':
-          playerRotate(-1);
-          break;
-        case ' ':
-          playerHardDrop();
-          break;
-        case 'p':
-        case 'P':
-          togglePause();
-          break;
+      if (paused) return;
+      if (event.key === 'ArrowLeft') {
+        playerMove(-1);
+      } else if (event.key === 'ArrowRight') {
+        playerMove(1);
+      } else if (event.key === 'ArrowDown') {
+        playerDrop();
+      } else if (event.key === 'ArrowUp') {
+        playerRotate(1);
+      } else if (event.key === ' ') {
+        playerHardDrop();
       }
     });
+
   </script>
 </body>
 </html>
