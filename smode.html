@@ -2,118 +2,121 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Tetris 이스터에그그</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tetris</title>
   <style>
     body {
+      margin: 0;
       background: #000;
       color: #fff;
       font-family: sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-    }
-    #game-container {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .top-info {
+      display: flex;
+      gap: 30px;
       margin-top: 10px;
-      gap: 20px;
-      flex-wrap: wrap;
+      font-size: 18px;
     }
-    #left-panel {
-      position: relative;
+
+    .container {
+      display: flex;
+      margin-top: 10px;
     }
+
+    #preview {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 10px;
+    }
+
+    #nextBlock, #holdBlock {
+      background: #111;
+      border: 1px solid #fff;
+      margin-bottom: 10px;
+    }
+
     #tetris {
       background: #111;
-      border: 3px solid white; /* 게임화면 보더 하얀색 */
-      display: block;
-      margin: 0 auto;
-      touch-action: none; /* 모바일 터치 스크롤 방지 */
+      border: 2px solid #fff;
     }
-    #info-bar {
+
+    .controls {
       display: flex;
-      justify-content: center;
-      gap: 40px;
-      font-size: 18px;
-      margin-bottom: 10px;
-      user-select: text;
-    }
-    #nextBlock {
-      background: #222;
-      border: 2px solid #555;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
       margin-top: 10px;
-      display: block;
     }
-    #controls {
-      margin-top: 15px;
-      user-select: none;
+
+    .controls .row {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      max-width: 280px;
-      margin-left: auto;
-      margin-right: auto;
+      gap: 5px;
     }
-    #controls button {
-      font-size: 20px;
-      padding: 10px 16px;
+
+    .controls button {
+      font-size: 16px;
+      padding: 8px 10px;
       border: none;
-      border-radius: 8px;
-      background: #444;
+      border-radius: 6px;
+      background: #333;
       color: white;
       cursor: pointer;
-      flex: 1 1 70px;
-      min-width: 60px;
     }
-    #controls button:hover {
-      background: #666;
+
+    .controls button:hover {
+      background: #555;
     }
-    #controls-row1, #controls-row2, #controls-row3 {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-    #pauseBtn.paused {
-      background: darkred !important;
-    }
-    #musicBtn.muted {
-      background: darkblue !important;
+
+    @media (max-width: 600px) {
+      .top-info {
+        font-size: 14px;
+      }
+
+      .controls button {
+        font-size: 12px;
+        padding: 6px 8px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Tetris</h1>
-  <div id="info-bar">
-    <div>최고점수: <span id="highscore">0</span></div>
-    <div>현재점수: <span id="score">0</span></div>
-    <div>레벨: <span id="level">1</span></div>
-  </div>
-  <div id="game-container">
-    <div id="left-panel">
-      <canvas id="tetris" width="240" height="400"></canvas>
-      <canvas id="nextBlock" width="80" height="80"></canvas>
-    </div>
+
+  <div class="top-info">
+    <div>Score: <span id="score">0</span></div>
+    <div>High: <span id="high">0</span></div>
+    <div>Level: <span id="level">0</span></div>
   </div>
 
-  <div id="controls">
-    <div id="controls-row1">
+  <div class="container">
+    <div id="preview">
+      <canvas id="nextBlock" width="80" height="80"></canvas>
+      <canvas id="holdBlock" width="80" height="80"></canvas>
+    </div>
+
+    <canvas id="tetris" width="240" height="400"></canvas>
+  </div>
+
+  <div class="controls">
+    <div class="row">
       <button onclick="playerMove(-1)">◀</button>
-      <button onclick="playerRotate(-1)">↺</button>
-      <button onclick="playerRotate(1)">↻</button>
+      <button onclick="playerRotate(-1)">⟲</button>
+      <button onclick="playerRotate(1)">⟳</button>
       <button onclick="playerMove(1)">▶</button>
     </div>
-    <div id="controls-row2">
+    <div class="row">
       <button onclick="playerDrop()">▼</button>
+      <button onclick="playerHold()">HOLD</button>
       <button onclick="playerHardDrop()">▼▼</button>
     </div>
-    <div id="controls-row3">
-      <button id="pauseBtn" onclick="togglePause()">일시정지</button>
-      <button id="startBtn" onclick="startGame()">시작</button>
-      <button id="musicBtn" onclick="toggleMusic()">음악</button>
+    <div class="row">
+      <button onclick="togglePause()">Pause</button>
+      <button onclick="startGame()">Start</button>
+      <button onclick="toggleMusic()">Music</button>
     </div>
   </div>
 
@@ -123,99 +126,84 @@
     context.scale(20, 20);
 
     const nextCanvas = document.getElementById('nextBlock');
-    const nextContext = nextCanvas.getContext('2d');
-    nextContext.scale(20, 20);
+    const nextCtx = nextCanvas.getContext('2d');
+    nextCtx.scale(20, 20);
+
+    const holdCanvas = document.getElementById('holdBlock');
+    const holdCtx = holdCanvas.getContext('2d');
+    holdCtx.scale(20, 20);
 
     const scoreEl = document.getElementById('score');
     const levelEl = document.getElementById('level');
-    const highscoreEl = document.getElementById('highscore');
-    const pauseBtn = document.getElementById('pauseBtn');
-    const musicBtn = document.getElementById('musicBtn');
-    const startBtn = document.getElementById('startBtn');
+    const highEl = document.getElementById('high');
 
-    // 배경음악 & 효과음 준비
-    const bgm = new Audio('ads/Tetris.mp3');
+    const bgm = new Audio('https://example.com/bgm.mp3');
+    const dropSound = new Audio('https://example.com/land.mp3');
+    const lineSound = new Audio('https://example.com/lineclear.mp3');
+
     bgm.loop = true;
-    let musicOn = false;
-
-    const lineClearSound = new Audio('ads/linebroken2.wav');
-    const blockLandSound = new Audio('ads/linebroken1.wav');
+    let musicOn = true;
 
     function toggleMusic() {
-      if (!musicOn) {
-        bgm.play();
-        musicBtn.classList.remove('muted');
-        musicOn = true;
-      } else {
-        bgm.pause();
-        musicBtn.classList.add('muted');
-        musicOn = false;
+      musicOn = !musicOn;
+      if (musicOn) bgm.play();
+      else bgm.pause();
+    }
+
+    function playSound(audio) {
+      if (!audio.paused) {
+        audio.pause();
+        audio.currentTime = 0;
       }
+      audio.play();
     }
 
-    function playLineClearSound() {
-      lineClearSound.currentTime = 0;
-      lineClearSound.play();
-    }
+    const colors = [
+      null,
+      '#FF0D72', '#0DC2FF', '#0DFF72',
+      '#F538FF', '#FF8E0D', '#FFE138', '#3877FF'
+    ];
 
-    function playBlockLandSound() {
-      blockLandSound.currentTime = 0;
-      blockLandSound.play();
-    }
+    const arena = createMatrix(12, 20);
+    let dropCounter = 0;
+    let dropInterval = 1000;
+    let lastTime = 0;
+    let paused = true;
+    let heldPiece = null;
+    let holdUsed = false;
+
+    const player = {
+      pos: {x: 0, y: 0},
+      matrix: null,
+      next: null,
+      score: 0,
+      level: 0
+    };
 
     function createMatrix(w, h) {
       const matrix = [];
-      while (h--) {
-        matrix.push(new Array(w).fill(0));
-      }
+      while (h--) matrix.push(new Array(w).fill(0));
       return matrix;
     }
 
     function createPiece(type) {
       switch (type) {
-        case 'T': return [ [0,1,0], [1,1,1], [0,0,0] ];
-        case 'O': return [ [2,2], [2,2] ];
-        case 'L': return [ [0,0,3], [3,3,3], [0,0,0] ];
-        case 'J': return [ [4,0,0], [4,4,4], [0,0,0] ];
-        case 'I': return [ [0,0,0,0], [5,5,5,5], [0,0,0,0], [0,0,0,0] ];
-        case 'S': return [ [0,6,6], [6,6,0], [0,0,0] ];
-        case 'Z': return [ [7,7,0], [0,7,7], [0,0,0] ];
+        case 'T': return [[0,1,0],[1,1,1],[0,0,0]];
+        case 'O': return [[2,2],[2,2]];
+        case 'L': return [[0,0,3],[3,3,3],[0,0,0]];
+        case 'J': return [[4,0,0],[4,4,4],[0,0,0]];
+        case 'I': return [[0,0,0,0],[5,5,5,5],[0,0,0,0],[0,0,0,0]];
+        case 'S': return [[0,6,6],[6,6,0],[0,0,0]];
+        case 'Z': return [[7,7,0],[0,7,7],[0,0,0]];
       }
     }
 
-    function drawMatrix(matrix, offset, ctx, ghost = false) {
-      matrix.forEach((row, y) => {
+    function merge(arena, player) {
+      player.matrix.forEach((row, y) => {
         row.forEach((value, x) => {
-          if (value !== 0) {
-            ctx.globalAlpha = ghost ? 0.3 : 1;
-            ctx.fillStyle = colors[value];
-            ctx.fillRect(x + offset.x, y + offset.y, 1, 1);
-            ctx.globalAlpha = 1;
-          }
+          if (value !== 0) arena[y + player.pos.y][x + player.pos.x] = value;
         });
       });
-    }
-
-    function draw() {
-      context.fillStyle = '#000';
-      context.fillRect(0, 0, canvas.width, canvas.height);
-
-      drawMatrix(arena, {x:0, y:0}, context);
-
-      // 고스트 블록 (블록이 떨어질 위치 표시)
-      const ghostPos = {x: player.pos.x, y: player.pos.y};
-      while (!collide(arena, {pos: ghostPos, matrix: player.matrix})) {
-        ghostPos.y++;
-      }
-      ghostPos.y--;
-      drawMatrix(player.matrix, ghostPos, context, true);
-
-      drawMatrix(player.matrix, player.pos, context);
-
-      // 미리보기 창 그리기
-      nextContext.fillStyle = '#000';
-      nextContext.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
-      drawMatrix(player.next, {x:1, y:1}, nextContext);
     }
 
     function collide(arena, player) {
@@ -232,118 +220,14 @@
       return false;
     }
 
-    function merge(arena, player) {
-      player.matrix.forEach((row, y) => {
-        row.forEach((value, x) => {
-          if (value !== 0) {
-            arena[y + player.pos.y][x + player.pos.x] = value;
-          }
-        });
-      });
-    }
-
-    function arenaSweep() {
-      let rowCount = 1;
-      let linesCleared = 0;
-      outer: for (let y = arena.length -1; y >= 0; --y) {
-        for (let x = 0; x < arena[y].length; ++x) {
-          if (arena[y][x] === 0) {
-            continue outer;
-          }
-        }
-        const row = arena.splice(y, 1)[0].fill(0);
-        arena.unshift(row);
-        ++y;
-        player.score += rowCount * 10;
-        rowCount *= 2;
-        linesCleared++;
-      }
-      if(linesCleared > 0){
-        playLineClearSound();
-        updateLevel(linesCleared);
-      }
-    }
-
-    function updateLevel(linesCleared){
-      player.lines = (player.lines || 0) + linesCleared;
-      if(player.lines >= 10){
-        player.level++;
-        player.lines -= 10;
-        dropInterval = Math.max(100, dropInterval - 100);
-      }
-    }
-
-    function updateScore() {
-      scoreEl.textContent = player.score;
-      levelEl.textContent = player.level;
-      if(player.score > player.highscore){
-        player.highscore = player.score;
-        localStorage.setItem('tetrisHighscore', player.highscore);
-      }
-      highscoreEl.textContent = player.highscore;
-    }
-
-    function playerDrop() {
-      player.pos.y++;
-      if (collide(arena, player)) {
-        player.pos.y--;
-        merge(arena, player);
-        playBlockLandSound();
-        playerReset();
-        arenaSweep();
-        updateScore();
-      }
-      dropCounter = 0;
-    }
-
-    function playerHardDrop() {
-      while (!collide(arena, player)) {
-        player.pos.y++;
-      }
-      player.pos.y--;
-      merge(arena, player);
-      playBlockLandSound();
-      playerReset();
-      arenaSweep();
-      updateScore();
-      dropCounter = 0;
-    }
-
-    function playerMove(dir) {
-      player.pos.x += dir;
-      if (collide(arena, player)) {
-        player.pos.x -= dir;
-      }
-    }
-
-    function playerReset() {
-      const pieces = 'TJLOSZI';
-      player.matrix = player.next || createPiece(pieces[pieces.length * Math.random() | 0]);
-      player.next = createPiece(pieces[pieces.length * Math.random() | 0]);
-      player.pos.y = 0;
-      player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
-      if (collide(arena, player)) {
-        gameOver();
-      }
-    }
-
     function rotate(matrix, dir) {
       for (let y = 0; y < matrix.length; ++y) {
         for (let x = 0; x < y; ++x) {
-          [
-            matrix[x][y],
-            matrix[y][x],
-          ] = [
-            matrix[y][x],
-            matrix[x][y],
-          ];
+          [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
         }
       }
-      if(dir > 0){
-        matrix.forEach(row => row.reverse());
-      } else {
-        matrix.reverse();
-      }
+      if (dir > 0) matrix.forEach(row => row.reverse());
+      else matrix.reverse();
     }
 
     function playerRotate(dir) {
@@ -361,103 +245,154 @@
       }
     }
 
-    function gameOver() {
-      pauseGame();
-      alert('게임 오버! 점수: ' + player.score);
+    function playerDrop() {
+      player.pos.y++;
+      if (collide(arena, player)) {
+        player.pos.y--;
+        merge(arena, player);
+        playSound(dropSound);
+        playerReset();
+        arenaSweep();
+        updateScore();
+        holdUsed = false;
+      }
+      dropCounter = 0;
     }
 
-    function startGame() {
-      arena.forEach(row => row.fill(0));
-      player.score = 0;
-      player.level = 1;
-      player.lines = 0;
-      dropInterval = 1000;
+    function playerHardDrop() {
+      while (!collide(arena, player)) player.pos.y++;
+      player.pos.y--;
+      merge(arena, player);
+      playSound(dropSound);
       playerReset();
+      arenaSweep();
       updateScore();
       dropCounter = 0;
-      lastTime = 0;
-      paused = false;
-      pauseBtn.classList.remove('paused');
-      requestAnimationFrame(update);
+      holdUsed = false;
     }
 
-    function pauseGame() {
-      paused = true;
-      pauseBtn.classList.add('paused');
+    function playerMove(dir) {
+      player.pos.x += dir;
+      if (collide(arena, player)) player.pos.x -= dir;
     }
 
-    function resumeGame() {
-      paused = false;
-      pauseBtn.classList.remove('paused');
-      lastTime = 0;
-      requestAnimationFrame(update);
-    }
-
-    function togglePause() {
-      if (paused) {
-        resumeGame();
+    function playerHold() {
+      if (holdUsed) return;
+      if (!heldPiece) {
+        heldPiece = player.matrix;
+        player.matrix = player.next;
+        player.next = createPiece(randomPiece());
       } else {
-        pauseGame();
+        [heldPiece, player.matrix] = [player.matrix, heldPiece];
+      }
+      player.pos = {x: 4, y: 0};
+      holdUsed = true;
+    }
+
+    function drawMatrix(matrix, offset, ctx, alpha = 1) {
+      ctx.globalAlpha = alpha;
+      matrix.forEach((row, y) => {
+        row.forEach((value, x) => {
+          if (value !== 0) {
+            ctx.fillStyle = colors[value];
+            ctx.fillRect(x + offset.x, y + offset.y, 1, 1);
+          }
+        });
+      });
+      ctx.globalAlpha = 1;
+    }
+
+    function draw() {
+      context.fillStyle = '#000';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      drawMatrix(arena, {x: 0, y: 0}, context);
+
+      // Ghost
+      const ghost = {matrix: player.matrix, pos: {...player.pos}};
+      while (!collide(arena, ghost)) ghost.pos.y++;
+      ghost.pos.y--;
+      drawMatrix(ghost.matrix, ghost.pos, context, 0.3);
+
+      drawMatrix(player.matrix, player.pos, context);
+
+      nextCtx.clearRect(0, 0, 4, 4);
+      drawMatrix(player.next, {x: 1, y: 1}, nextCtx);
+
+      holdCtx.clearRect(0, 0, 4, 4);
+      if (heldPiece) drawMatrix(heldPiece, {x: 1, y: 1}, holdCtx);
+    }
+
+    function arenaSweep() {
+      outer: for (let y = arena.length - 1; y >= 0; --y) {
+        for (let x = 0; x < arena[y].length; ++x) {
+          if (arena[y][x] === 0) continue outer;
+        }
+        const row = arena.splice(y, 1)[0].fill(0);
+        arena.unshift(row);
+        playSound(lineSound);
+        player.score += 10;
+        player.level = Math.floor(player.score / 100);
+        dropInterval = 1000 - player.level * 50;
       }
     }
 
-    let arena = createMatrix(12, 20);
+    function randomPiece() {
+      const pieces = 'TJLOSZI';
+      return pieces[Math.floor(Math.random() * pieces.length)];
+    }
 
-    const colors = [
-      null,
-      '#FF0D72',
-      '#0DC2FF',
-      '#0DFF72',
-      '#F538FF',
-      '#FF8E0D',
-      '#FFE138',
-      '#3877FF',
-    ];
+    function playerReset() {
+      player.matrix = player.next || createPiece(randomPiece());
+      player.next = createPiece(randomPiece());
+      player.pos = {x: 4, y: 0};
+      if (collide(arena, player)) {
+        alert("Game Over");
+        arena.forEach(row => row.fill(0));
+        player.score = 0;
+        player.level = 0;
+        dropInterval = 1000;
+      }
+    }
 
-    let dropCounter = 0;
-    let dropInterval = 1000;
-
-    let lastTime = 0;
-    let paused = true;
-
-    const player = {
-      pos: {x:0, y:0},
-      matrix: null,
-      next: null,
-      score: 0,
-      level: 1,
-      lines: 0,
-      highscore: Number(localStorage.getItem('tetrisHighscore') || '0'),
-    };
+    function updateScore() {
+      scoreEl.textContent = player.score;
+      levelEl.textContent = player.level;
+      const high = Math.max(player.score, +localStorage.getItem("tetrisHigh") || 0);
+      localStorage.setItem("tetrisHigh", high);
+      highEl.textContent = high;
+    }
 
     function update(time = 0) {
       if (paused) return;
       const deltaTime = time - lastTime;
       lastTime = time;
-
       dropCounter += deltaTime;
-      if (dropCounter > dropInterval) {
-        playerDrop();
-      }
+      if (dropCounter > dropInterval) playerDrop();
       draw();
       requestAnimationFrame(update);
     }
 
-    document.addEventListener('keydown', event => {
-      if (paused) return;
-      if (event.key === 'ArrowLeft') {
-        playerMove(-1);
-      } else if (event.key === 'ArrowRight') {
-        playerMove(1);
-      } else if (event.key === 'ArrowDown') {
-        playerDrop();
-      } else if (event.key === 'ArrowUp') {
-        playerRotate(1);
-      } else if (event.key === ' ') {
-        playerHardDrop();
-      }
-    });
+    function startGame() {
+      if (musicOn) bgm.play();
+      paused = false;
+      playerReset();
+      updateScore();
+      update();
+    }
 
+    function togglePause() {
+      paused = !paused;
+      if (!paused) update();
+    }
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'ArrowLeft') playerMove(-1);
+      else if (event.key === 'ArrowRight') playerMove(1);
+      else if (event.key === 'ArrowDown') playerDrop();
+      else if (event.key === 'ArrowUp') playerRotate(1);
+      else if (event.key === ' ') playerHardDrop();
+      else if (event.key.toLowerCase() === 'c') playerHold();
+    });
   </script>
 </body>
 </html>
