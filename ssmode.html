@@ -3,71 +3,81 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-<title>벽돌깨기 게임 with BGM</title>
+<title>Easter eggs2</title>
 <style>
   body {
-    margin: 0; background: #222; color: #eee; font-family: Arial, sans-serif;
-    display: flex; flex-direction: column; align-items: center; height: 100vh;
+    margin: 0; background: #222; color: #eee; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex; flex-direction: column; align-items: center; user-select:none;
   }
   canvas {
-    border: 2px solid #fff;
-    background: #111;
+    background: #000;
+    border: 3px solid white;
     display: block;
     margin-top: 10px;
+    touch-action: none;
+  }
+  #scoreboard {
+    margin-top: 10px;
+    font-size: 1.2rem;
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    width: 100%;
+    max-width: 480px;
   }
   #controls {
     margin-top: 10px;
     display: flex;
-    gap: 8px;
     flex-wrap: wrap;
     justify-content: center;
-    user-select: none;
+    gap: 8px;
+    max-width: 480px;
   }
   button, select {
-    padding: 6px 12px;
-    font-size: 14px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
     background: #444;
-    color: #eee;
-    transition: background 0.3s;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    padding: 8px 14px;
+    border-radius: 5px;
+    user-select:none;
   }
   button:disabled, select:disabled {
-    background: #222;
-    cursor: not-allowed;
-    color: #666;
+    opacity: 0.5;
   }
-  button:hover:not(:disabled), select:hover:not(:disabled) {
-    background: #666;
-  }
-  #scoreboard {
-    margin-top: 10px;
-    font-size: 18px;
+  /* 모바일 조작 버튼 */
+  #mobile-controls {
+    margin-top: 12px;
     display: flex;
-    gap: 20px;
-  }
-  /* 모바일 좌우버튼 */
-  #mobile-buttons {
-    margin-top: 10px;
-    display: flex;
-    gap: 12px;
     justify-content: center;
+    gap: 20px;
+    max-width: 480px;
   }
-  .mob-btn {
+  .touch-btn {
     width: 60px;
-    height: 40px;
-    font-size: 18px;
-    border-radius: 6px;
+    height: 60px;
     background: #555;
-    color: #eee;
-    user-select: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 1.8rem;
+    line-height: 60px;
+    text-align: center;
+    user-select:none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: none;
+  }
+  @media (max-width: 480px) {
+    canvas {
+      width: 100vw;
+      height: calc(100vw * 2/3);
+      max-height: 320px;
+    }
   }
 </style>
 </head>
 <body>
 
-<h1>벽돌깨기 게임 with BGM</h1>
+<h1>벽돌깨기 게임</h1>
 
 <div id="scoreboard">
   <div>점수: <span id="score">0</span></div>
@@ -78,371 +88,133 @@
 <canvas id="gameCanvas" width="480" height="320"></canvas>
 
 <div id="controls">
-  <select id="difficultySelect" title="난이도 선택">
+  <select id="difficulty">
     <option value="easy">쉬움</option>
     <option value="normal" selected>보통</option>
     <option value="hard">어려움</option>
   </select>
-  <button id="startBtn" title="게임 시작">시작하기</button>
-  <button id="restartBtn" title="게임 다시 시작" disabled>다시하기</button>
-  <button id="bgmToggleBtn" title="배경음악 ON/OFF">BGM ON</button>
+  <button id="startBtn">시작하기</button>
+  <button id="restartBtn" disabled>다시하기</button>
+  <button id="bgmToggleBtn">BGM ON</button>
 </div>
 
-<div id="mobile-buttons">
-  <button class="mob-btn" id="btnLeft">◀</button>
-  <button class="mob-btn" id="btnRight">▶</button>
+<div id="mobile-controls">
+  <div id="btnLeft" class="touch-btn">◀</div>
+  <div id="btnRight" class="touch-btn">▶</div>
 </div>
 
-<!-- 배경음악 -->
-<audio id="bgm" src="ads/Tetris.mp3" loop preload="auto"></audio>
-
-<!-- 효과음 -->
 <audio id="hitSound" src="ads/linebroken1.wav" preload="auto"></audio>
 <audio id="gameOverSound" src="ads/linebroken2.wav" preload="auto"></audio>
+<audio id="itemSound" src="ads/linebroken1.wav" preload="auto"></audio>
+<audio id="bgm" src="ads/Tetris.mp3" preload="auto" loop></audio>
 
 <script>
 (() => {
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
-  const scoreElem = document.getElementById("score");
-  const highscoreElem = document.getElementById("highscore");
-  const levelElem = document.getElementById("level");
-  const difficultySelect = document.getElementById("difficultySelect");
+  const scoreSpan = document.getElementById("score");
+  const highScoreSpan = document.getElementById("highscore");
+  const levelSpan = document.getElementById("level");
+
   const startBtn = document.getElementById("startBtn");
   const restartBtn = document.getElementById("restartBtn");
+  const difficultySelect = document.getElementById("difficulty");
+  const bgmToggleBtn = document.getElementById("bgmToggleBtn");
+
   const btnLeft = document.getElementById("btnLeft");
   const btnRight = document.getElementById("btnRight");
-  const bgmToggleBtn = document.getElementById("bgmToggleBtn");
 
   const hitSound = document.getElementById("hitSound");
   const gameOverSound = document.getElementById("gameOverSound");
+  const itemSound = document.getElementById("itemSound");
   const bgm = document.getElementById("bgm");
 
-  // 게임 상태 변수
-  let score = 0;
-  let highscore = localStorage.getItem("brickBreakerHighscore") || 0;
-  highscore = Number(highscore);
-  let level = 1;
-  let isGameOver = false;
+  const ROWS = 5;
+  const COLS = 9;
+  const BRICK_WIDTH = 48;
+  const BRICK_HEIGHT = 18;
+  const BRICK_PADDING = 6;
+  const BRICK_OFFSET_TOP = 30;
+  const BRICK_OFFSET_LEFT = 16;
 
-  // 패들 변수
-  let paddleHeight = 10;
+  const PADDLE_HEIGHT = 10;
   let paddleWidth = 75;
-  let paddleX = (canvas.width - paddleWidth) / 2;
 
-  // 공들 배열 (멀티볼 지원)
+  let score = 0;
+  let highScore = 0;
+  let level = 1;
+
   let balls = [];
+  let bricks = [];
 
-  // 공 기본 속도
-  let baseSpeed = 3;
-
-  // 좌우 조작 상태
+  let paddleX;
   let rightPressed = false;
   let leftPressed = false;
   let mobileRight = false;
   let mobileLeft = false;
 
-  // 벽돌 설정
-  let brickRowCount = 5;
-  let brickColumnCount = 7;
-  let brickWidth = 55;
-  let brickHeight = 20;
-  let brickPadding = 7;
-  let brickOffsetTop = 30;
-  let brickOffsetLeft = 25;
+  let isGameOver = false;
+  let controlsDisabled = false;
 
-  // 벽돌 배열
-  let bricks = [];
+  let baseSpeed = 3;
 
-  // 아이템 종류
-  const ITEM_NONE = 0;
-  const ITEM_PADDLE_EXPAND = 1;
-  const ITEM_PADDLE_SHRINK = 2;
-  const ITEM_SCORE_BONUS = 3;
-  const ITEM_BALL_SPEED_SLOW = 4;
-  const ITEM_BALL_SPEED_FAST = 5;
-  const ITEM_BALL_EXTRA = 6;
-
-  // 아이템 효과 지속시간 (밀리초)
-  const ITEM_DURATION = 10000;
-
-  // 현재 활성 아이템 상태
   let activeItems = {
-    paddleSizeModifier: 0,  // +1 : 확장, -1 : 축소, 0 : 기본
-    ballSpeedModifier: 0,   // +1 : 빠름, -1 : 느림, 0 : 기본
-    ballExtraActive: false, // 멀티볼 활성 여부
+    paddleSizeModifier: 0,
+    ballSpeedModifier: 0,
+    ballExtraActive: false,
     itemTimeouts: []
   };
 
-  // 아이템 블록 생성 확률 (%)
-  const ITEM_BLOCK_CHANCE = 15;
+  const ITEM_DURATION = 15000; // 아이템 지속 시간 (15초)
 
-  // 게임 오버 상태 시 컨트롤 비활성화 플래그
-  let controlsDisabled = false;
+  // 다양한 색깔의 벽돌 종류 및 아이템
+  const brickColors = [
+    "#ff5555", "#55ff55", "#5555ff", "#ffff55", "#ff55ff", "#55ffff"
+  ];
 
-  // 게임 보더 흰색
-  canvas.style.border = "2px solid white";
+  // 아이템 종류
+  const ITEM_TYPES = [
+    "paddleExpand",
+    "paddleShrink",
+    "scoreBonus",
+    "ballSpeedSlow",
+    "ballSpeedFast",
+    "ballExtra"
+  ];
 
-  // 초기 UI 설정
-  scoreElem.textContent = score;
-  highscoreElem.textContent = highscore;
-  levelElem.textContent = level;
+  // 최고점수 로컬스토리지 불러오기
+  function loadHighScore() {
+    const saved = localStorage.getItem("brickBreakerHighScore");
+    highScore = saved ? parseInt(saved) : 0;
+    highScoreSpan.textContent = highScore;
+  }
 
-  // 벽돌 초기화 함수
+  // 최고점수 저장
+  function saveHighScore() {
+    if(score > highScore) {
+      highScore = score;
+      localStorage.setItem("brickBreakerHighScore", highScore);
+      highScoreSpan.textContent = highScore;
+    }
+  }
+
+  // 벽돌 초기화 및 랜덤 아이템 포함
   function resetBricks() {
     bricks = [];
-    for(let c = 0; c < brickColumnCount; c++) {
-      bricks[c] = [];
-      for(let r = 0; r < brickRowCount; r++) {
-        // 아이템 블록 랜덤 설정
-        let itemType = ITEM_NONE;
-        if(Math.random() * 100 < ITEM_BLOCK_CHANCE) {
-          // 아이템 중 하나 랜덤 선택 (1~6)
-          itemType = Math.floor(Math.random() * 6) + 1;
-        }
-        bricks[c][r] = {
-          x: 0,
-          y: 0,
+    for(let r=0; r<ROWS; r++) {
+      for(let c=0; c<COLS; c++) {
+        let hasItem = Math.random() < 0.15; // 15% 확률로 아이템 포함
+        let item = hasItem ? ITEM_TYPES[Math.floor(Math.random() * ITEM_TYPES.length)] : null;
+        bricks.push({
+          x: BRICK_OFFSET_LEFT + c * (BRICK_WIDTH + BRICK_PADDING),
+          y: BRICK_OFFSET_TOP + r * (BRICK_HEIGHT + BRICK_PADDING),
           status: 1,
-          color: getRandomBrickColor(),
-          item: itemType
-        };
+          color: brickColors[Math.floor(Math.random() * brickColors.length)],
+          item: item
+        });
       }
     }
-  }
-
-  // 무작위 벽돌 색상 선택
-  function getRandomBrickColor() {
-    const colors = [
-      "#e74c3c", // red
-      "#f39c12", // orange
-      "#f1c40f", // yellow
-      "#27ae60", // green
-      "#2980b9", // blue
-      "#8e44ad", // purple
-      "#2c3e50"  // dark blue
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
-  }
-
-  // 점수, 레벨, 최고점 업데이트
-  function updateScoreboard() {
-    scoreElem.textContent = score;
-    highscoreElem.textContent = highscore;
-    levelElem.textContent = level;
-  }
-
-  // 벽돌 그리기
-  function drawBricks() {
-    for(let c = 0; c < brickColumnCount; c++) {
-      for(let r = 0; r < brickRowCount; r++) {
-        let b = bricks[c][r];
-        if(b.status === 1) {
-          let brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-          let brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-          b.x = brickX;
-          b.y = brickY;
-
-          ctx.fillStyle = b.color;
-          ctx.fillRect(brickX, brickY, brickWidth, brickHeight);
-
-          if(b.item !== ITEM_NONE) {
-            ctx.fillStyle = "#fff";
-            ctx.font = "bold 16px Arial";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            let itemChar = getItemChar(b.item);
-            ctx.fillText(itemChar, brickX + brickWidth/2, brickY + brickHeight/2);
-          }
-
-          ctx.strokeStyle = "#000";
-          ctx.strokeRect(brickX, brickY, brickWidth, brickHeight);
-        }
-      }
-    }
-  }
-
-  // 아이템 아이콘 표시용 문자
-  function getItemChar(item) {
-    switch(item) {
-      case ITEM_PADDLE_EXPAND: return "↔";  // 확장
-      case ITEM_PADDLE_SHRINK: return "⇎";  // 축소
-      case ITEM_SCORE_BONUS: return "+";
-      case ITEM_BALL_SPEED_SLOW: return "🐢";
-      case ITEM_BALL_SPEED_FAST: return "⚡";
-      case ITEM_BALL_EXTRA: return "⚾";
-      default: return "";
-    }
-  }
-
-  // 패들 그리기
-  function drawPaddle() {
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(paddleX, canvas.height - paddleHeight - 5, paddleWidth, paddleHeight);
-  }
-
-  // 공 그리기
-  function drawBall(ball) {
-    ctx.beginPath();
-    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-    ctx.fillStyle = "#ffdd55";
-    ctx.fill();
-    ctx.closePath();
-  }
-
-  // 충돌 감지 및 처리
-  function collisionDetection() {
-    balls.forEach((ball, ballIdx) => {
-      for(let c = 0; c < brickColumnCount; c++) {
-        for(let r = 0; r < brickRowCount; r++) {
-          let b = bricks[c][r];
-          if(b.status === 1) {
-            if(ball.x > b.x && ball.x < b.x + brickWidth &&
-               ball.y > b.y && ball.y < b.y + brickHeight) {
-              ball.dy = -ball.dy;
-
-              // 벽돌 깨짐
-              b.status = 0;
-              score += 10;
-              if(score > highscore) {
-                highscore = score;
-                localStorage.setItem("brickBreakerHighscore", highscore);
-              }
-
-              hitSound.currentTime = 0;
-              hitSound.play();
-
-              // 아이템 블록이면 효과 적용
-              if(b.item !== ITEM_NONE) {
-                applyItemEffect(b.item);
-              }
-
-              // 레벨업 및 벽돌 재생성
-              if(score > level * 100) {
-                level++;
-                resetBricks();
-              }
-
-              // 모든 벽돌 제거 시 다시 생성
-              if(isAllBricksCleared()) {
-                resetBricks();
-              }
-
-              updateScoreboard();
-            }
-          }
-        }
-      }
-    });
-  }
-
-  // 모든 벽돌 제거 체크
-  function isAllBricksCleared() {
-    for(let c = 0; c < brickColumnCount; c++) {
-      for(let r = 0; r < brickRowCount; r++) {
-        if(bricks[c][r].status === 1) return false;
-      }
-    }
-    return true;
-  }
-
-  // 아이템 효과 적용
-  function applyItemEffect(item) {
-    switch(item) {
-      case ITEM_PADDLE_EXPAND:
-        if(activeItems.paddleSizeModifier !== 1) {
-          activeItems.paddleSizeModifier = 1;
-          paddleWidth = 110;
-          setTimeout(() => {
-            if(!isGameOver) {
-              activeItems.paddleSizeModifier = 0;
-              paddleWidth = 75;
-            }
-          }, ITEM_DURATION);
-        }
-        break;
-      case ITEM_PADDLE_SHRINK:
-        if(activeItems.paddleSizeModifier !== -1) {
-          activeItems.paddleSizeModifier = -1;
-          paddleWidth = 50;
-          if(paddleX + paddleWidth > canvas.width) {
-            paddleX = canvas.width - paddleWidth;
-          }
-          setTimeout(() => {
-            if(!isGameOver) {
-              activeItems.paddleSizeModifier = 0;
-              paddleWidth = 75;
-            }
-          }, ITEM_DURATION);
-        }
-        break;
-      case ITEM_SCORE_BONUS:
-        score += 50;
-        if(score > highscore) {
-          highscore = score;
-          localStorage.setItem("brickBreakerHighscore", highscore);
-        }
-        break;
-      case ITEM_BALL_SPEED_SLOW:
-        if(activeItems.ballSpeedModifier !== -1) {
-          activeItems.ballSpeedModifier = -1;
-          balls.forEach(b => {
-            b.dx *= 0.7;
-            b.dy *= 0.7;
-          });
-          setTimeout(() => {
-            if(!isGameOver) {
-              activeItems.ballSpeedModifier = 0;
-              balls.forEach(b => {
-                b.dx /= 0.7;
-                b.dy /= 0.7;
-              });
-            }
-          }, ITEM_DURATION);
-        }
-        break;
-      case ITEM_BALL_SPEED_FAST:
-        if(activeItems.ballSpeedModifier !== 1) {
-          activeItems.ballSpeedModifier = 1;
-          balls.forEach(b => {
-            b.dx *= 1.3;
-            b.dy *= 1.3;
-          });
-          setTimeout(() => {
-            if(!isGameOver) {
-              activeItems.ballSpeedModifier = 0;
-              balls.forEach(b => {
-                b.dx /= 1.3;
-                b.dy /= 1.3;
-              });
-            }
-          }, ITEM_DURATION);
-        }
-        break;
-      case ITEM_BALL_EXTRA:
-        if(!activeItems.ballExtraActive) {
-          activeItems.ballExtraActive = true;
-          // 기존 공 중 첫번째 공 기준으로 새 공 추가
-          let firstBall = balls[0];
-          balls.push({
-            x: firstBall.x,
-            y: firstBall.y,
-            dx: -firstBall.dx,
-            dy: firstBall.dy,
-            radius: firstBall.radius
-          });
-          // 15초 후 멀티볼 해제
-          setTimeout(() => {
-            if(!isGameOver) {
-              activeItems.ballExtraActive = false;
-              if(balls.length > 1) balls.pop();
-            }
-          }, ITEM_DURATION);
-        }
-        break;
-    }
-    updateScoreboard();
   }
 
   // 공 초기화
@@ -456,124 +228,210 @@
     }];
   }
 
-  // 게임 초기화
-  function initGame() {
-    score = 0;
-    level = 1;
-    isGameOver = false;
-    controlsDisabled = false;
-    paddleWidth = 75;
-    paddleX = (canvas.width - paddleWidth) / 2;
-    activeItems = {
-      paddleSizeModifier: 0,
-      ballSpeedModifier: 0,
-      ballExtraActive: false,
-      itemTimeouts: []
-    };
-    resetBalls();
-    resetBricks();
-    updateScoreboard();
-    restartBtn.disabled = true;
-    difficultySelect.disabled = false;
-    startBtn.disabled = false;
+  // 점수판 업데이트
+  function updateScoreboard() {
+    scoreSpan.textContent = score;
+    levelSpan.textContent = level;
+    saveHighScore();
   }
 
-  // 공 이동 및 벽과 충돌 처리
+  // 벽돌 그리기
+  function drawBricks() {
+    bricks.forEach(brick => {
+      if(brick.status === 1) {
+        ctx.fillStyle = brick.color;
+        ctx.fillRect(brick.x, brick.y, BRICK_WIDTH, BRICK_HEIGHT);
+        if(brick.item) {
+          // 아이템 마크 작게 표시
+          ctx.fillStyle = "white";
+          ctx.font = "14px Arial";
+          ctx.fillText("★", brick.x + BRICK_WIDTH/2 - 7, brick.y + BRICK_HEIGHT - 4);
+        }
+      }
+    });
+  }
+
+  // 패들 그리기
+  function drawPaddle() {
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(paddleX, canvas.height - PADDLE_HEIGHT, paddleWidth, PADDLE_HEIGHT);
+  }
+
+  // 공 그리기
+  function drawBall(ball) {
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
+    ctx.fillStyle = "#eee";
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  // 충돌 체크
+  function collisionDetection() {
+    balls.forEach(ball => {
+      bricks.forEach(brick => {
+        if(brick.status === 1) {
+          if(ball.x > brick.x && ball.x < brick.x + BRICK_WIDTH &&
+             ball.y - ball.radius < brick.y + BRICK_HEIGHT &&
+             ball.y + ball.radius > brick.y) {
+            ball.dy = -ball.dy;
+
+            brick.status = 0;
+
+            // 점수 증가
+            score += 10;
+
+            // 아이템이 있으면 발동
+            if(brick.item) {
+              activateItem(brick.item);
+              itemSound.currentTime = 0;
+              itemSound.play().catch(() => {});
+            }
+
+            // 모든 벽돌이 없어졌으면 재생성 및 레벨 업
+            if(bricks.every(b => b.status === 0)) {
+              level++;
+              resetBricks();
+              // 레벨에 따라 난이도 자동 조정 (속도 증가)
+              baseSpeed = 2 + level * 0.5;
+              // 모든 공 속도 업데이트
+              balls.forEach(b => {
+                b.dx = b.dx > 0 ? baseSpeed : -baseSpeed;
+                b.dy = -baseSpeed;
+              });
+            }
+
+            updateScoreboard();
+
+            hitSound.currentTime = 0;
+            hitSound.play().catch(() => {});
+
+          }
+        }
+      });
+    });
+  }
+
+  // 아이템 발동
+  function activateItem(type) {
+    switch(type) {
+      case "paddleExpand":
+        activeItems.paddleSizeModifier = 30;
+        paddleWidth = 75 + activeItems.paddleSizeModifier;
+        setTimeout(() => {
+          activeItems.paddleSizeModifier = 0;
+          paddleWidth = 75;
+        }, ITEM_DURATION);
+        break;
+      case "paddleShrink":
+        activeItems.paddleSizeModifier = -20;
+        paddleWidth = Math.max(30, 75 + activeItems.paddleSizeModifier);
+        setTimeout(() => {
+          activeItems.paddleSizeModifier = 0;
+          paddleWidth = 75;
+        }, ITEM_DURATION);
+        break;
+      case "scoreBonus":
+        score += 50;
+        updateScoreboard();
+        break;
+      case "ballSpeedSlow":
+        activeItems.ballSpeedModifier = -1;
+        balls.forEach(b => {
+          b.dx *= 0.7;
+          b.dy *= 0.7;
+        });
+        setTimeout(() => {
+          activeItems.ballSpeedModifier = 0;
+          balls.forEach(b => {
+            let signX = b.dx > 0 ? 1 : -1;
+            let signY = b.dy > 0 ? 1 : -1;
+            b.dx = signX * baseSpeed;
+            b.dy = -baseSpeed;
+          });
+        }, ITEM_DURATION);
+        break;
+      case "ballSpeedFast":
+        activeItems.ballSpeedModifier = 1;
+        balls.forEach(b => {
+          b.dx *= 1.5;
+          b.dy *= 1.5;
+        });
+        setTimeout(() => {
+          activeItems.ballSpeedModifier = 0;
+          balls.forEach(b => {
+            let signX = b.dx > 0 ? 1 : -1;
+            let signY = b.dy > 0 ? 1 : -1;
+            b.dx = signX * baseSpeed;
+            b.dy = -baseSpeed;
+          });
+        }, ITEM_DURATION);
+        break;
+      case "ballExtra":
+        if(!activeItems.ballExtraActive) {
+          activeItems.ballExtraActive = true;
+          // 공 1개 추가
+          balls.push({
+            x: balls[0].x,
+            y: balls[0].y,
+            dx: -balls[0].dx,
+            dy: balls[0].dy,
+            radius: 8
+          });
+          // 멀티볼 영구 유지 (타이머 제거)
+          // 게임 오버 될 때까지 유지
+        }
+        break;
+    }
+  }
+
+  // 공 움직임 처리
   function moveBalls() {
-    balls.forEach((ball, idx) => {
+    balls.forEach(ball => {
       ball.x += ball.dx;
       ball.y += ball.dy;
 
-      // 좌우 벽 충돌
+      // 벽 충돌 (좌우)
       if(ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
         ball.dx = -ball.dx;
       }
+
       // 천장 충돌
       if(ball.y + ball.dy < ball.radius) {
         ball.dy = -ball.dy;
       }
 
-      // 패들과 충돌
-      if(ball.y + ball.radius > canvas.height - paddleHeight - 5) {
+      // 패들과 충돌 및 바닥 닿음 감지
+      if(ball.y + ball.radius >= canvas.height - PADDLE_HEIGHT) {
         if(ball.x > paddleX && ball.x < paddleX + paddleWidth) {
-          ball.dy = -ball.dy;
-
-          // 패들 위치에 따른 공 방향 조절
-          let collidePoint = ball.x - (paddleX + paddleWidth/2);
-          collidePoint = collidePoint / (paddleWidth/2);
-          let angle = collidePoint * (Math.PI/3); // 최대 60도 각도 조절
-
-          let speed = Math.sqrt(ball.dx*ball.dx + ball.dy*ball.dy);
-          ball.dx = speed * Math.sin(angle);
-          ball.dy = -speed * Math.cos(angle);
-
+          ball.dy = -Math.abs(ball.dy);
           hitSound.currentTime = 0;
-          hitSound.play();
+          hitSound.play().catch(() => {});
         } else if(ball.y + ball.dy > canvas.height - ball.radius) {
-          // 바닥에 닿으면 게임 오버
+          // 바닥 닿음: 게임오버
           if(!isGameOver) {
             gameOver();
           }
         }
       }
     });
+
+    // 여러 공 중 바닥에 닿은 공 제거는 안 함 (게임 오버 처리만 함)
   }
 
-  // 키 다운 이벤트
-  function keyDownHandler(e) {
-    if(controlsDisabled) return;
-    if(e.key === "Right" || e.key === "ArrowRight") {
-      rightPressed = true;
-    } else if(e.key === "Left" || e.key === "ArrowLeft") {
-      leftPressed = true;
-    }
-  }
-
-  // 키 업 이벤트
-  function keyUpHandler(e) {
-    if(controlsDisabled) return;
-    if(e.key === "Right" || e.key === "ArrowRight") {
-      rightPressed = false;
-    } else if(e.key === "Left" || e.key === "ArrowLeft") {
-      leftPressed = false;
-    }
-  }
-
-  // 모바일 버튼 핸들러
-  btnLeft.addEventListener("touchstart", e => { e.preventDefault(); if(!controlsDisabled) mobileLeft = true; });
-  btnLeft.addEventListener("touchend", e => { e.preventDefault(); mobileLeft = false; });
-  btnRight.addEventListener("touchstart", e => { e.preventDefault(); if(!controlsDisabled) mobileRight = true; });
-  btnRight.addEventListener("touchend", e => { e.preventDefault(); mobileRight = false; });
-
-  // 패들 이동 처리
+  // 패들 움직임 처리
   function movePaddle() {
+    if(controlsDisabled) return;
     if(rightPressed || mobileRight) {
       paddleX += 7;
-      if(paddleX + paddleWidth > canvas.width) {
-        paddleX = canvas.width - paddleWidth;
-      }
+      if(paddleX + paddleWidth > canvas.width) paddleX = canvas.width - paddleWidth;
     } else if(leftPressed || mobileLeft) {
       paddleX -= 7;
-      if(paddleX < 0) {
-        paddleX = 0;
-      }
+      if(paddleX < 0) paddleX = 0;
     }
   }
 
-  // 게임 오버 처리
-  function gameOver() {
-    isGameOver = true;
-    controlsDisabled = true;
-    gameOverSound.currentTime = 0;
-    gameOverSound.play();
-    pauseBGM();
-    alert("게임 오버! 점수: " + score);
-    restartBtn.disabled = false;
-    startBtn.disabled = true;
-    difficultySelect.disabled = true;
-  }
-
-  // 게임 루프
+  // 그리기 함수
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -590,79 +448,153 @@
     }
   }
 
-  // BGM 제어
-  function playBGM() {
-    bgm.volume = 0.15;
-    bgm.play().catch(() => {});
-    bgmToggleBtn.textContent = "BGM OFF";
+  // 게임 오버 처리
+  function gameOver() {
+    isGameOver = true;
+    controlsDisabled = true;
+    restartBtn.disabled = false;
+    difficultySelect.disabled = false; // 게임 오버시 난이도 선택 가능
+    gameOverSound.currentTime = 0;
+    gameOverSound.play().catch(() => {});
   }
-  function pauseBGM() {
-    bgm.pause();
-    bgmToggleBtn.textContent = "BGM ON";
+
+  // 게임 시작 초기화
+  function startGame() {
+    isGameOver = false;
+    controlsDisabled = false;
+    restartBtn.disabled = true;
+    difficultySelect.disabled = true; // 게임 중 난이도 변경 불가
+
+    // 점수, 레벨 초기화
+    score = 0;
+    level = 1;
+
+    // 난이도에 따라 baseSpeed 설정
+    applyDifficulty();
+
+    resetBricks();
+    resetBalls();
+
+    // 패들 초기 위치
+    paddleX = (canvas.width - paddleWidth) / 2;
+
+    // 키 상태 초기화
+    rightPressed = false;
+    leftPressed = false;
+    mobileRight = false;
+    mobileLeft = false;
+
+    activeItems = {
+      paddleSizeModifier: 0,
+      ballSpeedModifier: 0,
+      ballExtraActive: false,
+      itemTimeouts: []
+    };
+
+    updateScoreboard();
+
+    draw();
+
+    // BGM 자동 재생는 BGM 버튼 누르기 전까지 안 함 (브라우저 정책)
   }
-  let bgmPlaying = false;
 
-  // BGM 토글 버튼 클릭 이벤트
-  bgmToggleBtn.addEventListener("click", () => {
-    if(bgm.paused) {
-      playBGM();
-      bgmPlaying = true;
-    } else {
-      pauseBGM();
-      bgmPlaying = false;
-    }
-  });
+  // 재시작
+  function restartGame() {
+    startGame();
+  }
 
-  // 난이도별 속도 조절
+  // 난이도에 따른 baseSpeed 적용
   function applyDifficulty() {
     let diff = difficultySelect.value;
     switch(diff) {
       case "easy": baseSpeed = 2; break;
-      case "normal": baseSpeed = 3; break;
-      case "hard": baseSpeed = 4; break;
-      default: baseSpeed = 3;
+      case "normal": baseSpeed = 3.5; break;
+      case "hard": baseSpeed = 5; break;
+      default: baseSpeed = 3.5;
     }
   }
 
-  // 시작 버튼 클릭
+  // 배경음악 토글
+  function toggleBgm() {
+    if(bgm.paused) {
+      bgm.play().catch(() => {});
+      bgmToggleBtn.textContent = "BGM OFF";
+    } else {
+      bgm.pause();
+      bgmToggleBtn.textContent = "BGM ON";
+    }
+  }
+
+  // 키보드 이벤트
+  window.addEventListener("keydown", e => {
+    if(controlsDisabled) return;
+    if(e.key === "ArrowRight") rightPressed = true;
+    if(e.key === "ArrowLeft") leftPressed = true;
+  });
+  window.addEventListener("keyup", e => {
+    if(e.key === "ArrowRight") rightPressed = false;
+    if(e.key === "ArrowLeft") leftPressed = false;
+  });
+
+  // 모바일 터치 이벤트
+  btnLeft.addEventListener("touchstart", e => {
+    e.preventDefault();
+    if(controlsDisabled) return;
+    mobileLeft = true;
+  });
+  btnLeft.addEventListener("touchend", e => {
+    e.preventDefault();
+    mobileLeft = false;
+  });
+  btnLeft.addEventListener("touchcancel", e => {
+    e.preventDefault();
+    mobileLeft = false;
+  });
+
+  btnRight.addEventListener("touchstart", e => {
+    e.preventDefault();
+    if(controlsDisabled) return;
+    mobileRight = true;
+  });
+  btnRight.addEventListener("touchend", e => {
+    e.preventDefault();
+    mobileRight = false;
+  });
+  btnRight.addEventListener("touchcancel", e => {
+    e.preventDefault();
+    mobileRight = false;
+  });
+
+  // 버튼 이벤트 연결
   startBtn.addEventListener("click", () => {
-    if(isGameOver) return;
-    initGame();
-    applyDifficulty();
-    resetBalls();
-    draw();
-    playBGM();
-    bgmPlaying = true;
-
-    startBtn.disabled = true;
-    restartBtn.disabled = true;
-    difficultySelect.disabled = true;
+    startGame();
   });
-
-  // 다시하기 버튼 클릭
   restartBtn.addEventListener("click", () => {
-    if(!isGameOver) return;
-    initGame();
-    applyDifficulty();
-    resetBalls();
-    draw();
-    playBGM();
-    bgmPlaying = true;
-
-    restartBtn.disabled = true;
-    startBtn.disabled = true;
-    difficultySelect.disabled = true;
+    restartGame();
+  });
+  difficultySelect.addEventListener("change", () => {
+    if(!isGameOver) {
+      applyDifficulty();
+      // 게임 중 변경 시 공 속도 실시간 적용
+      balls.forEach(b => {
+        let signX = b.dx > 0 ? 1 : -1;
+        let signY = b.dy > 0 ? 1 : -1;
+        b.dx = signX * baseSpeed;
+        b.dy = -baseSpeed;
+      });
+    }
   });
 
-  // 키보드 이벤트 등록
-  document.addEventListener("keydown", keyDownHandler);
-  document.addEventListener("keyup", keyUpHandler);
+  bgmToggleBtn.addEventListener("click", () => {
+    toggleBgm();
+  });
 
-  // 초기 세팅
-  updateScoreboard();
-  resetBricks();
+  // 초기화
+  paddleX = (canvas.width - paddleWidth) / 2;
+  loadHighScore();
 
 })();
 </script>
+
 </body>
 </html>
