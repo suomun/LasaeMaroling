@@ -128,7 +128,7 @@
         <button onclick="playerMove(1)">▶</button>
         <button onclick="playerDrop()">▼</button>
         <button onclick="playerHardDrop()">▼▼</button>
-        <button onclick="rotateNTimes(5)">⟳×5</button>
+        <button onclick="rotateNTimes(1)">⟳</button>
       </div>
     </div>
   </div>
@@ -138,7 +138,7 @@
     <p><strong>◀ / ▶</strong> : 좌/우 이동</p>
     <p><strong>▼</strong> : 한 칸 아래로 이동</p>
     <p><strong>▼▼</strong> : 하드 드롭 (바닥까지)</p>
-    <p><strong>⟳×5</strong> : 시계 방향 5번 회전</p>
+    <p><strong>⟳×5</strong> : 시계 방향 1번 회전</p>
     <p><strong>Space</strong> : 하드 드롭</p>
     <p><strong>Q / W</strong> : 반시계 / 시계 방향 회전</p>
     <p><strong>P</strong> : 일시정지 / 재개</p>
@@ -146,8 +146,8 @@
     <p><strong>Music</strong> : 배경음악 On/Off</p>
   </div>
 
-  <audio id="bgm" loop src="https://cdn.pixabay.com/download/audio/2022/02/01/audio_09a88b23a7.mp3?filename=game-background-music-loop-10822.mp3"></audio>
-  <audio id="lineClearSound" src="https://freesound.org/data/previews/331/331912_3248244-lq.mp3"></audio>
+  <audio id="bgm" loop src="ads/Tetris.mp3"></audio>
+  <audio id="lineClearSound" src="ads/linebroken1.wav"></audio>
 
   <script>
     const canvas = document.getElementById('tetris');
