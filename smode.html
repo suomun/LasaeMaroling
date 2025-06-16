@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mobile Tetris</title>
+  <title>Mobile Tetris with Controls Info</title>
   <style>
     body {
       background: #111;
@@ -28,11 +28,15 @@
     #score, #level {
       font-size: 1.2rem;
     }
-    #restartBtn, #pauseBtn {
-      margin: 5px;
+    #restartBtn, #pauseBtn, #musicToggleBtn {
+      margin: 5px 5px 5px 0;
       padding: 5px 10px;
       font-size: 1rem;
       cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      background: #333;
+      color: white;
     }
     #nextBlock {
       margin-top: 10px;
@@ -56,6 +60,32 @@
       background: #333;
       color: white;
       cursor: pointer;
+      user-select: none;
+    }
+    #controlsInfo {
+      color: white;
+      font-family: sans-serif;
+      margin-top: 10px;
+      width: 240px;
+      background: #222;
+      border: 2px solid #fff;
+      border-radius: 8px;
+      padding: 10px;
+    }
+    #controlsInfo h3 {
+      margin: 5px 0;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+    #controlsInfo ul {
+      list-style: none;
+      padding-left: 10px;
+      font-size: 0.9rem;
+      line-height: 1.4rem;
+    }
+    #controlsInfo ul li strong {
+      width: 60px;
+      display: inline-block;
     }
   </style>
 </head>
@@ -69,6 +99,7 @@
   <div>
     <button id="restartBtn">Restart Game</button>
     <button id="pauseBtn">Pause</button>
+    <button id="musicToggleBtn">Music On</button>
   </div>
   <div id="highScore">High Score: 0</div>
 
@@ -78,6 +109,29 @@
     <button onclick="playerMove(1)">▶</button>
     <button onclick="playerRotate(1)">⟳</button>
   </div>
+
+  <div id="controlsInfo">
+    <h3>Keyboard Controls</h3>
+    <ul>
+      <li><strong>←</strong>: Move Left</li>
+      <li><strong>→</strong>: Move Right</li>
+      <li><strong>↓</strong>: Soft Drop</li>
+      <li><strong>Q</strong>: Rotate Left</li>
+      <li><strong>W</strong>: Rotate Right</li>
+      <li><strong>Restart</strong>: Restart Game Button</li>
+      <li><strong>Pause</strong>: Pause / Resume Button</li>
+    </ul>
+    <h3>Mobile Controls</h3>
+    <ul>
+      <li>◀ : Move Left</li>
+      <li>▶ : Move Right</li>
+      <li>▼ : Soft Drop</li>
+      <li>⟳ : Rotate Right</li>
+    </ul>
+  </div>
+
+  <audio id="bgm" loop src="ads/Tetris.mp3"></audio>
+  <audio id="lineClearSfx" src="ads/linebroken1.wav"></audio>
 
   <script>
     const canvas = document.getElementById('tetris');
@@ -91,6 +145,7 @@
     let dropCounter = 0;
     let lastTime = 0;
     let isPaused = false;
+    let musicPlaying = false;
 
     const colors = [null, '#FF0D72', '#0DC2FF', '#0DFF72', '#F538FF', '#FF8E0D', '#FFE138', '#3877FF'];
     const arena = createMatrix(12, 20);
@@ -103,11 +158,28 @@
       lines: 0,
     };
 
+    // 오디오 요소
+    const bgm = document.getElementById('bgm');
+    const lineClearSfx = document.getElementById('lineClearSfx');
+
+    document.getElementById('musicToggleBtn').addEventListener('click', () => {
+      if (musicPlaying) {
+        bgm.pause();
+        musicPlaying = false;
+        document.getElementById('musicToggleBtn').innerText = 'Music Off';
+      } else {
+        if (!isPaused) bgm.play();
+        musicPlaying = true;
+        document.getElementById('musicToggleBtn').innerText = 'Music On';
+      }
+    });
+
     function createMatrix(w, h) {
       const matrix = [];
       while (h--) matrix.push(new Array(w).fill(0));
       return matrix;
     }
+
     function createPiece(type) {
       if (type === 'T') return [[0, 0, 0], [1, 1, 1], [0, 1, 0]];
       if (type === 'O') return [[2, 2], [2, 2]];
@@ -117,10 +189,12 @@
       if (type === 'S') return [[0, 6, 6], [6, 6, 0], [0, 0, 0]];
       if (type === 'Z') return [[7, 7, 0], [0, 7, 7], [0, 0, 0]];
     }
+
     function randomPiece() {
       const pieces = 'TJLOSZI';
       return pieces[(Math.random() * pieces.length) | 0];
     }
+
     function collide(arena, player) {
       const [m, o] = [player.matrix, player.pos];
       for (let y = 0; y < m.length; ++y) {
@@ -130,6 +204,7 @@
       }
       return false;
     }
+
     function merge(arena, player) {
       player.matrix.forEach((row, y) => {
         row.forEach((value, x) => {
@@ -137,8 +212,10 @@
         });
       });
     }
+
     function arenaSweep() {
       let rowCount = 1;
+      let linesCleared = 0;
       outer: for (let y = arena.length - 1; y >= 0; --y) {
         for (let x = 0; x < arena[y].length; ++x) {
           if (arena[y][x] === 0) continue outer;
@@ -148,10 +225,17 @@
         player.score += rowCount * 10;
         player.lines++;
         rowCount *= 2;
+        linesCleared++;
+        y++; // 새로 생긴 행 다시 검사
+      }
+      if (linesCleared > 0) {
+        lineClearSfx.currentTime = 0;
+        lineClearSfx.play();
       }
       updateScore();
       updateLevel();
     }
+
     function playerDrop() {
       player.pos.y++;
       if (collide(arena, player)) {
@@ -162,10 +246,12 @@
       }
       dropCounter = 0;
     }
+
     function playerMove(dir) {
       player.pos.x += dir;
       if (collide(arena, player)) player.pos.x -= dir;
     }
+
     function playerRotate(dir) {
       const pos = player.pos.x;
       let offset = 1;
@@ -180,6 +266,7 @@
         }
       }
     }
+
     function rotate(matrix, dir) {
       for (let y = 0; y < matrix.length; ++y) {
         for (let x = 0; x < y; ++x) {
@@ -189,8 +276,12 @@
       if (dir > 0) matrix.forEach(row => row.reverse());
       else matrix.reverse();
     }
+
     function update(time = 0) {
-      if (isPaused) return requestAnimationFrame(update);
+      if (isPaused) {
+        requestAnimationFrame(update);
+        return;
+      }
       const deltaTime = time - lastTime;
       lastTime = time;
       dropCounter += deltaTime;
@@ -198,17 +289,21 @@
       draw();
       requestAnimationFrame(update);
     }
+
     function updateScore() {
       document.getElementById('score').innerText = 'Score: ' + player.score;
       const high = Math.max(player.score, +localStorage.getItem('tetrisHigh') || 0);
       localStorage.setItem('tetrisHigh', high);
       document.getElementById('highScore').innerText = 'High Score: ' + high;
     }
+
     function updateLevel() {
       player.level = Math.floor(player.lines / 10) + 1;
       document.getElementById('level').innerText = 'Level: ' + player.level;
       dropInterval = 1000 - (player.level - 1) * 50;
+      if (dropInterval < 100) dropInterval = 100;
     }
+
     function drawMatrix(matrix, offset, ctx = context, ghost = false) {
       matrix.forEach((row, y) => {
         row.forEach((value, x) => {
@@ -219,6 +314,7 @@
         });
       });
     }
+
     function draw() {
       context.fillStyle = '#000';
       context.fillRect(0, 0, canvas.width, canvas.height);
@@ -226,56 +322,128 @@
       drawGhost();
       drawMatrix(player.matrix, player.pos);
     }
+
     function drawNext() {
       nextContext.fillStyle = '#000';
       nextContext.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
       drawMatrix(player.next, { x: 1, y: 1 }, nextContext);
     }
+
     function drawGhost() {
       let offset = { ...player.pos };
       while (!collide(arena, { ...player, pos: offset })) offset.y++;
       offset.y--;
       drawMatrix(player.matrix, offset, context, true);
     }
+
     function playerReset() {
       player.matrix = player.next || createPiece(randomPiece());
       player.next = createPiece(randomPiece());
       player.pos.y = 0;
       player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
       if (collide(arena, player)) {
-        alert('Game Over!');
+        alert('Game Over! Your score: ' + player.score);
         arena.forEach(row => row.fill(0));
         player.score = 0;
         player.lines = 0;
-        player.level = 1;
+        updateScore();
+        updateLevel();
       }
-      updateScore();
-      updateLevel();
       drawNext();
     }
+
+    function togglePause() {
+      isPaused = !isPaused;
+      if (isPaused) {
+        document.getElementById('pauseBtn').innerText = 'Resume';
+        bgm.pause();
+      } else {
+        document.getElementById('pauseBtn').innerText = 'Pause';
+        if (musicPlaying) bgm.play();
+      }
+    }
+
+    // 키보드 이벤트 처리
     document.addEventListener('keydown', event => {
-      if (event.key === 'ArrowLeft') playerMove(-1);
-      else if (event.key === 'ArrowRight') playerMove(1);
-      else if (event.key === 'ArrowDown') playerDrop();
-      else if (event.key === 'q') playerRotate(-1);
-      else if (event.key === 'w') playerRotate(1);
+      if (isPaused) return;
+      switch(event.key) {
+        case 'ArrowLeft':
+          playerMove(-1);
+          break;
+        case 'ArrowRight':
+          playerMove(1);
+          break;
+        case 'ArrowDown':
+          playerDrop();
+          break;
+        case 'q':
+        case 'Q':
+          playerRotate(-1);
+          break;
+        case 'w':
+        case 'W':
+          playerRotate(1);
+          break;
+      }
     });
+
+    // 버튼 이벤트
     document.getElementById('restartBtn').addEventListener('click', () => {
       arena.forEach(row => row.fill(0));
       player.score = 0;
-      player.level = 1;
       player.lines = 0;
       updateScore();
       updateLevel();
       playerReset();
+      if (!isPaused && musicPlaying) bgm.play();
     });
+
     document.getElementById('pauseBtn').addEventListener('click', () => {
-      isPaused = !isPaused;
-      document.getElementById('pauseBtn').innerText = isPaused ? 'Resume' : 'Pause';
-      if (!isPaused) update();
+      togglePause();
     });
+
+    // 모바일 컨트롤용 함수 (버튼에서 호출)
+    function playerMove(dir) {
+      if (isPaused) return;
+      player.pos.x += dir;
+      if (collide(arena, player)) player.pos.x -= dir;
+      draw();
+    }
+    function playerDrop() {
+      if (isPaused) return;
+      player.pos.y++;
+      if (collide(arena, player)) {
+        player.pos.y--;
+        merge(arena, player);
+        playerReset();
+        arenaSweep();
+      }
+      dropCounter = 0;
+      draw();
+    }
+    function playerRotate(dir) {
+      if (isPaused) return;
+      const pos = player.pos.x;
+      let offset = 1;
+      rotate(player.matrix, dir);
+      while (collide(arena, player)) {
+        player.pos.x += offset;
+        offset = -(offset + (offset > 0 ? 1 : -1));
+        if (offset > player.matrix[0].length) {
+          rotate(player.matrix, -dir);
+          player.pos.x = pos;
+          return;
+        }
+      }
+      draw();
+    }
+
+    // 초기 시작
+    updateScore();
+    updateLevel();
     playerReset();
     update();
+
   </script>
 </body>
 </html>
