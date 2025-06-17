@@ -1,655 +1,315 @@
-<!DOCTYPE html>
-<html lang="ko">
+<!DOCTYPE html><html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-<title>벽돌깨기 게임</title>
-<style>
-  body {
-    margin: 0; padding: 0; background: #222; color: #eee; font-family: 'Arial', sans-serif;
-    display: flex; flex-direction: column; align-items: center;
-  }
-  canvas {
-    background: #111;
-    display: block;
-    margin-top: 10px;
-    border: 3px solid white;
-  }
-  #controls {
-    margin-top: 12px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  button, select {
-    font-size: 14px;
-    padding: 8px 12px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    user-select: none;
-  }
-  button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  #scoreboard {
-    margin-top: 12px;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    font-size: 16px;
-  }
-  #mobile-controls {
-    margin-top: 15px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-  .mobile-btn {
-    font-size: 25px;
-    background: #444;
-    color: #eee;
-    width: 50px; height: 50px;
-    border-radius: 10px;
-    user-select: none;
-  }
-  /* 아이템 효과 표 스타일 */
-  #itemLegend {
-    width: 100%;
-    max-width: 600px;
-    margin: 20px auto 30px auto;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    border-top: 1px solid #ccc;
-    padding-top: 10px;
-    color: #eee;
-  }
-  #itemLegend h3 {
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  #itemLegend table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: center;
-    background: #333;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  #itemLegend th, #itemLegend td {
-    border: 1px solid #666;
-    padding: 8px 6px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>벽돌깨기 게임</title>
+  <style>
+    body {
+      background: #000;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+    }
+    canvas {
+      background: #222;
+      display: block;
+      margin: 0 auto;
+      border: 2px solid white;
+    }
+    .info {
+      display: flex;
+      justify-content: space-around;
+      margin: 10px auto;
+      max-width: 480px;
+    }
+    .buttons, .mobile-controls {
+      margin: 10px;
+    }
+    button, select {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+    }
+    .mobile-controls button {
+      font-size: 24px;
+      width: 60px;
+    }
+    .item-table {
+      margin-top: 20px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      background: #111;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .item-table table {
+      width: 100%;
+      border-collapse: collapse;
+      color: white;
+    }
+    .item-table th, .item-table td {
+      border: 1px solid #555;
+      padding: 5px;
+    }
+  </style>
 </head>
 <body>
+  <h1>벽돌깨기 게임</h1>
+  <div class="info">
+    <div>점수: <span id="score">0</span></div>
+    <div>레벨: <span id="level">1</span></div>
+    <div>최고점수: <span id="highScore">0</span></div>
+  </div>
+  <canvas id="gameCanvas" width="480" height="320"></canvas>  <div class="buttons">
+    <button id="startBtn">시작하기</button>
+    <button id="restartBtn">다시하기</button>
+    <select id="difficulty">
+      <option value="easy">쉬움</option>
+      <option value="medium" selected>보통</option>
+      <option value="hard">어려움</option>
+    </select>
+    <button id="bgmToggle">브금 ON/OFF</button>
+  </div>  <div class="mobile-controls">
+    <button id="leftBtn">⬅</button>
+    <button id="rightBtn">➡</button>
+  </div>  <div class="item-table">
+    <h3>아이템 문양 효과</h3>
+    <table>
+      <tr><th>문양</th><th>효과</th></tr>
+      <tr><td>★</td><td>점수 보너스</td></tr>
+      <tr><td>⬅➡</td><td>패들 크기 확대</td></tr>
+      <tr><td>⬇⬆</td><td>패들 크기 축소</td></tr>
+      <tr><td>🐢</td><td>공 속도 감소</td></tr>
+      <tr><td>🐇</td><td>공 속도 증가</td></tr>
+      <tr><td>⚽</td><td>멀티볼 (공 하나 추가)</td></tr>
+    </table>
+  </div>  <audio id="bgm" loop>
+    <source src="https://example.com/background-music.mp3" type="audio/mpeg">
+    브라우저가 오디오를 지원하지 않습니다.
+  </audio>  <script>
+// 전체 JavaScript 게임 로직 삽입 시작
 
-<h1>벽돌깨기 게임</h1>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const scoreEl = document.getElementById("score");
+const levelEl = document.getElementById("level");
+const highScoreEl = document.getElementById("highScore");
+const difficultyEl = document.getElementById("difficulty");
+const bgm = document.getElementById("bgm");
 
-<canvas id="gameCanvas" width="480" height="320"></canvas>
+const startBtn = document.getElementById("startBtn");
+const restartBtn = document.getElementById("restartBtn");
+const leftBtn = document.getElementById("leftBtn");
+const rightBtn = document.getElementById("rightBtn");
+const bgmToggle = document.getElementById("bgmToggle");
 
-<div id="scoreboard">
-  <div id="scoreDisplay">점수: 0</div>
-  <div id="levelDisplay">레벨: 1</div>
-  <div id="highScoreDisplay">최고점수 (normal): 0</div>
-</div>
+let paddle, ball, bricks, score, level, isGameOver, isGameStarted, balls;
+let paddleMove = 0;
+let keys = {};
+let difficulty = difficultyEl.value;
+let highScores = JSON.parse(localStorage.getItem("highScores") || "{}");
+let startedOnce = false;
 
-<div id="controls">
-  <select id="difficultySelect" aria-label="난이도 선택">
-    <option value="easy">Easy</option>
-    <option value="normal" selected>Normal</option>
-    <option value="hard">Hard</option>
-  </select>
-  <button id="startBtn">시작하기</button>
-  <button id="restartBtn" disabled>다시하기</button>
-  <button id="bgmToggleBtn">BGM On</button>
-</div>
+function initGame() {
+  score = 0;
+  level = 1;
+  isGameOver = false;
+  balls = [createBall()];
+  paddle = { x: canvas.width / 2 - 40, y: canvas.height - 20, w: 80, h: 10 };
+  bricks = createBricks(level);
+  updateUI();
+  draw();
+}
 
-<div id="mobile-controls" aria-label="모바일 조작 버튼">
-  <button id="btnLeft" class="mobile-btn" aria-label="왼쪽 이동">◀</button>
-  <button id="btnRight" class="mobile-btn" aria-label="오른쪽 이동">▶</button>
-</div>
-
-<!-- 아이템 효과 표 -->
-<div id="itemLegend" role="region" aria-label="아이템 문양별 효과">
-  <h3>아이템 문양별 효과</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>문양</th><th>아이템 이름</th><th>효과</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>🟦</td><td>패들 확장</td><td>패들 길이 일시적 확장</td></tr>
-      <tr><td>🟥</td><td>패들 축소</td><td>패들 길이 일시적 축소</td></tr>
-      <tr><td>⭐</td><td>점수 보너스</td><td>점수 100점 추가</td></tr>
-      <tr><td>🐢</td><td>공 속도 느림</td><td>공 속도 일시적 감소</td></tr>
-      <tr><td>🚀</td><td>공 속도 빠름</td><td>공 속도 일시적 증가</td></tr>
-      <tr><td>⚽</td><td>멀티볼</td><td>공 1개 추가, 멀티볼 유지</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<script>
-(() => {
-  const canvas = document.getElementById("gameCanvas");
-  const ctx = canvas.getContext("2d");
-
-  // 게임 변수
-  let paddleHeight = 12;
-  let paddleWidth = 80;
-  let paddleX = (canvas.width - paddleWidth) / 2;
-
-  const ballRadius = 8;
-
-  // 공 배열 (멀티볼)
-  let balls = [];
-
-  let brickRowCount = 4;
-  let brickColumnCount = 10;
-  const brickWidth = 40;
-  const brickHeight = 18;
-  const brickPadding = 6;
-  const brickOffsetTop = 40;
-  const brickOffsetLeft = 0; // 중앙 기준 위치 계산으로 재정의됨
-
-  // 점수, 레벨, 최고점수
-  let score = 0;
-  let level = 1;
-  let scoreToNextLevel = 10;
-
-  // 난이도별 최고점수 저장
-  let highestScores = {easy:0, normal:0, hard:0};
-  let currentDifficulty = "normal";
-
-  // 조작 상태
-  let rightPressed = false;
-  let leftPressed = false;
-  let mobileRight = false;
-  let mobileLeft = false;
-
-  // 아이템 심볼
-  const itemSymbols = {
-    paddleExpand: "🟦",
-    paddleShrink: "🟥",
-    scoreBonus: "⭐",
-    ballSpeedSlow: "🐢",
-    ballSpeedFast: "🚀",
-    ballExtra: "⚽"
+function createBall() {
+  return {
+    x: canvas.width / 2,
+    y: canvas.height - 30,
+    dx: 2 * (Math.random() > 0.5 ? 1 : -1),
+    dy: -2,
+    r: 8,
   };
+}
 
-  // 아이템 지속시간(ms)
-  const ITEM_DURATION = 12000;
+function createBricks(level) {
+  const rows = 3 + level;
+  const cols = 6;
+  const brickW = 60;
+  const brickH = 20;
+  const offsetX = (canvas.width - cols * brickW) / 2;
+  const bricks = [];
 
-  // 효과음 로드
-  const hitSound = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
-  const paddleHitSound = new Audio("https://actions.google.com/sounds/v1/cartoon/metal_thud_and_bounce.ogg");
-  const gameOverSound = new Audio("https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg");
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const x = offsetX + c * brickW;
+      const y = 40 + r * brickH;
+      const type = Math.random() < 0.2 ? getRandomItemType() : null;
+      bricks.push({ x, y, w: brickW, h: brickH, broken: false, type });
+    }
+  }
+  return bricks;
+}
 
-  // 배경음악 (BGM)
-  const bgm = new Audio("https://cdn.pixabay.com/download/audio/2022/02/23/audio_d7d7dd4b7f.mp3?filename=game-background-music-6913.mp3");
-  bgm.loop = true;
-  bgm.volume = 0.15;
+function getRandomItemType() {
+  const items = ["expand", "shrink", "bonus", "slow", "fast", "multi"];
+  return items[Math.floor(Math.random() * items.length)];
+}
 
-  // DOM 요소
-  const scoreDisplay = document.getElementById("scoreDisplay");
-  const levelDisplay = document.getElementById("levelDisplay");
-  const highScoreDisplay = document.getElementById("highScoreDisplay");
-  const difficultySelect = document.getElementById("difficultySelect");
-  const startBtn = document.getElementById("startBtn");
-  const restartBtn = document.getElementById("restartBtn");
-  const bgmToggleBtn = document.getElementById("bgmToggleBtn");
-  const btnLeft = document.getElementById("btnLeft");
-  const btnRight = document.getElementById("btnRight");
-
-  // 게임 상태 플래그
-  let isGameStarted = false;
-  let isGameOver = false;
-  let controlsDisabled = true;
-
-  // 패들 확장/축소 타이머
-  let paddleExpandTimeout = null;
-  let paddleShrinkTimeout = null;
-
-  // 아이템 효과 상태
-  let itemEffects = {
-    paddleExpanded: false,
-    paddleShrunk: false,
-    ballSpeedModifier: 1,
-    scoreBonusActive: false,
-    multiBallActive: false
-  };
-
-  // 벽돌 배열 (2차원)
-  let bricks = [];
-
-  // 게임 초기화 함수
-  function initBricks() {
-    bricks = [];
-    const canvasCenterX = canvas.width / 2;
-    const halfCols = Math.floor(brickColumnCount / 2);
-    for(let c=0; c<brickColumnCount; c++) {
-      bricks[c] = [];
-      for(let r=0; r<brickRowCount; r++) {
-        // 좌우대칭 x좌표 계산
-        let offsetX = 0;
-        if(brickColumnCount % 2 === 0) {
-          if(c < halfCols) {
-            offsetX = canvasCenterX - ((halfCols - c) * (brickWidth + brickPadding)) - brickWidth;
-          } else {
-            offsetX = canvasCenterX + ((c - halfCols) * (brickWidth + brickPadding));
-          }
-        } else {
-          const centerCol = halfCols;
-          if(c === centerCol) {
-            offsetX = canvasCenterX - (brickWidth / 2);
-          } else if(c < centerCol) {
-            offsetX = canvasCenterX - ((centerCol - c) * (brickWidth + brickPadding)) - brickWidth;
-          } else {
-            offsetX = canvasCenterX + ((c - centerCol) * (brickWidth + brickPadding));
-          }
-        }
-        bricks[c][r] = {
-          x: offsetX,
-          y: r * (brickHeight + brickPadding) + brickOffsetTop,
-          status: 1,
-          color: randomColor(),
-          item: generateItem() // 아이템 여부 및 종류
-        };
+function drawBricks() {
+  bricks.forEach((b) => {
+    if (!b.broken) {
+      ctx.fillStyle = b.type ? "gold" : "#00f";
+      ctx.fillRect(b.x, b.y, b.w, b.h);
+      if (b.type) {
+        ctx.fillStyle = "black";
+        ctx.font = "14px sans-serif";
+        ctx.fillText(getSymbol(b.type), b.x + b.w / 2 - 7, b.y + b.h / 2 + 5);
       }
     }
-  }
+  });
+}
 
-  // 난이도별 초기값 세팅
-  function setDifficulty(diff) {
-    currentDifficulty = diff;
-    if(diff === "easy") {
-      paddleWidth = 100;
-      brickRowCount = 3;
-      ballSpeedBase = 2;
-      scoreToNextLevel = 10;
-    } else if(diff === "normal") {
-      paddleWidth = 80;
-      brickRowCount = 4;
-      ballSpeedBase = 3;
-      scoreToNextLevel = 15;
-    } else { // hard
-      paddleWidth = 60;
-      brickRowCount = 5;
-      ballSpeedBase = 4;
-      scoreToNextLevel = 20;
-    }
-    paddleX = (canvas.width - paddleWidth) / 2;
-    level = 1;
-    score = 0;
-    updateScoreDisplay();
-    updateLevelDisplay();
-    updateHighScoreDisplay();
-    initBricks();
-  }
+function getSymbol(type) {
+  return {
+    bonus: "★",
+    expand: "⬅➡",
+    shrink: "⬇⬆",
+    slow: "🐢",
+    fast: "🐇",
+    multi: "⚽",
+  }[type];
+}
 
-  // 색상 랜덤 선택
-  function randomColor() {
-    const colors = ["#2196F3", "#E91E63", "#9C27B0", "#FF9800", "#4CAF50", "#FFC107", "#00BCD4"];
-    return colors[Math.floor(Math.random() * colors.length)];
-  }
+function updateUI() {
+  scoreEl.textContent = score;
+  levelEl.textContent = level;
+  highScoreEl.textContent = highScores[difficulty] || 0;
+}
 
-  // 아이템 생성 확률과 종류 결정 (약 20% 확률 아이템)
-  function generateItem() {
-    const chance = Math.random();
-    if(chance < 0.20) {
-      // 6종류 중 하나 랜덤
-      const keys = Object.keys(itemSymbols);
-      const selected = keys[Math.floor(Math.random() * keys.length)];
-      return selected;
-    }
-    return null;
-  }
+function draw() {
+  if (isGameOver) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 공 객체 생성 (초기 공)
-  function createBall() {
-    return {
-      x: canvas.width / 2,
-      y: canvas.height - paddleHeight - ballRadius - 10,
-      dx: (Math.random() * 2 + 2) * (Math.random() < 0.5 ? -1 : 1),
-      dy: -ballSpeedBase,
-      radius: ballRadius,
-      speedModifier: 1
-    };
-  }
+  ctx.fillStyle = "white";
+  ctx.fillRect(paddle.x, paddle.y, paddle.w, paddle.h);
 
-  // 공 속도 기본값 (난이도에 따라 달라짐)
-  let ballSpeedBase = 3;
+  drawBricks();
 
-  // 게임 초기화
-  function initGame() {
-    setDifficulty(currentDifficulty);
-    balls = [createBall()];
-    isGameOver = false;
-    controlsDisabled = true;
-    startBtn.disabled = false;
-    restartBtn.disabled = true;
-    paddleExpandTimeout && clearTimeout(paddleExpandTimeout);
-    paddleShrinkTimeout && clearTimeout(paddleShrinkTimeout);
-    itemEffects = {
-      paddleExpanded: false,
-      paddleShrunk: false,
-      ballSpeedModifier: 1,
-      scoreBonusActive: false,
-      multiBallActive: false
-    };
-    paddleWidth = paddleWidth; // 난이도 따라 설정된 값 유지
-    paddleX = (canvas.width - paddleWidth) / 2;
-  }
-
-  // 점수, 레벨, 최고점수 업데이트 표시
-  function updateScoreDisplay() {
-    scoreDisplay.textContent = `점수: ${score}`;
-  }
-  function updateLevelDisplay() {
-    levelDisplay.textContent = `레벨: ${level}`;
-  }
-  function updateHighScoreDisplay() {
-    const hs = highestScores[currentDifficulty] || 0;
-    highScoreDisplay.textContent = `최고점수 (${currentDifficulty}): ${hs}`;
-  }
-
-  // 충돌 체크 및 아이템 적용
-  function collisionDetection() {
-    balls.forEach(ball => {
-      for(let c=0; c<brickColumnCount; c++) {
-        for(let r=0; r<brickRowCount; r++) {
-          const b = bricks[c][r];
-          if(b.status === 1) {
-            if(ball.x > b.x && ball.x < b.x + brickWidth && ball.y > b.y && ball.y < b.y + brickHeight) {
-              ball.dy = -ball.dy;
-              b.status = 0;
-              hitSound.play();
-
-              // 아이템 있으면 적용
-              if(b.item) applyItemEffect(b.item);
-
-              // 점수 증가
-              score += 5;
-              updateScoreDisplay();
-
-              // 레벨업 체크
-              if(score >= scoreToNextLevel) {
-                level++;
-                scoreToNextLevel += 10 + level*5;
-                updateLevelDisplay();
-                // 레벨업시 벽돌 다시 생성 + 난이도 살짝 증가
-                initBricks();
-                // 공 속도 증가 (최대 6배 속도)
-                balls.forEach(ball => {
-                  ball.dy = -Math.min(6, Math.abs(ball.dy) + 0.5) * Math.sign(ball.dy);
-                });
-              }
-
-              // 모든 벽돌 다 깨졌을 때 재생성
-              if(allBricksCleared()) {
-                initBricks();
-              }
-
-              return;
-            }
-          }
-        }
-      }
-    });
-  }
-
-  // 모든 벽돌 깨짐 체크
-  function allBricksCleared() {
-    for(let c=0; c<brickColumnCount; c++) {
-      for(let r=0; r<brickRowCount; r++) {
-        if(bricks[c][r].status === 1) return false;
-      }
-    }
-    return true;
-  }
-
-  // 아이템 효과 적용 함수
-  function applyItemEffect(itemKey) {
-    switch(itemKey) {
-      case "paddleExpand":
-        if(itemEffects.paddleExpanded) return;
-        itemEffects.paddleExpanded = true;
-        paddleWidth = Math.min(canvas.width, paddleWidth * 1.5);
-        paddleX = Math.min(paddleX, canvas.width - paddleWidth);
-        paddleExpandTimeout && clearTimeout(paddleExpandTimeout);
-        paddleExpandTimeout = setTimeout(() => {
-          paddleWidth /= 1.5;
-          itemEffects.paddleExpanded = false;
-        }, ITEM_DURATION);
-        break;
-      case "paddleShrink":
-        if(itemEffects.paddleShrunk) return;
-        itemEffects.paddleShrunk = true;
-        paddleWidth = Math.max(40, paddleWidth / 1.5);
-        paddleShrinkTimeout && clearTimeout(paddleShrinkTimeout);
-        paddleShrinkTimeout = setTimeout(() => {
-          paddleWidth *= 1.5;
-          itemEffects.paddleShrunk = false;
-        }, ITEM_DURATION);
-        break;
-      case "scoreBonus":
-        if(itemEffects.scoreBonusActive) return;
-        score += 100;
-        updateScoreDisplay();
-        itemEffects.scoreBonusActive = true;
-        setTimeout(() => { itemEffects.scoreBonusActive = false; }, ITEM_DURATION);
-        break;
-      case "ballSpeedSlow":
-        balls.forEach(ball => {
-          ball.speedModifier = 0.7;
-        });
-        itemEffects.ballSpeedModifier = 0.7;
-        setTimeout(() => {
-          balls.forEach(ball => {
-            ball.speedModifier = 1;
-          });
-          itemEffects.ballSpeedModifier = 1;
-        }, ITEM_DURATION);
-        break;
-      case "ballSpeedFast":
-        balls.forEach(ball => {
-          ball.speedModifier = 1.3;
-        });
-        itemEffects.ballSpeedModifier = 1.3;
-        setTimeout(() => {
-          balls.forEach(ball => {
-            ball.speedModifier = 1;
-          });
-          itemEffects.ballSpeedModifier = 1;
-        }, ITEM_DURATION);
-        break;
-      case "ballExtra":
-        if(itemEffects.multiBallActive) return;
-        itemEffects.multiBallActive = true;
-        if(balls.length < 3) {
-          const newBall = createBall();
-          newBall.x = balls[0].x;
-          newBall.y = balls[0].y;
-          newBall.dx = -balls[0].dx;
-          balls.push(newBall);
-        }
-        break;
-    }
-  }
-
-  // 공 그리기
-  function drawBalls() {
-    balls.forEach(ball => {
-      ctx.beginPath();
-      ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-      ctx.fillStyle = "#eee";
-      ctx.fill();
-      ctx.closePath();
-    });
-  }
-
-  // 패들 그리기
-  function drawPaddle() {
+  balls.forEach((ball) => {
     ctx.beginPath();
-    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-    ctx.fillStyle = "#eee";
+    ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+    ctx.fillStyle = "red";
     ctx.fill();
     ctx.closePath();
-  }
+  });
 
-  // 벽돌 그리기 (아이템 문양 포함)
-  function drawBricks() {
-    for(let c=0; c<brickColumnCount; c++) {
-      for(let r=0; r<brickRowCount; r++) {
-        const b = bricks[c][r];
-        if(b.status === 1) {
-          ctx.beginPath();
-          ctx.rect(b.x, b.y, brickWidth, brickHeight);
-          ctx.fillStyle = b.color;
-          ctx.fill();
-          ctx.closePath();
-          // 아이템 문양 표시
-          if(b.item) {
-            ctx.font = "18px Arial";
-            ctx.fillText(itemSymbols[b.item] || "❓", b.x + brickWidth/2 - 7, b.y + brickHeight - 4);
-          }
-        }
-      }
+  balls.forEach((ball) => {
+    ball.x += ball.dx;
+    ball.y += ball.dy;
+
+    if (ball.x < ball.r || ball.x > canvas.width - ball.r) ball.dx *= -1;
+    if (ball.y < ball.r) ball.dy *= -1;
+
+    if (
+      ball.x > paddle.x &&
+      ball.x < paddle.x + paddle.w &&
+      ball.y + ball.r > paddle.y
+    ) {
+      ball.dy *= -1;
     }
-  }
 
-  // 게임 오버 처리
-  function gameOver() {
-    if(isGameOver) return;
-    isGameOver = true;
-    controlsDisabled = true;
-    restartBtn.disabled = false;
-    gameOverSound.play();
-    // 최고점수 저장
-    if(score > highestScores[currentDifficulty]) {
-      highestScores[currentDifficulty] = score;
-      updateHighScoreDisplay();
-    }
-    alert(`게임 종료! 점수: ${score}`);
-  }
-
-  // 게임 루프
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBricks();
-    drawBalls();
-    drawPaddle();
-    collisionDetection();
-
-    if(isGameOver) return;
-
-    balls.forEach(ball => {
-      // 벽 충돌
-      if(ball.x + ball.dx * ball.speedModifier > canvas.width - ball.radius || ball.x + ball.dx * ball.speedModifier < ball.radius) {
-        ball.dx = -ball.dx;
+    bricks.forEach((b) => {
+      if (!b.broken &&
+          ball.x > b.x &&
+          ball.x < b.x + b.w &&
+          ball.y > b.y &&
+          ball.y < b.y + b.h) {
+        b.broken = true;
+        ball.dy *= -1;
+        score += 10;
+        if (b.type) applyItem(b.type);
+        updateUI();
       }
-      if(ball.y + ball.dy * ball.speedModifier < ball.radius) {
-        ball.dy = -ball.dy;
-      } else if(ball.y + ball.dy * ball.speedModifier > canvas.height - ball.radius - paddleHeight) {
-        // 패들 충돌 체크
-        if(ball.x > paddleX && ball.x < paddleX + paddleWidth) {
-          paddleHitSound.play();
-          ball.dy = -ball.dy;
-          // 공 속도 증가 (최대 6배)
-          ball.dy = -Math.min(6, Math.abs(ball.dy) + 0.1) * Math.sign(ball.dy);
-
-          // 공 좌우 방향 변화, 패들 중앙 기준
-          let hitPos = (ball.x - paddleX) / paddleWidth;
-          ball.dx = (hitPos - 0.5) * 10;
-        } else if(ball.y + ball.dy * ball.speedModifier > canvas.height - ball.radius) {
-          // 공 바닥 충돌 → 게임 오버
-          gameOver();
-        }
-      }
-      ball.x += ball.dx * ball.speedModifier;
-      ball.y += ball.dy * ball.speedModifier;
     });
+  });
 
-    // 패들 이동
-    if(!controlsDisabled) {
-      if(rightPressed || mobileRight) {
-        paddleX += 7;
-        if(paddleX + paddleWidth > canvas.width) {
-          paddleX = canvas.width - paddleWidth;
-        }
-      } else if(leftPressed || mobileLeft) {
-        paddleX -= 7;
-        if(paddleX < 0) {
-          paddleX = 0;
-        }
-      }
-    }
-
-    requestAnimationFrame(draw);
+  balls = balls.filter((b) => b.y - b.r <= canvas.height);
+  if (balls.length === 0) {
+    gameOver();
+    return;
   }
 
-  // 이벤트 핸들러 세팅
-  document.addEventListener("keydown", e => {
-    if(controlsDisabled) return;
-    if(e.key === "ArrowRight" || e.key === "d") {
-      rightPressed = true;
-    } else if(e.key === "ArrowLeft" || e.key === "a") {
-      leftPressed = true;
-    }
-  });
-  document.addEventListener("keyup", e => {
-    if(e.key === "ArrowRight" || e.key === "d") {
-      rightPressed = false;
-    } else if(e.key === "ArrowLeft" || e.key === "a") {
-      leftPressed = false;
-    }
-  });
+  bricks = bricks.filter((b) => !b.broken);
+  if (bricks.length === 0) {
+    level++;
+    bricks = createBricks(level);
+    updateUI();
+  }
 
-  // 모바일 터치 버튼 이벤트
-  leftBtn.addEventListener("touchstart", e => { e.preventDefault(); mobileLeft = true; });
-  leftBtn.addEventListener("touchend", e => { e.preventDefault(); mobileLeft = false; });
-  rightBtn.addEventListener("touchstart", e => { e.preventDefault(); mobileRight = true; });
-  rightBtn.addEventListener("touchend", e => { e.preventDefault(); mobileRight = false; });
+  paddle.x += paddleMove;
+  if (paddle.x < 0) paddle.x = 0;
+  if (paddle.x + paddle.w > canvas.width) paddle.x = canvas.width - paddle.w;
 
-  // 시작 버튼
-  startBtn.addEventListener("click", () => {
-    if(isGameStarted) return;
-    isGameStarted = true;
-    controlsDisabled = false;
-    startBtn.disabled = true;
-    restartBtn.disabled = false;
-    draw();
-  });
+  requestAnimationFrame(draw);
+}
 
-  // 다시하기 버튼
-  restartBtn.addEventListener("click", () => {
-    initGame();
-    draw();
-  });
+function applyItem(type) {
+  if (type === "bonus") score += 100;
+  if (type === "expand") paddle.w += 20;
+  if (type === "shrink") paddle.w = Math.max(40, paddle.w - 20);
+  if (type === "slow") balls.forEach((b) => { b.dx *= 0.8; b.dy *= 0.8; });
+  if (type === "fast") balls.forEach((b) => { b.dx *= 1.2; b.dy *= 1.2; });
+  if (type === "multi") balls.push(createBall());
+}
 
-  // 난이도 선택 이벤트
-  difficultySelect.addEventListener("change", e => {
-    setDifficulty(e.target.value);
-  });
+function gameOver() {
+  isGameOver = true;
+  if (!highScores[difficulty] || score > highScores[difficulty]) {
+    highScores[difficulty] = score;
+    localStorage.setItem("highScores", JSON.stringify(highScores));
+  }
+  updateUI();
+}
 
-  // 배경 음악 토글
-  musicBtn.addEventListener("click", () => {
-    if(musicPlaying) {
-      backgroundMusic.pause();
-      musicPlaying = false;
-      musicBtn.textContent = "음악 켜기";
-    } else {
-      backgroundMusic.play();
-      musicPlaying = true;
-      musicBtn.textContent = "음악 끄기";
-    }
-  });
-
-  // 초기 설정
+function startGame() {
+  if (startedOnce) return;
+  startedOnce = true;
+  isGameStarted = true;
+  difficulty = difficultyEl.value;
   initGame();
-</script>
-</body>
+}
+
+function restartGame() {
+  isGameStarted = true;
+  difficulty = difficultyEl.value;
+  startedOnce = false;
+  initGame();
+}
+
+startBtn.addEventListener("click", startGame);
+restartBtn.addEventListener("click", restartGame);
+
+leftBtn.addEventListener("touchstart", () => paddleMove = -5);
+leftBtn.addEventListener("touchend", () => paddleMove = 0);
+rightBtn.addEventListener("touchstart", () => paddleMove = 5);
+rightBtn.addEventListener("touchend", () => paddleMove = 0);
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft") paddleMove = -5;
+  if (e.key === "ArrowRight") paddleMove = 5;
+});
+
+document.addEventListener("keyup", () => paddleMove = 0);
+
+bgmToggle.addEventListener("click", () => {
+  if (bgm.paused) bgm.play();
+  else bgm.pause();
+});
+
+// JavaScript 끝
+</script></body>
 </html>
